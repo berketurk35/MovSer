@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text } from "react-native";
 
-function App() {
+function SeriesList() {
     return(
         <View>
             <Text>
-                Selam
+                Series
             </Text>
         </View>
     )
 };
 
-export default App;
+export default SeriesList;
