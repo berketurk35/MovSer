@@ -4,6 +4,7 @@ import { createMaterialBottomTabNavigator  } from '@react-navigation/material-bo
 
 import TopNavigator from "./TopNavigator";
 import TopNavigator2 from "./TopNavigator2";
+import MyLists from "../pages/MyLists/MyLists";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Iconx from "react-native-vector-icons/MaterialIcons";
@@ -27,6 +28,14 @@ function TabNavigator() {
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="connected-tv" size={20} color={"black"} />),
                         title: "Dizilerim",
+                        headerShown: false,
+                    }
+                } />
+                <Tab.Screen name="MyLists" component={MyLists}
+                options={
+                    {
+                        tabBarIcon: ({ color, size }) => (<Iconx name="list-alt" size={20} color={"black"} />),
+                        title: "Listelerim",
                         headerShown: false,
                     }
                 } />

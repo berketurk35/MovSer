@@ -10,6 +10,8 @@ import MoviesList from "./pages/MoviesList/MoviesList";
 import SeriesList from "./pages/SeriesList/SeriesList";
 import ReqMoviesList from "./pages/ReqMoviesList/ReqMoviesList";
 import ReqSeriesList from "./pages/ReqSeriesList/ReqSeriesList";
+import MyLists from "./pages/MyLists/MyLists";
+import AddMovie from "./pages/AddMovie/AddMovie";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,10 +34,13 @@ function Router() {
                 <Stack.Screen name="TopNavigator" component={TopNavigator} />
                 <Stack.Screen name="MoviesList" component={MoviesList} />
                 <Stack.Screen name="ReqMoviesList" component={ReqMoviesList} />
+                <Stack.Screen name="AddMovie" component={AddMovie} />
 
                 <Stack.Screen name="TopNavigator2" component={TopNavigator2} />
                 <Stack.Screen name="SeriesList" component={SeriesList} />
                 <Stack.Screen name="ReqSeriesList" component={ReqSeriesList} />
+
+                <Stack.Screen name="MyLists" component={MyLists} />
             </Stack.Navigator>
         </NavigationContainer>
     )
