@@ -8,15 +8,19 @@ function TopNavigator() {
   const Tab = createMaterialTopTabNavigator();
 
   return (
-    <Tab.Navigator screenOptions={
-      {
-        tabBarLabelStyle: {
-          color: "black",
-          fontSize: 12,
-          fontWeight: "bold",
-        },
+    <Tab.Navigator screenOptions={{
+      tabBarActiveTintColor: "black",
+      tabBarInactiveTintColor: "gray",
+      tabBarLabelStyle: {
+        textTransform: "capitalize",
+        fontSize: 16,
+        fontWeight: "bold",
+      },
+      tabBarIndicatorStyle : {
+        backgroundColor: "black"
       }
-    }>
+
+    }}>
       <Tab.Screen name="MoviesList" component={MoviesList}
         options={
           {

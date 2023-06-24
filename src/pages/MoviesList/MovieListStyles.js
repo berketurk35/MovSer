@@ -18,10 +18,12 @@ export default StyleSheet.create({
     },
     fab: {
         position: "absolute",
-        margin: 16,
+        margin: 12,
         right: 0,
         bottom: 0,
         backgroundColor: "pink",
+        elevation: 24,
+        shadowColor: "green"
     },
     modalBackground: {
         flex: 1,
@@ -50,5 +52,14 @@ export default StyleSheet.create({
         fontWeight: "bold",
         color: "white",
         padding: 10,
-    }
+    },
+    savedMoviesContainer: {
+        marginTop: 20,
+        paddingHorizontal: 16,
+      },
+      savedMovieText: {
+        fontSize: 16,
+        marginBottom: 8,
+        color: "white",
+      },
 });

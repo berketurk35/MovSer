@@ -14,13 +14,12 @@ function TabNavigator() {
     const Tab = createMaterialBottomTabNavigator();
 
     return (
-        <Tab.Navigator>
-            <Tab.Screen name="TopNavigator" component={TopNavigator}
+        <Tab.Navigator >
+            <Tab.Screen name="TopNavigator" component={TopNavigator} 
                 options={
                     {
                         tabBarIcon: ({ color, size }) => (<Icon name="movie-open" size={20} color={"black"} />),
                         title: "Filmlerim",
-                        headerShown: false,
                     }
                 } />
             <Tab.Screen name="TopNavigator2" component={TopNavigator2}
@@ -28,7 +27,6 @@ function TabNavigator() {
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="connected-tv" size={20} color={"black"} />),
                         title: "Dizilerim",
-                        headerShown: false,
                     }
                 } />
                 <Tab.Screen name="MyLists" component={MyLists}
@@ -36,7 +34,6 @@ function TabNavigator() {
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="list-alt" size={20} color={"black"} />),
                         title: "Listelerim",
-                        headerShown: false,
                     }
                 } />
         </Tab.Navigator>

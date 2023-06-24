@@ -8,7 +8,7 @@ function PickerPlatform({ selectedValue, onValueChange }) {
 
     const platforms = [
         "Netflix",
-        "Amozon Prime",
+        "Amazon Prime",
         "İnternet",
     ];
 
@@ -22,8 +22,9 @@ function PickerPlatform({ selectedValue, onValueChange }) {
                     mode='dropdown'
                     dropdownIconColor={"blue"}
                 >
-                    {platforms.map((category, index) => (
-                        <Picker.Item key={index} label={category} value={category.toLowerCase()} style={styles.pickerItem} />
+                    <Picker.Item label='-' value={""} />
+                    {platforms.map((platforms, index) => (
+                        <Picker.Item key={index} label={platforms} value={platforms.charAt(0).toUpperCase() + platforms.slice(1).toLowerCase()} style={styles.pickerItem} />
                     ))}
                 </Picker>
             </View>

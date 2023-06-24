@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text} from "react-native";
+import { View, Text } from "react-native";
 import styles from "./PickerCategoryStyles";
 
 import { Picker } from '@react-native-picker/picker';
@@ -8,14 +8,14 @@ function PickerCategory({ selectedValue, onValueChange }) {
 
     const categories = [
         "Aksiyon",
-        "Komedi",
-        "Drama",
+        "Animasyon",
+        "Belgesel",
         "Bilim Kurgu",
+        "Drama",
+        "Komedi",
         "Korku",
         "Macera",
         "Romantik",
-        "Belgesel",
-        "Animasyon",
     ];
 
     return (
@@ -28,8 +28,9 @@ function PickerCategory({ selectedValue, onValueChange }) {
                     mode='dropdown'
                     dropdownIconColor={"blue"}
                 >
+                    <Picker.Item label='-' value={""} />
                     {categories.map((category, index) => (
-                        <Picker.Item key={index} label={category} value={category.toLowerCase()} style={styles.pickerItem} />
+                        <Picker.Item key={index} label={category} value={category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()} style={styles.pickerItem} />
                     ))}
                 </Picker>
             </View>

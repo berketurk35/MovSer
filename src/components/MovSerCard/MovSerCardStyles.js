@@ -7,16 +7,19 @@ export default StyleSheet.create({
         alignSelf: "center",
         borderRadius: 20,
         height: Dimensions.get("window").height / 6,
-        width: Dimensions.get("window").width / 1.2,
-        borderWidth: 0.5,
+        width: Dimensions.get("window").width / 1.3,
+        marginVertical: 15,
+        elevation: 22,
+        shadowColor: "yellow"
 
     },
     textMovie: {
-        flex: 1,
+        //flex: 1,
         fontSize: 18,
+        textAlign: "center",
         fontWeight: "bold",
         color: "black",
-        padding: 8,
+        padding: 6,
     },
     textPlatform: {
         flex: 2,
@@ -28,6 +31,7 @@ export default StyleSheet.create({
     textCategory: {
         flex: 1,
         fontSize: 16,
+        textAlign: "center",
         fontWeight: "bold",
         color: "black",
         padding: 4,
@@ -43,11 +47,11 @@ export default StyleSheet.create({
         flexDirection: "row",
     },
     verticalSeperator: {
-        width: 1,
+        width: 0.6,
         backgroundColor: "black",
     },
     horizontalSeperator: {
-        height: 1,
+        height: 0.6,
         backgroundColor: "black",
     },
 });

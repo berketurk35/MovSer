@@ -22,11 +22,11 @@ function Router() {
                 headerShown: false,
                 headerTitleAlign: "center",
                 headerTitleStyle: {
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: "bold",
                 },
                 headerStyle: {
-                    backgroundColor: "white",
+                    backgroundColor: "pink",
                 },
             }} >
                 <Stack.Screen name="TabNavigator" component={TabNavigator} />

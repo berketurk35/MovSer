@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/MovSerCard/MovSerCard";
@@ -9,11 +9,41 @@ import PickerPlatform from "../../components/PickerPlatform/PickerPlatform";
 
 import { FAB } from "react-native-paper";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function MoviesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [movieName, setMovieName] = useState('');
+    const [movieNote, setMovieNote] = useState('-');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState('');
+    const [savedMovies, setSavedMovies] = useState([]);
+
+    useEffect(() => {
+        // Kaydedilmiş filmleri AsyncStorage'den al
+        fetchSavedMovies();
+    }, []);
+
+    const fetchSavedMovies = async () => {
+        try {
+            const movies = await AsyncStorage.getItem('savedMovies');
+            if (movies) {
+                setSavedMovies(JSON.parse(movies));
+            }
+        } catch (error) {
+            console.log('Hata: ', error);
+        }
+    };
+
+    const clearData = async () => {
+        try {
+            await AsyncStorage.clear();
+            console.log('Veriler başarıyla sıfırlandı.');
+        } catch (error) {
+            console.log('Veriler sıfırlanırken bir hata oluştu:', error);
+        }
+    };
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -21,31 +51,81 @@ function MoviesList({ navigation }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSelectedCategory('');
+        setSelectedPlatform('');
     };
-    const handleModalPress = () => {
-        
+
+    const saveMovie = async () => {
+        if (
+            movieName === '' ||
+            selectedCategory === '' ||
+            selectedPlatform === ''
+        ) {
+            // Boş veri olduğunda kullanıcıya uyarı mesajı ver
+            Alert.alert("Uyarı", 'Lütfen Tüm Bilgileri Doldurun.');
+            return;
+        }
+
+        // Verileri bir obje olarak hazırla
+        const movieData = {
+            movieName: movieName,
+            movieNote: movieNote,
+            selectedCategory: selectedCategory,
+            selectedPlatform: selectedPlatform
+        };
+
+        try {
+            // Daha önce kaydedilen filmleri al
+            const existingMovies = await AsyncStorage.getItem('savedMovies');
+            let updatedMovies = [];
+
+            if (existingMovies) {
+                // Eğer daha önce kaydedilen filmler varsa, onları güncelle
+                updatedMovies = JSON.parse(existingMovies);
+            }
+
+            // Yeni filmi ekle
+            updatedMovies.push(movieData);
+
+            // Filmleri AsyncStorage'e kaydet
+            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
+
+            // Kaydedilen filmleri güncelle
+            setSavedMovies(updatedMovies);
+
+            // Modalı kapat
+            closeModal();
+        } catch (error) {
+            console.log('Hata: ', error);
+        }
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <ImageBackground source={require("../../images/3.jpeg")} style={styles.background}>
-                <View style={styles.content}>
-                    <Text style={styles.title} >
-                        Movies
-                    </Text>
-                    <MovSerCard />
-                    <FAB
-                        style={styles.fab}
-                        icon="plus"
-                        onPress={handleFabPress}
-                    />
-
-                </View>
+                <ScrollView>
+                    <View style={styles.content}>
+                        <Text style={styles.title} >
+                            Movies
+                        </Text>
+                        {savedMovies.map((movie, index) => (
+                            <MovSerCard key={index} movieName={movie.movieName} category={movie.selectedCategory} platform={movie.selectedPlatform} note={movie.movieNote} />
+                        ))}
+                    </View>
+                </ScrollView>
+                <FAB
+                    style={styles.fab}
+                    icon="plus"
+                    //customSize={40}
+                    label="Ekle"
+                    onPress={handleFabPress}
+                />
             </ImageBackground>
             <Modal
                 visible={modalVisible}
                 transparent={true}
                 animationType="fade"
+                onRequestClose={closeModal}
             >
                 <TouchableOpacity
                     style={styles.modalBackground}
@@ -53,8 +133,12 @@ function MoviesList({ navigation }) {
                     onPress={closeModal}
                 >
                     <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Input label={"Film Adı"} icon={"pricetags"} placeholder={"Örn. Harry Potter"} />
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            style={styles.modalContent}
+                            onPress={() => { }}
+                        >
+                            <Input label={"Film Adı"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
                             <View style={{ flexDirection: "row" }} >
                                 <View style={{ flex: 1, marginRight: 10 }} >
                                     <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
@@ -63,13 +147,12 @@ function MoviesList({ navigation }) {
                                     <PickerPlatform selectedValue={selectedPlatform} onValueChange={(itemValue) => setSelectedPlatform(itemValue)} />
                                 </View>
                             </View>
-                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} />
-                            <TouchableOpacity style={styles.button} onPress={null} >
+                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={movieNote} onChangeText={(movieNote) => setMovieNote(movieNote)} />
+                            <TouchableOpacity style={styles.button} onPress={saveMovie} >
                                 <Text style={styles.buttonText} >Filmi Kaydet</Text>
                             </TouchableOpacity>
 
-                        </View>
-
+                        </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
             </Modal>
