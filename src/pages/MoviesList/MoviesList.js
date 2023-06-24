@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/MovSerCard/MovSerCard";
@@ -8,6 +8,7 @@ import PickerCategory from "../../components/PickerCategory/PickerCategory";
 import PickerPlatform from "../../components/PickerPlatform/PickerPlatform";
 
 import { FAB } from "react-native-paper";
+import Icon from "react-native-vector-icons/Ionicons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -103,11 +104,21 @@ function MoviesList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <ImageBackground source={require("../../images/3.jpeg")} style={styles.background}>
+                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                    <View style={styles.search} >
+                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                        <TextInput placeholder="Film Sorgula" placeholderTextColor={"black"} />
+                    </View>
+                    <View style={styles.search}>
+                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                        <TextInput placeholder="Kategori Filtrele" placeholderTextColor={"black"} />
+                    </View>
+                </View>
+                <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
-                        <Text style={styles.title} >
-                            Movies
-                        </Text>
+
+
                         {savedMovies.map((movie, index) => (
                             <MovSerCard key={index} movieName={movie.movieName} category={movie.selectedCategory} platform={movie.selectedPlatform} note={movie.movieNote} />
                         ))}
