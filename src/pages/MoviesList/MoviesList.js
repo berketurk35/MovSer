@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput } from "react-native";
+import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/MovSerCard/MovSerCard";
@@ -15,11 +15,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function MoviesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
+
     const [movieName, setMovieName] = useState('');
     const [movieNote, setMovieNote] = useState('-');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState('');
+
     const [savedMovies, setSavedMovies] = useState([]);
+
+    const [searchMovie, setSearchMovie] = useState('');
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -103,35 +107,45 @@ function MoviesList({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ImageBackground source={require("../../images/3.jpeg")} style={styles.background}>
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Film Sorgula" placeholderTextColor={"black"} />
+            <KeyboardAvoidingView style={styles.container} behavior="height" >
+                <ImageBackground source={require("../../images/3.jpeg")} style={styles.background}>
+                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                        <View style={styles.search} >
+                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
+                                onChangeText={setSearchMovie} />
+                        </View>
                     </View>
-                    <View style={styles.search}>
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Kategori Filtrele" placeholderTextColor={"black"} />
-                    </View>
-                </View>
-                <View style={styles.seperator} />
-                <ScrollView>
-                    <View style={styles.content}>
+                    <View style={styles.seperator} />
+                    <ScrollView>
+                        <View style={styles.content}>
+                            {savedMovies
+                                .filter(
+                                    (movie) =>
+                                        movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
+                                )
+                                .map((movie, index) => (
+                                    <MovSerCard
+                                        key={index}
+                                        movieName={movie.movieName}
+                                        category={movie.selectedCategory}
+                                        platform={movie.selectedPlatform}
+                                        note={movie.movieNote}
+                                    />
+                                ))}
+                        </View>
+                    </ScrollView>
+                    <FAB
+                        style={styles.fab}
+                        icon="plus"
+                        //customSize={40}
+                        label="Ekle"
+                        color="white"
+                        onPress={handleFabPress}
+                    />
+                </ImageBackground>
+            </KeyboardAvoidingView>
 
-
-                        {savedMovies.map((movie, index) => (
-                            <MovSerCard key={index} movieName={movie.movieName} category={movie.selectedCategory} platform={movie.selectedPlatform} note={movie.movieNote} />
-                        ))}
-                    </View>
-                </ScrollView>
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    //customSize={40}
-                    label="Ekle"
-                    onPress={handleFabPress}
-                />
-            </ImageBackground>
             <Modal
                 visible={modalVisible}
                 transparent={true}
@@ -175,3 +189,4 @@ function MoviesList({ navigation }) {
 };
 
 export default MoviesList;
+
