@@ -14,7 +14,7 @@ function PickerPlatform({ selectedValue, onValueChange }) {
 
     return (
         <View style={styles.contaier}>
-            <Text style={styles.label}> Platformu </Text>
+            <Text style={styles.label}> Platformu* </Text>
             <View style={styles.picker} >
                 <Picker
                     selectedValue={selectedValue}

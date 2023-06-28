@@ -13,7 +13,7 @@ function TopNavigator() {
       tabBarInactiveTintColor: "gray",
       tabBarLabelStyle: {
         textTransform: "capitalize",
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "bold",
       },
       tabBarIndicatorStyle : {
@@ -24,13 +24,13 @@ function TopNavigator() {
       <Tab.Screen name="MoviesList" component={MoviesList}
         options={
           {
-            title: "İzlediklerim",
+            title: "İzlediğim Filmlerim",
           }
         } />
       <Tab.Screen name="ReqMoviesList" component={ReqMoviesList}
         options={
           {
-            title: "İzlemek İstediklerim",
+            title: "İstek Filmlerim",
           }
         } />
     </Tab.Navigator>

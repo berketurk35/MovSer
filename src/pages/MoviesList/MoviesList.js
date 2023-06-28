@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
 import styles from "./MovieListStyles";
 
-import MovSerCard from "../../components/MovSerCard/MovSerCard";
+import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../components/Input/Input";
-import PickerCategory from "../../components/PickerCategory/PickerCategory";
-import PickerPlatform from "../../components/PickerPlatform/PickerPlatform";
+import PickerCategory from "../../components/Picker/PickerCategory/PickerCategory";
+import PickerPlatform from "../../components/Picker/PickerPlatform/PickerPlatform";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -163,7 +163,7 @@ function MoviesList({ navigation }) {
                             style={styles.modalContent}
                             onPress={() => { }}
                         >
-                            <Input label={"Film Adı"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
+                            <Input label={"Film Adı*"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
                             <View style={{ flexDirection: "row" }} >
                                 <View style={{ flex: 1, marginRight: 10 }} >
                                     <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
@@ -176,7 +176,7 @@ function MoviesList({ navigation }) {
                             <TouchableOpacity style={styles.button} onPress={saveMovie} >
                                 <Text style={styles.buttonText} >Filmi Kaydet</Text>
                             </TouchableOpacity>
-
+                            <Text style={styles.bottomText} >( * olan alanlar zorunludur )</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>

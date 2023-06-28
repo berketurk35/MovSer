@@ -20,7 +20,7 @@ function PickerCategory({ selectedValue, onValueChange }) {
 
     return (
         <View style={styles.contaier}>
-            <Text style={styles.label}> Kategorisi </Text>
+            <Text style={styles.label}> Kategorisi* </Text>
             <View style={styles.picker} >
                 <Picker
                     selectedValue={selectedValue}

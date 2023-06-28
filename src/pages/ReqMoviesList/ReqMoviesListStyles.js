@@ -83,4 +83,8 @@ export default StyleSheet.create({
         height: 1,
         backgroundColor: "black",
     },
+    bottomText: {
+        textAlign: "center",
+        paddingTop: 6,
+    }
 });

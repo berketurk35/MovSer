@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
-import styles from "./ReqMoviesListStyles";
+import styles from "./ActiveSeriesListStyles";
 
 import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../components/Input/Input";
@@ -12,18 +12,18 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function ReqMoviesList({ navigation }) {
+function ActiveSeriesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [reqMovieName, setReqMovieName] = useState('');
-    const [reqMovieNote, setReqMovieNote] = useState('-');
-    const [reqSelectedCategory, setReqSelectedCategory] = useState('');
-    const [reqSelectedPlatform, setReqSelectedPlatform] = useState('');
+    const [movieName, setMovieName] = useState('');
+    const [movieNote, setMovieNote] = useState('-');
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedPlatform, setSelectedPlatform] = useState('');
 
-    const [savedReqMovies, setSavedReqMovies] = useState([]);
+    const [savedMovies, setSavedMovies] = useState([]);
 
-    const [searchReqMovie, setSearchReqMovie] = useState('');
+    const [searchMovie, setSearchMovie] = useState('');
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -32,9 +32,9 @@ function ReqMoviesList({ navigation }) {
 
     const fetchSavedMovies = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedReqMovies');
+            const movies = await AsyncStorage.getItem('savedMovies');
             if (movies) {
-                setSavedReqMovies(JSON.parse(movies));
+                setSavedMovies(JSON.parse(movies));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -52,20 +52,19 @@ function ReqMoviesList({ navigation }) {
 
     const handleFabPress = () => {
         setModalVisible(true);
-        clearData();
     };
 
     const closeModal = () => {
         setModalVisible(false);
-        setReqSelectedCategory('');
-        setReqSelectedPlatform('');
+        setSelectedCategory('');
+        setSelectedPlatform('');
     };
 
     const saveMovie = async () => {
         if (
-            reqMovieName === '' ||
-            reqSelectedCategory === '' ||
-            reqSelectedPlatform === ''
+            movieName === '' ||
+            selectedCategory === '' ||
+            selectedPlatform === ''
         ) {
             // Boş veri olduğunda kullanıcıya uyarı mesajı ver
             Alert.alert("Uyarı", 'Lütfen Tüm Bilgileri Doldurun.');
@@ -73,16 +72,16 @@ function ReqMoviesList({ navigation }) {
         }
 
         // Verileri bir obje olarak hazırla
-        const reqMovieData = {
-            reqMovieName: reqMovieName,
-            reqMovieNote: reqMovieNote,
-            reqSelectedCategory: reqSelectedCategory,
-            reqSelectedPlatform: reqSelectedPlatform
+        const movieData = {
+            movieName: movieName,
+            movieNote: movieNote,
+            selectedCategory: selectedCategory,
+            selectedPlatform: selectedPlatform
         };
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedReqMovies');
+            const existingMovies = await AsyncStorage.getItem('savedMovies');
             let updatedMovies = [];
 
             if (existingMovies) {
@@ -91,13 +90,13 @@ function ReqMoviesList({ navigation }) {
             }
 
             // Yeni filmi ekle
-            updatedMovies.push(reqMovieData);
+            updatedMovies.push(movieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedReqMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
 
             // Kaydedilen filmleri güncelle
-            setSavedReqMovies(updatedMovies);
+            setSavedMovies(updatedMovies);
 
             // Modalı kapat
             closeModal();
@@ -109,29 +108,29 @@ function ReqMoviesList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <ImageBackground source={require("../../images/2.jpeg")} style={styles.background} resizeMode="cover">
+                <ImageBackground source={require("../../images/5.jpeg")} style={styles.background} resizeMode="cover" >
                     <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchReqMovie}
-                                onChangeText={setSearchReqMovie} />
+                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
+                                onChangeText={setSearchMovie} />
                         </View>
                     </View>
                     <View style={styles.seperator} />
                     <ScrollView>
                         <View style={styles.content}>
-                            {savedReqMovies
+                            {savedMovies
                                 .filter(
                                     (movie) =>
-                                        movie.reqMovieName.toLowerCase().includes(searchReqMovie.toLowerCase())
+                                        movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
                                 )
                                 .map((movie, index) => (
                                     <MovSerCard
                                         key={index}
-                                        movieName={movie.reqMovieName}
-                                        category={movie.reqSelectedCategory}
-                                        platform={movie.reqSelectedPlatform}
-                                        note={movie.reqMovieNote}
+                                        movieName={movie.movieName}
+                                        category={movie.selectedCategory}
+                                        platform={movie.selectedPlatform}
+                                        note={movie.movieNote}
                                     />
                                 ))}
                         </View>
@@ -164,20 +163,20 @@ function ReqMoviesList({ navigation }) {
                             style={styles.modalContent}
                             onPress={() => { }}
                         >
-                            <Input label={"Film Adı*"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={reqMovieName} onChangeText={(reqMovieName) => setReqMovieName(reqMovieName)} />
+                            <Input label={"Film Adı"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
                             <View style={{ flexDirection: "row" }} >
                                 <View style={{ flex: 1, marginRight: 10 }} >
-                                    <PickerCategory selectedValue={reqSelectedCategory} onValueChange={(itemValue) => setReqSelectedCategory(itemValue)} />
+                                    <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
                                 </View>
                                 <View style={{ flex: 1 }}>
-                                    <PickerPlatform selectedValue={reqSelectedPlatform} onValueChange={(itemValue) => setReqSelectedPlatform(itemValue)} />
+                                    <PickerPlatform selectedValue={selectedPlatform} onValueChange={(itemValue) => setSelectedPlatform(itemValue)} />
                                 </View>
                             </View>
-                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={reqMovieNote} onChangeText={(reqMovieNote) => setReqMovieNote(reqMovieNote)} />
+                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={movieNote} onChangeText={(movieNote) => setMovieNote(movieNote)} />
                             <TouchableOpacity style={styles.button} onPress={saveMovie} >
                                 <Text style={styles.buttonText} >Filmi Kaydet</Text>
                             </TouchableOpacity>
-                            <Text style={styles.bottomText} >( * olan alanlar zorunludur )</Text>
+
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -189,5 +188,5 @@ function ReqMoviesList({ navigation }) {
     )
 };
 
-export default ReqMoviesList;
+export default ActiveSeriesList;
 

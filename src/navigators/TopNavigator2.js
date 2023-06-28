@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import SeriesList from '../pages/SeriesList/SeriesList';
 import ReqSeriesList from '../pages/ReqSeriesList/ReqSeriesList';
+import ActiveSeriesList from '../pages/ActiveSeriesList/ActiveSeriesList';
 
 function TopNavigator2() {
 
@@ -10,23 +11,35 @@ function TopNavigator2() {
   return (
     <Tab.Navigator screenOptions={
       {
+        tabBarActiveTintColor: "black",
+        tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
-          color: "black",
+          textTransform: "capitalize",
           fontSize: 12,
           fontWeight: "bold",
         },
+        tabBarIndicatorStyle: {
+          backgroundColor: "black"
+        }
+
       }
     }>
       <Tab.Screen name="SeriesList" component={SeriesList}
         options={
           {
-            title: "İzlediklerim",
+            title: "İzlediğim Dizilerim",
+          }
+        } />
+        <Tab.Screen name="ActiveSeriesList" component={ActiveSeriesList}
+        options={
+          {
+            title: "Aktif Dizilerim",
           }
         } />
       <Tab.Screen name="ReqSeriesList" component={ReqSeriesList}
         options={
           {
-            title: "İzlemek İstediklerim",
+            title: "İstek Dizilerim",
           }
         } />
     </Tab.Navigator>

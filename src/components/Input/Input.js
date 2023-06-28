@@ -14,7 +14,7 @@ function Input({ label, icon, placeholder, onChangeText }) {
                 <View style={styles.inputBox} >
                     <Icon name={icon} size={16} color="black" />
                     <TextInput style={styles.textInput} autoCapitalize={"words"}
-                        keyboardType={"default"} placeholder={placeholder} onChangeText={onChangeText} multiline={true} />
+                        keyboardType={"default"} placeholder={placeholder} onChangeText={onChangeText} multiline={true} maxLength={80} />
                 </View>
             </View>
         </SafeAreaView>
