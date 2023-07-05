@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
 import styles from "./ActiveSeriesListStyles";
 
-import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
+import SeriesCard from "../../components/Card/SeriesCard/SeriesCard";
 import Input from "../../components/Input/Input";
+
 import PickerCategory from "../../components/Picker/PickerCategory/PickerCategory";
 import PickerPlatform from "../../components/Picker/PickerPlatform/PickerPlatform";
+import PickerSeasons from "../../components/Picker/PickerSeasons.js/PickerSeasons";
+import PickerFinal from "../../components/Picker/PickerFinal/PickerFinal";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,25 +19,28 @@ function ActiveSeriesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [movieName, setMovieName] = useState('');
-    const [movieNote, setMovieNote] = useState('-');
+    const [seriesActiveName, setSeriesActiveName] = useState('');
+    const [seriesActiveNote, setSeriesActiveNote] = useState('-');
+
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState('');
+    const [selectedSeasons, setSelectedSeasons] = useState('-');
+    const [isFinal, setIsFinal] = useState('-');
 
-    const [savedMovies, setSavedMovies] = useState([]);
+    const [savedActiveSeries, setSavedActiveSeries] = useState([]);
 
-    const [searchMovie, setSearchMovie] = useState('');
+    const [searchActiveSeries, setSearchActiveSeries] = useState('');
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedMovies();
+        fetchSavedSeries();
     }, []);
 
-    const fetchSavedMovies = async () => {
+    const fetchSavedSeries = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedMovies');
-            if (movies) {
-                setSavedMovies(JSON.parse(movies));
+            const series = await AsyncStorage.getItem('savedActiveSeries');
+            if (series) {
+                setSavedActiveSeries(JSON.parse(series));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -58,13 +64,16 @@ function ActiveSeriesList({ navigation }) {
         setModalVisible(false);
         setSelectedCategory('');
         setSelectedPlatform('');
+        setSelectedSeasons('');
+        setIsFinal('');
     };
 
-    const saveMovie = async () => {
+    const saveSerie = async () => {
         if (
-            movieName === '' ||
+            seriesActiveName === '' ||
             selectedCategory === '' ||
-            selectedPlatform === ''
+            selectedPlatform === '' ||
+            selectedSeasons === '' 
         ) {
             // Boş veri olduğunda kullanıcıya uyarı mesajı ver
             Alert.alert("Uyarı", 'Lütfen Tüm Bilgileri Doldurun.');
@@ -72,31 +81,33 @@ function ActiveSeriesList({ navigation }) {
         }
 
         // Verileri bir obje olarak hazırla
-        const movieData = {
-            movieName: movieName,
-            movieNote: movieNote,
+        const serieActiveData = {
+            seriesActiveName: seriesActiveName,
+            seriesActiveNote: seriesActiveNote,
             selectedCategory: selectedCategory,
-            selectedPlatform: selectedPlatform
+            selectedPlatform: selectedPlatform,
+            selectedSeasons: selectedSeasons,
+            isFinal: isFinal + "-",
         };
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedMovies');
-            let updatedMovies = [];
+            const existingSeries = await AsyncStorage.getItem('savedActiveSeries');
+            let updatedSeries = [];
 
-            if (existingMovies) {
+            if (existingSeries) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
-                updatedMovies = JSON.parse(existingMovies);
+                updatedSeries = JSON.parse(existingSeries);
             }
 
             // Yeni filmi ekle
-            updatedMovies.push(movieData);
+            updatedSeries.push(serieActiveData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries));
 
             // Kaydedilen filmleri güncelle
-            setSavedMovies(updatedMovies);
+            setSavedActiveSeries(updatedSeries);
 
             // Modalı kapat
             closeModal();
@@ -112,25 +123,27 @@ function ActiveSeriesList({ navigation }) {
                     <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
-                                onChangeText={setSearchMovie} />
+                            <TextInput placeholder="Dizi İsmi Sorgula" placeholderTextColor={"black"} value={searchActiveSeries}
+                                onChangeText={setSearchActiveSeries} />
                         </View>
                     </View>
                     <View style={styles.seperator} />
                     <ScrollView>
                         <View style={styles.content}>
-                            {savedMovies
+                            {savedActiveSeries
                                 .filter(
-                                    (movie) =>
-                                        movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
+                                    (serie) =>
+                                        serie.seriesActiveName.toLowerCase().includes(searchActiveSeries.toLowerCase())
                                 )
-                                .map((movie, index) => (
-                                    <MovSerCard
+                                .map((serie, index) => (
+                                    <SeriesCard
                                         key={index}
-                                        movieName={movie.movieName}
-                                        category={movie.selectedCategory}
-                                        platform={movie.selectedPlatform}
-                                        note={movie.movieNote}
+                                        seriesName={serie.seriesActiveName}
+                                        category={serie.selectedCategory}
+                                        platform={serie.selectedPlatform}
+                                        seaons={serie.selectedSeasons}
+                                        isFinal={serie.isFinal}
+                                        note={serie.seriesActiveNote}
                                     />
                                 ))}
                         </View>
@@ -163,7 +176,7 @@ function ActiveSeriesList({ navigation }) {
                             style={styles.modalContent}
                             onPress={() => { }}
                         >
-                            <Input label={"Film Adı"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
+                            <Input label={"Dizi Adı*"} icon={"pricetags"} placeholder={"Örn. Game Of Thrones"} value={seriesActiveName} onChangeText={(seriesActiveName) => setSeriesActiveName(seriesActiveName)} />
                             <View style={{ flexDirection: "row" }} >
                                 <View style={{ flex: 1, marginRight: 10 }} >
                                     <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
@@ -172,11 +185,19 @@ function ActiveSeriesList({ navigation }) {
                                     <PickerPlatform selectedValue={selectedPlatform} onValueChange={(itemValue) => setSelectedPlatform(itemValue)} />
                                 </View>
                             </View>
-                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={movieNote} onChangeText={(movieNote) => setMovieNote(movieNote)} />
-                            <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                            <View style={{ flexDirection: "row" }} >
+                                <View style={{ flex: 1, marginRight: 10 }} >
+                                    <PickerSeasons selectedValue={selectedSeasons} onValueChange={(itemValue) => setSelectedSeasons(itemValue)} />
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <PickerFinal selectedValue={isFinal} onValueChange={(itemValue) => setIsFinal(itemValue)} />
+                                </View>
+                            </View>
+                            <Input label={"Not"} icon={"chatbox"} placeholder={"Dizi ile ilgili not ekleyebilirsiniz.."} value={seriesActiveNote} onChangeText={(seriesActiveNote) => setSeriesActiveNote(seriesActiveNote)} />
+                            <TouchableOpacity style={styles.button} onPress={saveSerie} >
+                                <Text style={styles.buttonText} >Diziyi Kaydet</Text>
                             </TouchableOpacity>
-
+                            <Text style={styles.bottomText} >( * olan alanlar zorunludur )</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
