@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-import { View, Text, Button, FlatList, TextInput, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from "react-native";
 
 import axios from "react-native-axios";
 
 const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200'; // Küçük bir boyut için w200 kullanıldı
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
 const App = () => {
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [genreNames, setGenreNames] = useState([]);
+    const [categoryText, setCategoryText] = useState("");
 
     const searchMovies = async () => {
         try {
@@ -20,31 +23,76 @@ const App = () => {
                 },
             });
 
-            const results = response.data.results;
+            const results = response.data.results.slice(0, 3);
             setSearchResults(results);
         } catch (error) {
             console.error(error);
         }
     };
 
-    const handleTextChange = (text) => {
-        setSearchText(text);
-        searchMovies(text);
-          
+    const fetchGenreNames = async (genreIds) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+
+            const genres = response.data.genres;
+            const names = genreIds.map((genreId) => {
+                const genre = genres.find((g) => g.id === genreId);
+                return genre ? genre.name : '';
+            });
+
+            return names;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
     };
 
-    const renderMovieItem = ({ item }) => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image
-                source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                style={{ width: 75, height: 100, margin: 10 }}
-            />
-            <Text>{item.title} - </Text>
-            <Text>{item.vote_average}</Text>
+    const handleTextChange = (text) => {
+        setSearchText(text);
+        searchMovies();
+    };
 
-        </View>
-        // Diğer film bilgilerini burada gösterebilirsiniz
-    );
+    const handleMovieSelect = async (movie) => {
+        setSelectedMovie(movie);
+        setSearchText(movie.title);
+
+        // Film tür adlarını al
+        const genreNames = await fetchGenreNames(movie.genre_ids);
+
+        // Kategori adlarını ekrana yazdır
+        setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
+        console.log('Seçilen film kategorisi:', categoryText);
+    };
+
+    const handleSearchBarPress = () => {
+        setSelectedMovie(null);
+        setGenreNames([]);
+    };
+
+    const renderMovieItem = ({ item }) => {
+        console.log(item); // Bütün verileri konsola yazdır
+        return (
+            <TouchableOpacity onPress={() => handleMovieSelect(item)}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                        source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
+                        style={{ width: 75, height: 100, margin: 10 }}
+                    />
+                    <View>
+                        <Text>{item.title} - </Text>
+                        <Text>{item.vote_average}</Text>
+                        {genreNames.length > 0 && (
+                            <Text>{genreNames.join(', ')}</Text> // Film tür adlarını göster
+                        )}
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <View>
@@ -52,13 +100,20 @@ const App = () => {
                 value={searchText}
                 onChangeText={handleTextChange}
                 placeholder="Film ara..."
+                onFocus={handleSearchBarPress}
             />
-            <Button title="Ara" onPress={searchMovies} />
-            <FlatList
-                data={searchResults}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderMovieItem}
-            />
+
+            {selectedMovie ? (
+                <Text>
+                    Seçilen film: {selectedMovie.title} - {categoryText}
+                </Text>
+            ) : (
+                <FlatList
+                    data={searchResults}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderMovieItem}
+                />
+            )}
         </View>
     );
 };

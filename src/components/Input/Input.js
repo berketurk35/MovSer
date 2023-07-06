@@ -4,7 +4,7 @@ import { SafeAreaView, View, Text, TextInput, TouchableOpacity } from 'react-nat
 import styles from "./InputStyles";
 import Icon from "react-native-vector-icons/Ionicons";
 
-function Input({ label, icon, placeholder, onChangeText }) {
+function Input({ label, icon, placeholder, onChangeText, onFocus }) {
 
 
     return (
@@ -14,7 +14,7 @@ function Input({ label, icon, placeholder, onChangeText }) {
                 <View style={styles.inputBox} >
                     <Icon name={icon} size={16} color="black" />
                     <TextInput style={styles.textInput} autoCapitalize={"words"}
-                        keyboardType={"default"} placeholder={placeholder} onChangeText={onChangeText} multiline={true} maxLength={80} />
+                        keyboardType={"default"} placeholder={placeholder} onChangeText={onChangeText} multiline={true} maxLength={80} onFocus={onFocus} />
                 </View>
             </View>
         </SafeAreaView>

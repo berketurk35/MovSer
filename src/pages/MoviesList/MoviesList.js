@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
+import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
@@ -12,11 +12,17 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function MoviesList({ navigation }) {
+import axios from "react-native-axios";
+
+const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
+
+function MoviesList() {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [movieName, setMovieName] = useState('');
+    //const [movieName, setMovieName] = useState('');
     const [movieNote, setMovieNote] = useState('-');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedPlatform, setSelectedPlatform] = useState('');
@@ -24,6 +30,11 @@ function MoviesList({ navigation }) {
     const [savedMovies, setSavedMovies] = useState([]);
 
     const [searchMovie, setSearchMovie] = useState('');
+
+    const [searchText, setSearchText] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -105,6 +116,49 @@ function MoviesList({ navigation }) {
         }
     };
 
+    const searchMovies = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/search/movie`, {
+                params: {
+                    api_key: API_KEY,
+                    query: searchText,
+                },
+            });
+
+            const results = response.data.results.slice(0, 3);
+            setSearchResults(results);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleTextChange = (text) => {
+        setSearchText(text);
+        searchMovies();
+    };
+
+    const handleMovieSelect = (movie) => {
+        setSelectedMovie(movie);
+        setSearchText(movie.title);
+    };
+
+    const handleSearchBarPress = () => {
+        setSelectedMovie(null);
+    };
+
+    const renderMovieItem = ({ item }) => (
+        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
+                    style={{ width: 50, height: 75, margin: 10 }}
+                />
+                <Text>{item.title} </Text>
+            </View>
+        </TouchableOpacity>
+    );
+
+
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -163,7 +217,21 @@ function MoviesList({ navigation }) {
                             style={styles.modalContent}
                             onPress={() => { }}
                         >
-                            <Input label={"Film Adı*"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={movieName} onChangeText={(movieName) => setMovieName(movieName)} />
+                            <View>
+                                <Input label={"Film Adı*"} icon={"pricetags"} placeholder="Örn. Harry Potter ve Sırlar Odası" value={searchText} onChangeText={handleTextChange} onFocus={handleSearchBarPress} />
+
+                                {selectedMovie ? (
+                                    <Text>Seçilen film: {selectedMovie.title}</Text>
+                                ) : (
+                                    <FlatList
+                                        data={searchResults}
+                                        keyExtractor={(item) => item.id.toString()}
+                                        renderItem={renderMovieItem}
+                                    />
+                                )}
+                            </View>
+
+
                             <View style={{ flexDirection: "row" }} >
                                 <View style={{ flex: 1, marginRight: 10 }} >
                                     <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
