@@ -13,6 +13,7 @@ const App = () => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
+    const [duration, setDuration] = useState("");
 
     const searchMovies = async () => {
         try {
@@ -25,6 +26,25 @@ const App = () => {
 
             const results = response.data.results.slice(0, 3);
             setSearchResults(results);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const getMovieDetails = async (movieId) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+
+            const runtime = response.data.runtime;
+            setDuration(runtime);
+
+            console.log("Movie Details: ", duration);
+
+
         } catch (error) {
             console.error(error);
         }
@@ -59,13 +79,14 @@ const App = () => {
     const handleMovieSelect = async (movie) => {
         setSelectedMovie(movie);
         setSearchText(movie.title);
+        getMovieDetails(movie.id);
 
         // Film tür adlarını al
         const genreNames = await fetchGenreNames(movie.genre_ids);
 
         // Kategori adlarını ekrana yazdır
         setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
-        console.log('Seçilen film kategorisi:', categoryText);
+        //console.log('Seçilen film kategorisi:', categoryText);
     };
 
     const handleSearchBarPress = () => {
@@ -74,7 +95,7 @@ const App = () => {
     };
 
     const renderMovieItem = ({ item }) => {
-        console.log(item); // Bütün verileri konsola yazdır
+        //console.log(item); // Bütün verileri konsola yazdır
         return (
             <TouchableOpacity onPress={() => handleMovieSelect(item)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -105,7 +126,7 @@ const App = () => {
 
             {selectedMovie ? (
                 <Text>
-                    Seçilen film: {selectedMovie.title} - {categoryText}
+                    Seçilen film: {selectedMovie.title} - {selectedMovie.vote_average.toFixed(1)} - {selectedMovie.popularity}
                 </Text>
             ) : (
                 <FlatList

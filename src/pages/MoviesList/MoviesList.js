@@ -4,8 +4,6 @@ import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../components/Input/Input";
-import PickerCategory from "../../components/Picker/PickerCategory/PickerCategory";
-import PickerPlatform from "../../components/Picker/PickerPlatform/PickerPlatform";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -21,20 +19,14 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 function MoviesList() {
 
     const [modalVisible, setModalVisible] = useState(false);
-
-    //const [movieName, setMovieName] = useState('');
-    const [movieNote, setMovieNote] = useState('-');
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedPlatform, setSelectedPlatform] = useState('');
-
     const [savedMovies, setSavedMovies] = useState([]);
-
     const [searchMovie, setSearchMovie] = useState('');
-
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-
     const [selectedMovie, setSelectedMovie] = useState(null);
+    const [genreNames, setGenreNames] = useState([]);
+    const [categoryText, setCategoryText] = useState("");
+    const [duration, setDuration] = useState("");
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -63,31 +55,23 @@ function MoviesList() {
 
     const handleFabPress = () => {
         setModalVisible(true);
+        //clearData();
     };
 
     const closeModal = () => {
         setModalVisible(false);
-        setSelectedCategory('');
-        setSelectedPlatform('');
     };
 
     const saveMovie = async () => {
-        if (
-            movieName === '' ||
-            selectedCategory === '' ||
-            selectedPlatform === ''
-        ) {
-            // Boş veri olduğunda kullanıcıya uyarı mesajı ver
-            Alert.alert("Uyarı", 'Lütfen Tüm Bilgileri Doldurun.');
-            return;
-        }
 
         // Verileri bir obje olarak hazırla
         const movieData = {
-            movieName: movieName,
-            movieNote: movieNote,
-            selectedCategory: selectedCategory,
-            selectedPlatform: selectedPlatform
+            movieName: selectedMovie.title,
+            movieDate: formatDate(selectedMovie.release_date),
+            movieVote: selectedMovie.vote_average.toFixed(1),
+            movieCategory: categoryText,
+            moviePoster: selectedMovie.poster_path,
+            movieTime: duration
         };
 
         try {
@@ -110,6 +94,9 @@ function MoviesList() {
             setSavedMovies(updatedMovies);
 
             // Modalı kapat
+            setSearchResults("");
+            setSelectedMovie("");
+            setSearchText("");
             closeModal();
         } catch (error) {
             console.log('Hata: ', error);
@@ -125,10 +112,63 @@ function MoviesList() {
                 },
             });
 
-            const results = response.data.results.slice(0, 3);
+            const results = response.data.results.slice(0, 4);
             setSearchResults(results);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const getMovieDetails = async (movieId) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+
+            const runtime = response.data.runtime;
+            const formattedDuration = formatDuration(runtime);
+            setDuration(formattedDuration);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const formatDuration = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+
+        return `${hours} h ${remainingMinutes} m`;
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString('tr-TR'); // tr-TR, Türkiye'nin bölgesel kodudur
+
+        return formattedDate;
+    };
+
+
+    const fetchGenreNames = async (genreIds) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+
+            const genres = response.data.genres;
+            const names = genreIds.map((genreId) => {
+                const genre = genres.find((g) => g.id === genreId);
+                return genre ? genre.name : '';
+            });
+
+            return names;
+        } catch (error) {
+            console.error(error);
+            return [];
         }
     };
 
@@ -137,13 +177,20 @@ function MoviesList() {
         searchMovies();
     };
 
-    const handleMovieSelect = (movie) => {
+    const handleMovieSelect = async (movie) => {
         setSelectedMovie(movie);
         setSearchText(movie.title);
+        getMovieDetails(movie.id);
+        // Film tür adlarını al
+        const genreNames = await fetchGenreNames(movie.genre_ids);
+
+        // Kategori adlarını ekrana yazdır
+        setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
     };
 
     const handleSearchBarPress = () => {
         setSelectedMovie(null);
+        setGenreNames([]);
     };
 
     const renderMovieItem = ({ item }) => (
@@ -153,7 +200,11 @@ function MoviesList() {
                     source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
                     style={{ width: 50, height: 75, margin: 10 }}
                 />
-                <Text>{item.title} </Text>
+                <View>
+                    <Text>{item.title} </Text>
+
+                </View>
+
             </View>
         </TouchableOpacity>
     );
@@ -162,42 +213,42 @@ function MoviesList() {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <ImageBackground source={require("../../images/3.jpeg")} style={styles.background}>
-                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                        <View style={styles.search} >
-                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
-                                onChangeText={setSearchMovie} />
-                        </View>
+                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                    <View style={styles.search} >
+                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                        <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
+                            onChangeText={setSearchMovie} />
                     </View>
-                    <View style={styles.seperator} />
-                    <ScrollView>
-                        <View style={styles.content}>
-                            {savedMovies
-                                .filter(
-                                    (movie) =>
-                                        movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
-                                )
-                                .map((movie, index) => (
-                                    <MovSerCard
-                                        key={index}
-                                        movieName={movie.movieName}
-                                        category={movie.selectedCategory}
-                                        platform={movie.selectedPlatform}
-                                        note={movie.movieNote}
-                                    />
-                                ))}
-                        </View>
-                    </ScrollView>
-                    <FAB
-                        style={styles.fab}
-                        icon="plus"
-                        //customSize={40}
-                        label="Ekle"
-                        color="white"
-                        onPress={handleFabPress}
-                    />
-                </ImageBackground>
+                </View>
+                <View style={styles.seperator} />
+                <ScrollView>
+                    <View style={styles.content}>
+                        {savedMovies
+                            .filter(
+                                (movie) =>
+                                    movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
+                            )
+                            .map((movie, index) => (
+                                <MovSerCard
+                                    key={index}
+                                    movieName={movie.movieName}
+                                    date={movie.movieDate}
+                                    vote={movie.movieVote}
+                                    category={movie.movieCategory}
+                                    poster={movie.moviePoster}
+                                    time={movie.movieTime}
+                                />
+                            ))}
+                    </View>
+                </ScrollView>
+                <FAB
+                    style={styles.fab}
+                    icon="plus"
+                    label="Ekle"
+                    color="white"
+                    onPress={handleFabPress}
+                />
+
             </KeyboardAvoidingView>
 
             <Modal
@@ -218,10 +269,35 @@ function MoviesList() {
                             onPress={() => { }}
                         >
                             <View>
-                                <Input label={"Film Adı*"} icon={"pricetags"} placeholder="Örn. Harry Potter ve Sırlar Odası" value={searchText} onChangeText={handleTextChange} onFocus={handleSearchBarPress} />
+                                <View style={styles.searchMovie} >
+                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
+                                    <TextInput
+                                        value={searchText}
+                                        onChangeText={handleTextChange}
+                                        placeholder="Film İsmi Ara..."
+                                        onFocus={handleSearchBarPress}
+                                        style={styles.searchText}
+                                    />
+                                </View>
 
                                 {selectedMovie ? (
-                                    <Text>Seçilen film: {selectedMovie.title}</Text>
+                                    <View>
+                                        <View style={styles.seperator2} />
+                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                        <View style={{ flexDirection: "row" }} >
+                                            <View style={{ flex: 1, marginRight: 10, }} >
+                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                            </View>
+                                            <View style={{ flex: 1 }}>
+                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                            </View>
+                                        </View>
+                                        <Input label={"Kategorileri"} text={categoryText} />
+
+                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
+                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 ) : (
                                     <FlatList
                                         data={searchResults}
@@ -229,22 +305,11 @@ function MoviesList() {
                                         renderItem={renderMovieItem}
                                     />
                                 )}
+
                             </View>
 
 
-                            <View style={{ flexDirection: "row" }} >
-                                <View style={{ flex: 1, marginRight: 10 }} >
-                                    <PickerCategory selectedValue={selectedCategory} onValueChange={(itemValue) => setSelectedCategory(itemValue)} />
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <PickerPlatform selectedValue={selectedPlatform} onValueChange={(itemValue) => setSelectedPlatform(itemValue)} />
-                                </View>
-                            </View>
-                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={movieNote} onChangeText={(movieNote) => setMovieNote(movieNote)} />
-                            <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                <Text style={styles.buttonText} >Filmi Kaydet</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.bottomText} >( * olan alanlar zorunludur )</Text>
+
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
