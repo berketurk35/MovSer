@@ -10,6 +10,7 @@ import MoviesList from "./pages/MoviesList/MoviesList";
 import SeriesList from "./pages/SeriesList/SeriesList";
 import ReqMoviesList from "./pages/ReqMoviesList/ReqMoviesList";
 import ReqSeriesList from "./pages/ReqSeriesList/ReqSeriesList";
+import MoviesDetail from "./pages/MoviesDetail/MoviesDetail";
 import MyLists from "./pages/MyLists/MyLists";
 import ActiveSeriesList from "./pages/ActiveSeriesList/ActiveSeriesList";
 
@@ -34,6 +35,8 @@ function Router() {
                 <Stack.Screen name="TopNavigator" component={TopNavigator} />
                 <Stack.Screen name="MoviesList" component={MoviesList} />
                 <Stack.Screen name="ReqMoviesList" component={ReqMoviesList} />
+                <Stack.Screen name="MoviesDetail" component={MoviesDetail} />
+                
 
                 <Stack.Screen name="TopNavigator2" component={TopNavigator2} />
                 <Stack.Screen name="SeriesList" component={SeriesList} />

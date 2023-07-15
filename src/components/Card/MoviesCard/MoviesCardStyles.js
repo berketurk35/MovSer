@@ -41,6 +41,7 @@ export default StyleSheet.create({
     poster: {
         flex: 0.8,
     },
+    
     image: {
         height: Dimensions.get("window").height / 5.5,
         margin: 6,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
@@ -16,7 +16,7 @@ const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-function MoviesList() {
+function MoviesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
@@ -64,6 +64,7 @@ function MoviesList() {
 
     const saveMovie = async () => {
 
+        console.log('selam: ', selectedMovie);
         // Verileri bir obje olarak hazırla
         const movieData = {
             movieName: selectedMovie.title,
@@ -126,7 +127,7 @@ function MoviesList() {
                     api_key: API_KEY,
                 },
             });
-
+            console.log( "ne geldi?:", response.data);
             const runtime = response.data.runtime;
             const formattedDuration = formatDuration(runtime);
             setDuration(formattedDuration);
@@ -178,6 +179,7 @@ function MoviesList() {
     };
 
     const handleMovieSelect = async (movie) => {
+        //console.log(movie);
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);
@@ -209,6 +211,10 @@ function MoviesList() {
         </TouchableOpacity>
     );
 
+    const goToMovieDetails = (movie) => {
+        navigation.navigate("MoviesDetail", { selectedMovie: movie });
+    };
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -237,6 +243,7 @@ function MoviesList() {
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
+                                    onPress={() => goToMovieDetails(movie)}
                                 />
                             ))}
                     </View>
