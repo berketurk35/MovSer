@@ -67,6 +67,7 @@ function MoviesList({ navigation }) {
         console.log('selam: ', selectedMovie);
         // Verileri bir obje olarak hazırla
         const movieData = {
+            movieId: selectedMovie.id,
             movieName: selectedMovie.title,
             movieDate: formatDate(selectedMovie.release_date),
             movieVote: selectedMovie.vote_average.toFixed(1),
@@ -86,7 +87,7 @@ function MoviesList({ navigation }) {
             }
 
             // Yeni filmi ekle
-            updatedMovies.push(movieData);
+            updatedMovies.unshift(movieData);
 
             // Filmleri AsyncStorage'e kaydet
             await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
@@ -127,7 +128,7 @@ function MoviesList({ navigation }) {
                     api_key: API_KEY,
                 },
             });
-            console.log( "ne geldi?:", response.data);
+            console.log("ne geldi?:", response.data);
             const runtime = response.data.runtime;
             const formattedDuration = formatDuration(runtime);
             setDuration(formattedDuration);
@@ -195,6 +196,37 @@ function MoviesList({ navigation }) {
         setGenreNames([]);
     };
 
+    const handleMovieDelete = (movie) => {
+        Alert.alert(
+            'Film Silme',
+            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Sil',
+                    style: 'destructive',
+                    onPress: () => deleteMovie(movie),
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+    const deleteMovie = async (movie) => {
+        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
+        setSavedMovies(updatedMovies);
+        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
+            .then(() => {
+                console.log('Film başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Film silinirken bir hata oluştu:', error);
+            });
+    };
+
     const renderMovieItem = ({ item }) => (
         <TouchableOpacity onPress={() => handleMovieSelect(item)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -236,14 +268,16 @@ function MoviesList({ navigation }) {
                             )
                             .map((movie, index) => (
                                 <MovSerCard
-                                    key={index}
+                                    key={movie.movieId}
                                     movieName={movie.movieName}
                                     date={movie.movieDate}
                                     vote={movie.movieVote}
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
-                                    onPress={() => goToMovieDetails(movie)}
+                                    onPressList={null}
+                                    onPressDelete={() => handleMovieDelete(movie)}
+                                    iconName={"library-add"}
                                 />
                             ))}
                     </View>

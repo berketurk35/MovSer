@@ -56,6 +56,10 @@ export default StyleSheet.create({
         alignSelf: "center",
         paddingLeft: 6,
     },
+    icon2: {
+        alignSelf: "center",
+        marginRight: 10,
+    },
     movieNameCard: {
         backgroundColor: "#1f1f1f",
         elevation: 50,
