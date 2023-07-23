@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ImageBackground, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
+import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
-import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
+import ReqMoviesCard from "../../components/Card/ReqMoviesCard/ReqMoviesCard";
 import Input from "../../components/Input/Input";
-import PickerCategory from "../../components/Picker/PickerCategory/PickerCategory";
-import PickerPlatform from "../../components/Picker/PickerPlatform/PickerPlatform";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import axios from "react-native-axios";
+
+const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
+
 function ReqMoviesList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-
-    const [reqMovieName, setReqMovieName] = useState('');
-    const [reqMovieNote, setReqMovieNote] = useState('-');
-    const [reqSelectedCategory, setReqSelectedCategory] = useState('');
-    const [reqSelectedPlatform, setReqSelectedPlatform] = useState('');
-
-    const [savedReqMovies, setSavedReqMovies] = useState([]);
-
-    const [searchReqMovie, setSearchReqMovie] = useState('');
+    const [savedMovies, setSavedMovies] = useState([]);
+    const [searchMovie, setSearchMovie] = useState('');
+    const [searchText, setSearchText] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [genreNames, setGenreNames] = useState([]);
+    const [categoryText, setCategoryText] = useState("");
+    const [duration, setDuration] = useState("");
+    const [instantDate, setInstantDate] = useState('');
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -32,57 +36,40 @@ function ReqMoviesList({ navigation }) {
 
     const fetchSavedMovies = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedReqMovies');
+            const movies = await AsyncStorage.getItem('reqSavedMovies');
             if (movies) {
-                setSavedReqMovies(JSON.parse(movies));
+                setSavedMovies(JSON.parse(movies));
             }
         } catch (error) {
             console.log('Hata: ', error);
         }
     };
 
-    const clearData = async () => {
-        try {
-            await AsyncStorage.clear();
-            console.log('Veriler başarıyla sıfırlandı.');
-        } catch (error) {
-            console.log('Veriler sıfırlanırken bir hata oluştu:', error);
-        }
-    };
-
     const handleFabPress = () => {
         setModalVisible(true);
-        clearData();
+        //clearData();
     };
 
     const closeModal = () => {
         setModalVisible(false);
-        setReqSelectedCategory('');
-        setReqSelectedPlatform('');
     };
 
     const saveMovie = async () => {
-        if (
-            reqMovieName === '' ||
-            reqSelectedCategory === '' ||
-            reqSelectedPlatform === ''
-        ) {
-            // Boş veri olduğunda kullanıcıya uyarı mesajı ver
-            Alert.alert("Uyarı", 'Lütfen Tüm Bilgileri Doldurun.');
-            return;
-        }
-
+        console.log('selam: ', selectedMovie);
         // Verileri bir obje olarak hazırla
-        const reqMovieData = {
-            reqMovieName: reqMovieName,
-            reqMovieNote: reqMovieNote,
-            reqSelectedCategory: reqSelectedCategory,
-            reqSelectedPlatform: reqSelectedPlatform
+        const movieData = {
+            movieId: selectedMovie.id,
+            movieName: selectedMovie.title,
+            movieDate: formatDate(selectedMovie.release_date),
+            movieVote: selectedMovie.vote_average.toFixed(1),
+            movieCategory: categoryText,
+            moviePoster: selectedMovie.poster_path,
+            movieTime: duration
         };
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedReqMovies');
+            const existingMovies = await AsyncStorage.getItem('reqSavedMovies');
             let updatedMovies = [];
 
             if (existingMovies) {
@@ -91,60 +78,244 @@ function ReqMoviesList({ navigation }) {
             }
 
             // Yeni filmi ekle
-            updatedMovies.push(reqMovieData);
+            updatedMovies.unshift(movieData);
+            instaDate();
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedReqMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies));
 
             // Kaydedilen filmleri güncelle
-            setSavedReqMovies(updatedMovies);
+            setSavedMovies(updatedMovies);
 
             // Modalı kapat
+            setSearchResults("");
+            setSelectedMovie("");
+            setSearchText("");
             closeModal();
         } catch (error) {
             console.log('Hata: ', error);
         }
     };
 
+    const searchMovies = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/search/movie`, {
+                params: {
+                    api_key: API_KEY,
+                    query: searchText,
+                },
+            });
+
+            const results = response.data.results.slice(0, 4);
+            setSearchResults(results);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const getMovieDetails = async (movieId) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+            const runtime = response.data.runtime;
+            const formattedDuration = formatDuration(runtime);
+            setDuration(formattedDuration);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const formatDuration = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+
+        return `${hours} h ${remainingMinutes} m`;
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString('tr-TR'); // tr-TR, Türkiye'nin bölgesel kodudur
+
+        return formattedDate;
+    };
+
+
+    const fetchGenreNames = async (genreIds) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
+                params: {
+                    api_key: API_KEY,
+                },
+            });
+
+            const genres = response.data.genres;
+            const names = genreIds.map((genreId) => {
+                const genre = genres.find((g) => g.id === genreId);
+                return genre ? genre.name : '';
+            });
+
+            return names;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    };
+
+    const handleTextChange = (text) => {
+        setSearchText(text);
+        searchMovies();
+    };
+
+    const handleMovieSelect = async (movie) => {
+        //console.log(movie);
+        setSelectedMovie(movie);
+        setSearchText(movie.title);
+        getMovieDetails(movie.id);
+        // Film tür adlarını al
+        const genreNames = await fetchGenreNames(movie.genre_ids);
+
+        // Kategori adlarını ekrana yazdır
+        setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
+    };
+
+    const handleSearchBarPress = () => {
+        setSelectedMovie(null);
+        setGenreNames([]);
+    };
+
+    const handleMovieDelete = (movie) => {
+        Alert.alert(
+            'Film Silme',
+            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Sil',
+                    style: 'destructive',
+                    onPress: () => deleteMovie(movie),
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+    const deleteMovie = async (movie) => {
+        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
+        setSavedMovies(updatedMovies);
+        AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies))
+            .then(() => {
+                console.log('Film başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Film silinirken bir hata oluştu:', error);
+            });
+    };
+
+    const renderMovieItem = ({ item }) => (
+        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
+                    style={{ width: 50, height: 75, margin: 10 }}
+                />
+                <View>
+                    <Text>{item.title} </Text>
+
+                </View>
+
+            </View>
+        </TouchableOpacity>
+    );
+
+    const instaDate = () => {
+        const date = new Date();
+        const dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+
+        setInstantDate(dateStr);
+    };
+
+    const onPressAdd = (movie) => {
+        Alert.alert(
+            'Film Taşıma',
+            `"${movie.movieName}" Filmini izlediğim filmler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Taşı ve Sil',
+                    style: 'destructive',
+                    onPress: () => moveDeleteMovie(movie),
+                },
+            ],
+            { cancelable: false }
+        );
+      };
+    
+      const moveDeleteMovie = async (movie) => {
+        navigation.navigate("MoviesList", { Movie: movie || null })
+        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
+        setSavedMovies(updatedMovies);
+        AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies))
+            .then(() => {
+                console.log('Film başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Film silinirken bir hata oluştu:', error);
+            });
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <ImageBackground source={require("../../images/2.jpeg")} style={styles.background} resizeMode="cover">
-                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                        <View style={styles.search} >
-                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchReqMovie}
-                                onChangeText={setSearchReqMovie} />
-                        </View>
+                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                    <View style={styles.search} >
+                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                        <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
+                            onChangeText={setSearchMovie} />
                     </View>
-                    <View style={styles.seperator} />
-                    <ScrollView>
-                        <View style={styles.content}>
-                            {savedReqMovies
-                                .filter(
-                                    (movie) =>
-                                        movie.reqMovieName.toLowerCase().includes(searchReqMovie.toLowerCase())
-                                )
-                                .map((movie, index) => (
-                                    <MovSerCard
-                                        key={index}
-                                        movieName={movie.reqMovieName}
-                                        category={movie.reqSelectedCategory}
-                                        platform={movie.reqSelectedPlatform}
-                                        note={movie.reqMovieNote}
-                                    />
-                                ))}
-                        </View>
-                    </ScrollView>
-                    <FAB
-                        style={styles.fab}
-                        icon="plus"
-                        //customSize={40}
-                        label="Ekle"
-                        color="white"
-                        onPress={handleFabPress}
-                    />
-                </ImageBackground>
+                </View>
+                <View style={styles.seperator} />
+                <ScrollView>
+                    <View style={styles.content}>
+                        {savedMovies
+                            .filter(
+                                (movie) =>
+                                    movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
+                            )
+                            .map((movie, index) => (
+                                <ReqMoviesCard
+                                    key={movie.movieId}
+                                    instaDate={instantDate}
+                                    movieName={movie.movieName}
+                                    date={movie.movieDate}
+                                    vote={movie.movieVote}
+                                    category={movie.movieCategory}
+                                    poster={movie.moviePoster}
+                                    time={movie.movieTime}
+                                    onPressAdd={() => onPressAdd(movie)}
+                                    onPressDelete={() => handleMovieDelete(movie)}
+                                    iconName={"add-circle"}
+                                />
+                            ))}
+                    </View>
+                </ScrollView>
+                <FAB
+                    style={styles.fab}
+                    icon="plus"
+                    label="Ekle"
+                    color="white"
+                    onPress={handleFabPress}
+                />
+
             </KeyboardAvoidingView>
 
             <Modal
@@ -164,20 +335,48 @@ function ReqMoviesList({ navigation }) {
                             style={styles.modalContent}
                             onPress={() => { }}
                         >
-                            <Input label={"Film Adı*"} icon={"pricetags"} placeholder={"Örn. Harry Potter ve Sırlar Odası"} value={reqMovieName} onChangeText={(reqMovieName) => setReqMovieName(reqMovieName)} />
-                            <View style={{ flexDirection: "row" }} >
-                                <View style={{ flex: 1, marginRight: 10 }} >
-                                    <PickerCategory selectedValue={reqSelectedCategory} onValueChange={(itemValue) => setReqSelectedCategory(itemValue)} />
+                            <View>
+                                <View style={styles.searchMovie} >
+                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
+                                    <TextInput
+                                        value={searchText}
+                                        onChangeText={handleTextChange}
+                                        placeholder="Film İsmi Ara..."
+                                        onFocus={handleSearchBarPress}
+                                        style={styles.searchText}
+                                    />
                                 </View>
-                                <View style={{ flex: 1 }}>
-                                    <PickerPlatform selectedValue={reqSelectedPlatform} onValueChange={(itemValue) => setReqSelectedPlatform(itemValue)} />
-                                </View>
+
+                                {selectedMovie ? (
+                                    <View>
+                                        <View style={styles.seperator2} />
+                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                        <View style={{ flexDirection: "row" }} >
+                                            <View style={{ flex: 1, marginRight: 10, }} >
+                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                            </View>
+                                            <View style={{ flex: 1 }}>
+                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                            </View>
+                                        </View>
+                                        <Input label={"Kategorileri"} text={categoryText} />
+
+                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
+                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <FlatList
+                                        data={searchResults}
+                                        keyExtractor={(item) => item.id.toString()}
+                                        renderItem={renderMovieItem}
+                                    />
+                                )}
+
                             </View>
-                            <Input label={"Not"} icon={"chatbox"} placeholder={"Film ile ilgili not ekleyebilirsiniz.."} value={reqMovieNote} onChangeText={(reqMovieNote) => setReqMovieNote(reqMovieNote)} />
-                            <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                <Text style={styles.buttonText} >Filmi Kaydet</Text>
-                            </TouchableOpacity>
-                            <Text style={styles.bottomText} >( * olan alanlar zorunludur )</Text>
+
+
+
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>

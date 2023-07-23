@@ -16,7 +16,7 @@ const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-function MoviesList({ navigation }) {
+function MoviesList({ navigation, route }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
@@ -27,11 +27,30 @@ function MoviesList({ navigation }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
-
+    
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
-    }, []);
+        console.log("X");
+        if (route.params && route.params.Movie) {
+            console.log("Y");
+            const { Movie } = route.params;
+            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
+            const updatedMovies = [Movie, ...savedMovies];
+            setSavedMovies(updatedMovies);
+            AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
+              .then(() => {
+                console.log("Film başarıyla eklendi.");
+                fetchSavedMovies();
+              })
+              .catch((error) => {
+                console.log("Film eklenirken bir hata oluştu:", error);
+              });
+      
+            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
+            navigation.setParams({ Movie: null });
+          }
+        }, [route.params]);
 
     const fetchSavedMovies = async () => {
         try {
@@ -63,8 +82,6 @@ function MoviesList({ navigation }) {
     };
 
     const saveMovie = async () => {
-
-        console.log('selam: ', selectedMovie);
         // Verileri bir obje olarak hazırla
         const movieData = {
             movieId: selectedMovie.id,
@@ -128,7 +145,6 @@ function MoviesList({ navigation }) {
                     api_key: API_KEY,
                 },
             });
-            console.log("ne geldi?:", response.data);
             const runtime = response.data.runtime;
             const formattedDuration = formatDuration(runtime);
             setDuration(formattedDuration);
@@ -242,11 +258,6 @@ function MoviesList({ navigation }) {
             </View>
         </TouchableOpacity>
     );
-
-    const goToMovieDetails = (movie) => {
-        navigation.navigate("MoviesDetail", { selectedMovie: movie });
-    };
-
 
     return (
         <SafeAreaView style={styles.container}>
