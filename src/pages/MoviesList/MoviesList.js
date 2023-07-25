@@ -31,9 +31,8 @@ function MoviesList({ navigation, route }) {
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
-        console.log("X");
+        //clearData();
         if (route.params && route.params.Movie) {
-            console.log("Y");
             const { Movie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
             const updatedMovies = [Movie, ...savedMovies];
@@ -74,7 +73,6 @@ function MoviesList({ navigation, route }) {
 
     const handleFabPress = () => {
         setModalVisible(true);
-        //clearData();
     };
 
     const closeModal = () => {

@@ -28,7 +28,7 @@ export default StyleSheet.create({
     },
     modalBackground: {
         flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
     },
     modalContainer: {
         flex: 1,

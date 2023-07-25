@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "black"
     },
     background: {
         flex: 1,
@@ -27,7 +28,7 @@ export default StyleSheet.create({
     },
     modalBackground: {
         flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
     },
     modalContainer: {
         flex: 1,
@@ -68,7 +69,7 @@ export default StyleSheet.create({
         backgroundColor: "white", //#FF95AB
         marginHorizontal: 30,
         marginVertical: 10,
-        height: 40,
+        height: 38,
         borderRadius: 16,
         borderWidth: 0.6,
         elevation: 24,
@@ -83,8 +84,22 @@ export default StyleSheet.create({
         height: 1,
         backgroundColor: "black",
     },
+    seperator2: {
+        height: 1,
+        backgroundColor: "black",
+        marginTop: 20,
+    },
     bottomText: {
         textAlign: "center",
         paddingTop: 6,
-    }
+    },
+    searchMovie: {
+        flexDirection: "row",
+        borderWidth: 0.5,
+        borderRadius: 22,
+    },
+    searchText: {
+        flex: 1,
+        fontSize: 14,
+    },
 });
