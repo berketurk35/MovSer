@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate, onPressList, onPressDelete, iconName, seasons, episodes }) {
+function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate, onPressList, onPressAdd, onPressDelete, iconName, iconName2, seasons, episodes }) {
 
     function formatSerieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -66,6 +66,9 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
                             </Text>
                         </View>
                         <TouchableOpacity onPress={onPressList} style={styles.icon2}>
+                            <Icon name={iconName2} color={"green"} size={18} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
                             <Icon name={iconName} color={"green"} size={18} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>

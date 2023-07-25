@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
-import ReqMoviesCard from "../../components/Card/ReqMoviesCard/ReqMoviesCard";
-import Input from "../../components/Input/Input";
+import ReqMoviesCard from "../../../components/Card/ReqMoviesCard/ReqMoviesCard";
+import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";

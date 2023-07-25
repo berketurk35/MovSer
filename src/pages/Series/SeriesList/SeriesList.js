@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./SeriesListStyles";
 
-import SeriesCard from "../../components/Card/SeriesCard/SeriesCard";
-import Input from "../../components/Input/Input";
+import SeriesCard from "../../../components/Card/SeriesCard/SeriesCard";
+import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -33,22 +33,22 @@ function SeriesList({ navigation, route }) {
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedSeries();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedSeries = [Movie, ...savedSeries];
+        if (route.params && route.params.Serie) {
+            const { Serie } = route.params;
+            // Eğer bir dizi aktarıldıysa, savedSeries dizisine ekleyin
+            const updatedSeries = [Serie, ...savedSeries];
             setSavedSeries(updatedSeries);
             AsyncStorage.setItem("savedSeries", JSON.stringify(updatedSeries))
               .then(() => {
-                console.log("Film başarıyla eklendi.");
+                console.log("Dizi başarıyla eklendi.");
                 fetchSavedSeries();
               })
               .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
+                console.log("Dizi eklenirken bir hata oluştu:", error);
               });
       
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
+            navigation.setParams({ Serie: null });
           }
         }, [route.params]);
 

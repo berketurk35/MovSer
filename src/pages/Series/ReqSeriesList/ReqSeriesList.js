@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
-import styles from "./ActiveSeriesListStyles";
+import styles from "./ReqSeriesListStyles";
 
-import SeriesCard from "../../components/Card/SeriesCard/SeriesCard";
-import Input from "../../components/Input/Input";
+import ReqSeriesCard from "../../../components/Card/ReqSeriesCard/ReqSeriesCard";
+import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,10 +16,10 @@ const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-function ActiveSeriesList({ navigation, route }) {
+function ReqSeriesList({ navigation, route }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [savedActiveSeries, setSavedActiveSeries] = useState([]);
+    const [savedReqSeries, setSavedReqSeries] = useState([]);
     const [searchSerie, setSearchSerie] = useState('');
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -29,6 +29,7 @@ function ActiveSeriesList({ navigation, route }) {
     const [finalDate, setFinalDate] = useState("");
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
+    const [instantDate, setInstantDate] = useState('');
     
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -36,9 +37,9 @@ function ActiveSeriesList({ navigation, route }) {
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedSeries = [Movie, ...savedActiveSeries];
-            setSavedActiveSeries(updatedSeries);
-            AsyncStorage.setItem("savedActiveSeries", JSON.stringify(updatedSeries))
+            const updatedSeries = [Movie, ...savedReqSeries];
+            setSavedReqSeries(updatedSeries);
+            AsyncStorage.setItem("savedReqSeries", JSON.stringify(updatedSeries))
               .then(() => {
                 console.log("Film başarıyla eklendi.");
                 fetchSavedSeries();
@@ -54,9 +55,9 @@ function ActiveSeriesList({ navigation, route }) {
 
     const fetchSavedSeries = async () => {
         try {
-            const series = await AsyncStorage.getItem('savedActiveSeries');
+            const series = await AsyncStorage.getItem('savedReqSeries');
             if (series) {
-                setSavedActiveSeries(JSON.parse(series));
+                setSavedReqSeries(JSON.parse(series));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -87,7 +88,7 @@ function ActiveSeriesList({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingSeries = await AsyncStorage.getItem('savedActiveSeries');
+            const existingSeries = await AsyncStorage.getItem('savedReqSeries');
             let updatedSeries = [];
 
             if (existingSeries) {
@@ -97,12 +98,13 @@ function ActiveSeriesList({ navigation, route }) {
 
             // Yeni filmi ekle
             updatedSeries.unshift(serieData);
+            instaDate();
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries));
+            await AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries));
 
             // Kaydedilen filmleri güncelle
-            setSavedActiveSeries(updatedSeries);
+            setSavedReqSeries(updatedSeries);
 
             // Modalı kapat
             setSearchResults("");
@@ -155,6 +157,13 @@ function ActiveSeriesList({ navigation, route }) {
         const formattedDate = date.toLocaleDateString('tr-TR'); // tr-TR, Türkiye'nin bölgesel kodudur
 
         return formattedDate;
+    };
+
+    const instaDate = () => {
+        const date = new Date();
+        const dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+
+        setInstantDate(dateStr);
     };
 
 
@@ -221,9 +230,9 @@ function ActiveSeriesList({ navigation, route }) {
     };
 
     const deleteSerie = async (serie) => {
-        const updatedSeries = savedActiveSeries.filter((m) => m.serieId !== serie.serieId);
-        setSavedActiveSeries(updatedSeries);
-        AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries))
+        const updatedSeries = savedReqSeries.filter((m) => m.serieId !== serie.serieId);
+        setSavedReqSeries(updatedSeries);
+        AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries))
             .then(() => {
                 console.log('Dizi başarıyla silindi.');
             })
@@ -247,6 +256,38 @@ function ActiveSeriesList({ navigation, route }) {
         </TouchableOpacity>
     );
 
+    const onPressAdd = (serie) => {
+        Alert.alert(
+            'Dizi Taşıma',
+            `"${serie.serieName}" Dizisini aktif izlediğim diziler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Taşı ve Sil',
+                    style: 'destructive',
+                    onPress: () => moveDeleteSerie(serie),
+                },
+            ],
+            { cancelable: false }
+        );
+      };
+    
+      const moveDeleteSerie = async (serie) => {
+        navigation.navigate("ActiveSeriesList", { Serie: serie || null })
+        const updatedSeries = savedReqSeries.filter((m) => m.serieId !== serie.serieId);
+        setSavedReqSeries(updatedSeries);
+        AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries))
+            .then(() => {
+                console.log('Dizi başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Dizi silinirken bir hata oluştu:', error);
+            });
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -260,14 +301,15 @@ function ActiveSeriesList({ navigation, route }) {
                 <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
-                        {savedActiveSeries
+                        {savedReqSeries
                             .filter(
                                 (serie) =>
                                     serie.serieName.toLowerCase().includes(searchSerie.toLowerCase())
                             )
                             .map((serie, index) => (
-                                <SeriesCard
+                                <ReqSeriesCard
                                     key={serie.serieId}
+                                    instaDate={instantDate}
                                     serieName={serie.serieName}
                                     releaseDate={serie.serieReleaseDate}
                                     finalDate={serie.serieFinaldate}
@@ -276,9 +318,9 @@ function ActiveSeriesList({ navigation, route }) {
                                     poster={serie.seriePoster}
                                     seasons={serie.serieSeasons}
                                     episodes={serie.serieEpisodes}
-                                    onPressList={null}
+                                    onPressList={() => onPressAdd(serie)}
                                     onPressDelete={() => handleSerieDelete(serie)}
-                                    iconName={"library-add"}
+                                    iconName={"add-circle"}
                                 />
                             ))}
                     </View>
@@ -368,5 +410,5 @@ function ActiveSeriesList({ navigation, route }) {
     )
 };
 
-export default ActiveSeriesList;
+export default ReqSeriesList;
 

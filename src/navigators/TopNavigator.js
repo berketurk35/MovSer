@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import MoviesList from '../pages/MoviesList/MoviesList';
-import ReqMoviesList from '../pages/ReqMoviesList/ReqMoviesList';
+import MoviesList from '../pages/Movies/MoviesList/MoviesList';
+import ReqMoviesList from '../pages/Movies/ReqMoviesList/ReqMoviesList';
 
 function TopNavigator() {
 

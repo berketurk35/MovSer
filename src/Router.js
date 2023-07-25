@@ -6,13 +6,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./navigators/TabNavigator";
 import TopNavigator from "./navigators/TopNavigator";
 import TopNavigator2 from "./navigators/TopNavigator2";
-import MoviesList from "./pages/MoviesList/MoviesList";
-import SeriesList from "./pages/SeriesList/SeriesList";
-import ReqMoviesList from "./pages/ReqMoviesList/ReqMoviesList";
-import ReqSeriesList from "./pages/ReqSeriesList/ReqSeriesList";
+import MoviesList from "./pages/Movies/MoviesList/MoviesList";
+import SeriesList from "./pages/Series/SeriesList/SeriesList";
+import ReqMoviesList from "./pages/Movies/ReqMoviesList/ReqMoviesList";
+import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
 import MoviesDetail from "./pages/MoviesDetail/MoviesDetail";
 import MyLists from "./pages/MyLists/MyLists";
-import ActiveSeriesList from "./pages/ActiveSeriesList/ActiveSeriesList";
+import ActiveSeriesList from "./pages/Series/ActiveSeriesList/ActiveSeriesList";
 
 const Stack = createNativeStackNavigator();
 

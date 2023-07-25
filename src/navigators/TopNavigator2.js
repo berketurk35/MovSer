@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import SeriesList from '../pages/SeriesList/SeriesList';
-import ReqSeriesList from '../pages/ReqSeriesList/ReqSeriesList';
-import ActiveSeriesList from '../pages/ActiveSeriesList/ActiveSeriesList';
+import SeriesList from '../pages/Series/SeriesList/SeriesList';
+import ReqSeriesList from '../pages/Series/ReqSeriesList/ReqSeriesList';
+import ActiveSeriesList from '../pages/Series/ActiveSeriesList/ActiveSeriesList';
 
 function TopNavigator2() {
 

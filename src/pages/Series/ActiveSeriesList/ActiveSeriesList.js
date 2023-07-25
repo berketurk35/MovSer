@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
-import styles from "./MovieListStyles";
+import styles from "./ActiveSeriesListStyles";
 
-import MovSerCard from "../../components/Card/MoviesCard/MoviesCard";
-import Input from "../../components/Input/Input";
+import SeriesCard from "../../../components/Card/SeriesCard/SeriesCard";
+import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,58 +16,50 @@ const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-function MoviesList({ navigation, route }) {
+function ActiveSeriesList({ navigation, route }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [savedMovies, setSavedMovies] = useState([]);
-    const [searchMovie, setSearchMovie] = useState('');
+    const [savedActiveSeries, setSavedActiveSeries] = useState([]);
+    const [searchSerie, setSearchSerie] = useState('');
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [selectedSerie, setSelectedSerie] = useState(null);
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
-    const [duration, setDuration] = useState("");
+    const [finalDate, setFinalDate] = useState("");
+    const [seasons, setSeasons] = useState("");
+    const [episodes, setEpisodes] = useState("");
     
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedMovies();
-        //clearData();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
+        fetchSavedSeries();
+        if (route.params && route.params.Serie) {
+            const { Serie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedMovies = [Movie, ...savedMovies];
-            setSavedMovies(updatedMovies);
-            AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
+            const updatedSeries = [Serie, ...savedActiveSeries];
+            setSavedActiveSeries(updatedSeries);
+            AsyncStorage.setItem("savedActiveSeries", JSON.stringify(updatedSeries))
               .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
+                console.log("Dizi başarıyla eklendi.");
+                fetchSavedSeries();
               })
               .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
+                console.log("Dizi eklenirken bir hata oluştu:", error);
               });
       
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
+            navigation.setParams({ Serie: null });
           }
         }, [route.params]);
 
-    const fetchSavedMovies = async () => {
+    const fetchSavedSeries = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedMovies');
-            if (movies) {
-                setSavedMovies(JSON.parse(movies));
+            const series = await AsyncStorage.getItem('savedActiveSeries');
+            if (series) {
+                setSavedActiveSeries(JSON.parse(series));
             }
         } catch (error) {
             console.log('Hata: ', error);
-        }
-    };
-
-    const clearData = async () => {
-        try {
-            await AsyncStorage.clear();
-            console.log('Veriler başarıyla sıfırlandı.');
-        } catch (error) {
-            console.log('Veriler sıfırlanırken bir hata oluştu:', error);
         }
     };
 
@@ -79,40 +71,42 @@ function MoviesList({ navigation, route }) {
         setModalVisible(false);
     };
 
-    const saveMovie = async () => {
+    const saveSerie = async () => {
         // Verileri bir obje olarak hazırla
-        const movieData = {
-            movieId: selectedMovie.id,
-            movieName: selectedMovie.title,
-            movieDate: formatDate(selectedMovie.release_date),
-            movieVote: selectedMovie.vote_average.toFixed(1),
-            movieCategory: categoryText,
-            moviePoster: selectedMovie.poster_path,
-            movieTime: duration
+        const serieData = {
+            serieId: selectedSerie.id,
+            serieName: selectedSerie.name,
+            serieReleaseDate: formatDate(selectedSerie.first_air_date),
+            serieFinaldate: finalDate,
+            serieVote: selectedSerie.vote_average.toFixed(1),
+            serieCategory: categoryText,
+            seriePoster: selectedSerie.poster_path,
+            serieSeasons: seasons,
+            serieEpisodes: episodes
         };
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedMovies');
-            let updatedMovies = [];
+            const existingSeries = await AsyncStorage.getItem('savedActiveSeries');
+            let updatedSeries = [];
 
-            if (existingMovies) {
+            if (existingSeries) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
-                updatedMovies = JSON.parse(existingMovies);
+                updatedSeries = JSON.parse(existingSeries);
             }
 
             // Yeni filmi ekle
-            updatedMovies.unshift(movieData);
+            updatedSeries.unshift(serieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries));
 
             // Kaydedilen filmleri güncelle
-            setSavedMovies(updatedMovies);
+            setSavedActiveSeries(updatedSeries);
 
             // Modalı kapat
             setSearchResults("");
-            setSelectedMovie("");
+            setSelectedSerie("");
             setSearchText("");
             closeModal();
         } catch (error) {
@@ -120,9 +114,9 @@ function MoviesList({ navigation, route }) {
         }
     };
 
-    const searchMovies = async () => {
+    const searchSeries = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/search/movie`, {
+            const response = await axios.get(`${BASE_URL}/search/tv`, {
                 params: {
                     api_key: API_KEY,
                     query: searchText,
@@ -136,27 +130,24 @@ function MoviesList({ navigation, route }) {
         }
     };
 
-    const getMovieDetails = async (movieId) => {
+    const getSerieDetails = async (serieId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+            const response = await axios.get(`${BASE_URL}/tv/${serieId}`, {
                 params: {
                     api_key: API_KEY,
                 },
             });
-            const runtime = response.data.runtime;
-            const formattedDuration = formatDuration(runtime);
-            setDuration(formattedDuration);
+            const lastDate = response.data.last_air_date;
+            const formattedDuration = formatDate(lastDate);
+            setFinalDate(formattedDuration);
+            setSeasons(response.data.number_of_seasons);
+            setEpisodes(response.data.number_of_episodes);
+            //const test = JSON.stringify(response, null, 2);
+            //console.log("id den ne geliyor?", test);
 
         } catch (error) {
             console.error(error);
         }
-    };
-
-    const formatDuration = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-
-        return `${hours} h ${remainingMinutes} m`;
     };
 
     const formatDate = (dateString) => {
@@ -169,7 +160,7 @@ function MoviesList({ navigation, route }) {
 
     const fetchGenreNames = async (genreIds) => {
         try {
-            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
+            const response = await axios.get(`${BASE_URL}/genre/tv/list`, {
                 params: {
                     api_key: API_KEY,
                 },
@@ -190,30 +181,30 @@ function MoviesList({ navigation, route }) {
 
     const handleTextChange = (text) => {
         setSearchText(text);
-        searchMovies();
+        searchSeries();
     };
 
-    const handleMovieSelect = async (movie) => {
-        //console.log(movie);
-        setSelectedMovie(movie);
-        setSearchText(movie.title);
-        getMovieDetails(movie.id);
+    const handleSerieSelect = async (serie) => {
+        //console.log("Ne geliyor?",serie)
+        setSelectedSerie(serie);
+        setSearchText(serie.name);
+        getSerieDetails(serie.id);
         // Film tür adlarını al
-        const genreNames = await fetchGenreNames(movie.genre_ids);
+        const genreNames = await fetchGenreNames(serie.genre_ids);
 
         // Kategori adlarını ekrana yazdır
         setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
     };
 
     const handleSearchBarPress = () => {
-        setSelectedMovie(null);
+        setSelectedSerie(null);
         setGenreNames([]);
     };
 
-    const handleMovieDelete = (movie) => {
+    const handleSerieDelete = (serie) => {
         Alert.alert(
-            'Film Silme',
-            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            'Dizi Silme',
+            `"${serie.serieName}" Dizisini silmek istediğinize emin misiniz?`,
             [
                 {
                     text: 'Vazgeç',
@@ -222,40 +213,71 @@ function MoviesList({ navigation, route }) {
                 {
                     text: 'Sil',
                     style: 'destructive',
-                    onPress: () => deleteMovie(movie),
+                    onPress: () => deleteSerie(serie),
                 },
             ],
             { cancelable: false }
         );
     };
 
-    const deleteMovie = async (movie) => {
-        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
-        setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
+    const deleteSerie = async (serie) => {
+        const updatedSeries = savedActiveSeries.filter((m) => m.serieId !== serie.serieId);
+        setSavedActiveSeries(updatedSeries);
+        AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries))
             .then(() => {
-                console.log('Film başarıyla silindi.');
+                console.log('Dizi başarıyla silindi.');
             })
             .catch((error) => {
-                console.log('Film silinirken bir hata oluştu:', error);
+                console.log('Dizi silinirken bir hata oluştu:', error);
             });
     };
 
-    const renderMovieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
+    const renderSerieItem = ({ item }) => (
+        <TouchableOpacity onPress={() => handleSerieSelect(item)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                     source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
                     style={{ width: 50, height: 75, margin: 10 }}
                 />
                 <View>
-                    <Text>{item.title} </Text>
-
+                    <Text>{item.name} </Text>
                 </View>
 
             </View>
         </TouchableOpacity>
     );
+
+    const onPressAdd = (serie) => {
+        Alert.alert(
+            'Dizi Taşıma',
+            `"${serie.serieName}" Dizisini izlediğim diziler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Taşı ve Sil',
+                    style: 'destructive',
+                    onPress: () => moveDeleteSerie(serie),
+                },
+            ],
+            { cancelable: false }
+        );
+      };
+    
+      const moveDeleteSerie = async (serie) => {
+        navigation.navigate("SeriesList", { Serie: serie || null })
+        const updatedSeries = savedActiveSeries.filter((m) => m.serieId !== serie.serieId);
+        setSavedActiveSeries(updatedSeries);
+        AsyncStorage.setItem('savedActiveSeries', JSON.stringify(updatedSeries))
+            .then(() => {
+                console.log('Dizi başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Dizi silinirken bir hata oluştu:', error);
+            });
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -263,30 +285,34 @@ function MoviesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
+                        <TextInput placeholder="Dizi İsmi Sorgula" placeholderTextColor={"black"} value={searchSerie}
+                            onChangeText={setSearchSerie} />
                     </View>
                 </View>
                 <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
-                        {savedMovies
+                        {savedActiveSeries
                             .filter(
-                                (movie) =>
-                                    movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
+                                (serie) =>
+                                    serie.serieName.toLowerCase().includes(searchSerie.toLowerCase())
                             )
-                            .map((movie, index) => (
-                                <MovSerCard
-                                    key={movie.movieId}
-                                    movieName={movie.movieName}
-                                    date={movie.movieDate}
-                                    vote={movie.movieVote}
-                                    category={movie.movieCategory}
-                                    poster={movie.moviePoster}
-                                    time={movie.movieTime}
+                            .map((serie, index) => (
+                                <SeriesCard
+                                    key={serie.serieId}
+                                    serieName={serie.serieName}
+                                    releaseDate={serie.serieReleaseDate}
+                                    finalDate={serie.serieFinaldate}
+                                    vote={serie.serieVote}
+                                    category={serie.serieCategory}
+                                    poster={serie.seriePoster}
+                                    seasons={serie.serieSeasons}
+                                    episodes={serie.serieEpisodes}
                                     onPressList={null}
-                                    onPressDelete={() => handleMovieDelete(movie)}
-                                    iconName={"library-add"}
+                                    onPressAdd={() => onPressAdd(serie)}
+                                    onPressDelete={() => handleSerieDelete(serie)}
+                                    iconName={"add-circle"}
+                                    iconName2={"library-add"}
                                 />
                             ))}
                     </View>
@@ -324,42 +350,47 @@ function MoviesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Film İsmi Ara..."
+                                        placeholder="Dizi İsmi Ara..."
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
                                 </View>
 
-                                {selectedMovie ? (
+                                {selectedSerie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                        <Input label={"Seçilen Dizi"} text={selectedSerie.name} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedSerie.first_air_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                                <Input label={"Puanı"} text={selectedSerie.vote_average.toFixed(1)} />
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: "row" }} >
+                                            <View style={{ flex: 1, marginRight: 10, }} >
+                                                <Input label={"Sezon Sayısı"} text={seasons} />
+                                            </View>
+                                            <View style={{ flex: 1 }}>
+                                                <Input label={"Bölüm Sayısı"} text={episodes} />
                                             </View>
                                         </View>
                                         <Input label={"Kategorileri"} text={categoryText} />
 
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                        <TouchableOpacity style={styles.button} onPress={saveSerie} >
+                                            <Text style={styles.buttonText} >Diziyi Kaydet</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (
                                     <FlatList
                                         data={searchResults}
                                         keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
+                                        renderItem={renderSerieItem}
                                     />
                                 )}
 
                             </View>
-
-
-
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -371,5 +402,5 @@ function MoviesList({ navigation, route }) {
     )
 };
 
-export default MoviesList;
+export default ActiveSeriesList;
 
