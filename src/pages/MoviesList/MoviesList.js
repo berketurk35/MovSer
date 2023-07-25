@@ -263,7 +263,7 @@ function MoviesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Film İsmi Sorgula" placeholderTextColor={"black"} value={searchMovie}
+                        <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
                     </View>
                 </View>

@@ -15,7 +15,7 @@ function TopNavigator2() {
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           textTransform: "capitalize",
-          fontSize: 12,
+          fontSize: 13,
           fontWeight: "bold",
         },
         tabBarIndicatorStyle: {
@@ -27,19 +27,19 @@ function TopNavigator2() {
       <Tab.Screen name="SeriesList" component={SeriesList}
         options={
           {
-            title: "İzlediğim Dizilerim",
+            title: "Watched Series",
           }
         } />
         <Tab.Screen name="ActiveSeriesList" component={ActiveSeriesList}
         options={
           {
-            title: "Aktif Dizilerim",
+            title: "Watching Now",
           }
         } />
       <Tab.Screen name="ReqSeriesList" component={ReqSeriesList}
         options={
           {
-            title: "İstek Dizilerim",
+            title: "Series to Watch",
           }
         } />
     </Tab.Navigator>

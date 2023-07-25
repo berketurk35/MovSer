@@ -24,13 +24,13 @@ function TopNavigator() {
       <Tab.Screen name="MoviesList" component={MoviesList}
         options={
           {
-            title: "İzlediğim Filmlerim",
+            title: "Watched Films",
           }
         } />
       <Tab.Screen name="ReqMoviesList" component={ReqMoviesList}
         options={
           {
-            title: "İstek Filmlerim",
+            title: "Movies to Watch",
           }
         } />
     </Tab.Navigator>

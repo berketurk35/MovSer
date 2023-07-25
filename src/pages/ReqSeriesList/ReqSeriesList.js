@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./ReqSeriesListStyles";
 
-import SeriesCard from "../../components/Card/SeriesCard/SeriesCard";
+import ReqSeriesCard from "../../components/Card/ReqSeriesCard/ReqSeriesCard";
 import Input from "../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
@@ -29,6 +29,7 @@ function ReqSeriesList({ navigation, route }) {
     const [finalDate, setFinalDate] = useState("");
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
+    const [instantDate, setInstantDate] = useState('');
     
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
@@ -97,6 +98,7 @@ function ReqSeriesList({ navigation, route }) {
 
             // Yeni filmi ekle
             updatedSeries.unshift(serieData);
+            instaDate();
 
             // Filmleri AsyncStorage'e kaydet
             await AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries));
@@ -155,6 +157,13 @@ function ReqSeriesList({ navigation, route }) {
         const formattedDate = date.toLocaleDateString('tr-TR'); // tr-TR, Türkiye'nin bölgesel kodudur
 
         return formattedDate;
+    };
+
+    const instaDate = () => {
+        const date = new Date();
+        const dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+
+        setInstantDate(dateStr);
     };
 
 
@@ -266,8 +275,9 @@ function ReqSeriesList({ navigation, route }) {
                                     serie.serieName.toLowerCase().includes(searchSerie.toLowerCase())
                             )
                             .map((serie, index) => (
-                                <SeriesCard
+                                <ReqSeriesCard
                                     key={serie.serieId}
+                                    instaDate={instantDate}
                                     serieName={serie.serieName}
                                     releaseDate={serie.serieReleaseDate}
                                     finalDate={serie.serieFinaldate}

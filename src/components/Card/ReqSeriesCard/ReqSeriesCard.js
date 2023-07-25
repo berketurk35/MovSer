@@ -1,25 +1,25 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import styles from "./MoviesCardStyles";
+import styles from "./ReqSeriesCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function MoviesCard({ movieName, date, vote, category, poster, time, onPressList, onPressDelete, iconName }) {
+function ReqSeriesCard({ serieName, releaseDate, instaDate, vote, category, poster, finalDate, onPressList, onPressDelete, iconName, seasons, episodes }) {
 
-    function formatMovieName(name, maxLength) {
+    function formatSerieName(name, maxLength) {
         if (name.length <= maxLength) {
-          return name;
+            return name;
         } else {
-          return name.substring(0, maxLength - 3) + '...';
+            return name.substring(0, maxLength - 3) + '...';
         }
-      }
-      
-      const sName = movieName;
-      const maxLengthToShow = 34;
-      
-      const formattedMovieName = formatMovieName(sName, maxLengthToShow); 
+    }
+
+    const sName = serieName;
+    const maxLengthToShow = 34;
+
+    const formattedSerieName = formatSerieName(sName, maxLengthToShow);
 
     return (
         <View style={styles.card} >
@@ -32,9 +32,10 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressList
                     />
                 </View>
                 <View style={styles.rightCard}>
+                    <Text style={styles.instaDate} >{instaDate}</Text>
                     <View style={styles.movieNameCard} >
                         <Text style={styles.textMovie} >
-                            {formattedMovieName}
+                            {formattedSerieName}
                         </Text>
                     </View>
                     <Text style={styles.textCategory}>
@@ -43,10 +44,19 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressList
                     <View style={styles.topCard}>
                         <Icon name={"date-range"} color={"yellow"} size={16} style={styles.icon} />
                         <Text style={styles.textDate}>
-                            {date}
+                            {releaseDate}
                         </Text>
                         <Text style={styles.textDate}>
-                            |    {time}
+                            |    {finalDate}
+                        </Text>
+                    </View>
+                    <View style={styles.topCard}>
+                        <Icon name={"analytics"} color={"pink"} size={16} style={styles.icon} />
+                        <Text style={styles.textSeasons}>
+                            {seasons} Season
+                        </Text>
+                        <Text style={styles.textSeasons}>
+                            |    {episodes} Episode
                         </Text>
                     </View>
                     <View style={styles.topCard} >
@@ -74,4 +84,4 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressList
     )
 };
 
-export default MoviesCard;
+export default ReqSeriesCard;
