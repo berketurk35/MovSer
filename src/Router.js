@@ -6,13 +6,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./navigators/TabNavigator";
 import TopNavigator from "./navigators/TopNavigator";
 import TopNavigator2 from "./navigators/TopNavigator2";
+import TopNavigator3 from "./navigators/TopNavigator3";
+
 import MoviesList from "./pages/Movies/MoviesList/MoviesList";
-import SeriesList from "./pages/Series/SeriesList/SeriesList";
 import ReqMoviesList from "./pages/Movies/ReqMoviesList/ReqMoviesList";
-import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
-import MoviesDetail from "./pages/MoviesDetail/MoviesDetail";
-import MyLists from "./pages/MyLists/MyLists";
+
+import SeriesList from "./pages/Series/SeriesList/SeriesList";
 import ActiveSeriesList from "./pages/Series/ActiveSeriesList/ActiveSeriesList";
+import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
+
+import MyMoviesList from "./pages/MyLists/MyMoviesList/MyMovieList";
+import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -35,15 +40,16 @@ function Router() {
                 <Stack.Screen name="TopNavigator" component={TopNavigator} />
                 <Stack.Screen name="MoviesList" component={MoviesList} />
                 <Stack.Screen name="ReqMoviesList" component={ReqMoviesList} />
-                <Stack.Screen name="MoviesDetail" component={MoviesDetail} />
-                
 
                 <Stack.Screen name="TopNavigator2" component={TopNavigator2} />
                 <Stack.Screen name="SeriesList" component={SeriesList} />
                 <Stack.Screen name="ReqSeriesList" component={ReqSeriesList} />
                 <Stack.Screen name="ActiveSeriesList" component={ActiveSeriesList} />
 
-                <Stack.Screen name="MyLists" component={MyLists} />
+                <Stack.Screen name="TopNavigator3" component={TopNavigator3} />
+                <Stack.Screen name="MyMoviesList" component={MyMoviesList} />
+                <Stack.Screen name="MySeriesList" component={MySeriesList} />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
