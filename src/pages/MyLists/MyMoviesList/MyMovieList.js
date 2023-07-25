@@ -27,7 +27,9 @@ function MyLists({ navigation, route }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
-    
+    const [cardName, setCardName] = useState("");
+
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
@@ -38,18 +40,18 @@ function MyLists({ navigation, route }) {
             const updatedMovies = [Movie, ...savedMovies];
             setSavedMovies(updatedMovies);
             AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
+                .then(() => {
+                    console.log("Film başarıyla eklendi.");
+                    fetchSavedMovies();
+                })
+                .catch((error) => {
+                    console.log("Film eklenirken bir hata oluştu:", error);
+                });
+
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
-          }
-        }, [route.params]);
+        }
+    }, [route.params]);
 
     const fetchSavedMovies = async () => {
         try {
@@ -120,22 +122,6 @@ function MyLists({ navigation, route }) {
         }
     };
 
-    const searchMovies = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/search/movie`, {
-                params: {
-                    api_key: API_KEY,
-                    query: searchText,
-                },
-            });
-
-            const results = response.data.results.slice(0, 4);
-            setSearchResults(results);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const getMovieDetails = async (movieId) => {
         try {
             const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
@@ -188,11 +174,6 @@ function MyLists({ navigation, route }) {
         }
     };
 
-    const handleTextChange = (text) => {
-        setSearchText(text);
-        searchMovies();
-    };
-
     const handleMovieSelect = async (movie) => {
         //console.log(movie);
         setSelectedMovie(movie);
@@ -203,11 +184,6 @@ function MyLists({ navigation, route }) {
 
         // Kategori adlarını ekrana yazdır
         setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
-    };
-
-    const handleSearchBarPress = () => {
-        setSelectedMovie(null);
-        setGenreNames([]);
     };
 
     const handleMovieDelete = (movie) => {
@@ -240,22 +216,6 @@ function MyLists({ navigation, route }) {
                 console.log('Film silinirken bir hata oluştu:', error);
             });
     };
-
-    const renderMovieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.title} </Text>
-
-                </View>
-
-            </View>
-        </TouchableOpacity>
-    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -294,7 +254,7 @@ function MyLists({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Ekle"
+                    label="Kart Ekle"
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -319,47 +279,33 @@ function MyLists({ navigation, route }) {
                             onPress={() => { }}
                         >
                             <View>
+                                <Text style={styles.cardName} > Card Name </Text>
                                 <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
                                     <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder="Film İsmi Ara..."
-                                        onFocus={handleSearchBarPress}
+                                        value={cardName}
+                                        onChangeText={setCardName}
+                                        placeholder="Kart ismini yazınız.."
                                         style={styles.searchText}
                                     />
                                 </View>
-
-                                {selectedMovie ? (
-                                    <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
-                                            </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
-                                            </View>
+                                <View>
+                                    <View style={styles.seperator2} />
+                                    <Input label={"Seçilen Film"} text={"slm"} />
+                                    <View style={{ flexDirection: "row" }} >
+                                        <View style={{ flex: 1, marginRight: 10, }} >
+                                            <Input label={"Çıkış Tarihi"} text={"slm"} />
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
-
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
-                                        </TouchableOpacity>
+                                        <View style={{ flex: 1 }}>
+                                            <Input label={"Puanı"} text={"slm"} />
+                                        </View>
                                     </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
-                                    />
-                                )}
+                                    <Input label={"Kategorileri"} text={"slm"} />
 
+                                    <TouchableOpacity style={styles.button} onPress={saveMovie} >
+                                        <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-
-
-
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>

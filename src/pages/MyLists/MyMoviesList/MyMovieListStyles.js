@@ -87,19 +87,26 @@ export default StyleSheet.create({
     seperator2: {
         height: 1,
         backgroundColor: "black",
-        marginTop: 20,
+        marginTop: 10,
     },
     bottomText: {
         textAlign: "center",
         paddingTop: 6,
     },
     searchMovie: {
-        flexDirection: "row",
+        height: 40,
         borderWidth: 0.5,
-        borderRadius: 22,
+        borderRadius: 8,
     },
     searchText: {
         flex: 1,
+        paddingLeft: 14,
         fontSize: 14,
     },
+    cardName: {
+        textAlign: 'center',
+        fontSize: 16,
+        paddingBottom: 8,
+        fontWeight: 'bold',
+    }
 });
