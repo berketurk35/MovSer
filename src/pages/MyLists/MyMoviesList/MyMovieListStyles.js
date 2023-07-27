@@ -108,5 +108,12 @@ export default StyleSheet.create({
         fontSize: 16,
         paddingBottom: 8,
         fontWeight: 'bold',
+    },
+    imageBack: {
+        paddingTop: 10,
+        textAlign: 'center',
+        fontSize: 16,
+        paddingBottom: 2,
+        fontWeight: 'bold',
     }
 });

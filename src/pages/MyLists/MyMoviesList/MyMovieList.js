@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, T
 import styles from "./MyMovieListStyles";
 
 import ListCard from "../../../components/Card/ListCard/ListCard";
+import ImageSwiper from "../../../components/ImageSwiper/ImageSwiper";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -166,7 +167,10 @@ function MyLists() {
                                 </View>
                                 <View>
                                     <View style={styles.seperator2} />
-                                    <Text style={styles.cardName} > Card Background Image </Text>
+                                    <Text style={styles.imageBack} > Card Background Images </Text>
+        
+                                    <ImageSwiper/>
+
                                     <TouchableOpacity style={styles.button} onPress={saveList} >
                                         <Text style={styles.buttonText} >Kartı Kaydet</Text>
                                     </TouchableOpacity>
