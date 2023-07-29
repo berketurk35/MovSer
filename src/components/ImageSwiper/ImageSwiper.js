@@ -4,7 +4,7 @@ import styles from "./ImageSwiperStyles";
 
 import Swiper from "react-native-swiper";
 
-function ImageSwiper({ value, onChangeText, onPressButton} ) {
+function ImageSwiper({ value, onChangeText, onPressButton}) {
 
   const [platformVisible, setPlatformVisible] = useState(false);
   const [picturesVisible, setPicturesVisible] = useState(false);
@@ -12,6 +12,7 @@ function ImageSwiper({ value, onChangeText, onPressButton} ) {
   const [swiperVisible2, setSwiperVisible2] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+
 
   function openPlatform() {
     setPlatformVisible(!platformVisible);

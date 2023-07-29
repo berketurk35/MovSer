@@ -5,7 +5,7 @@ import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-function ListCard({ cardName, onPressDelete, imageName }) {
+function ListCard({ cardName, onPressDelete, imageName}) {
 
     const Images= {
         netflix: require("../../../images/netflix.png"),
@@ -38,7 +38,7 @@ function ListCard({ cardName, onPressDelete, imageName }) {
                     <Icon name={"cancel"} color={"red"} size={18} />
                 </TouchableOpacity>
             </View>
-            <Image source={require("../../../images/netflix.png")} style={styles.image} />
+            <Image source={Images[imageName]} style={styles.image} />
         </View>
     )
 };

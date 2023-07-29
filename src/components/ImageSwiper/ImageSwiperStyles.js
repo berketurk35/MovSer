@@ -3,7 +3,6 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         height: 150,
-
     },
     slide: {
         flex: 1,
