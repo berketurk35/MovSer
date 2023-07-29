@@ -10,13 +10,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function MyLists() {
+function MyMovieList() {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovieList, setSavedMovieList] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
     const [cardName, setCardName] = useState("");
-
 
     useEffect(() => {
         fetchSavedMovies();
@@ -39,12 +38,14 @@ function MyLists() {
 
     const closeModal = () => {
         setModalVisible(false);
+        setCardName("");
     };
 
     const saveList = async () => {
         // Verileri bir obje olarak hazırla
         const listData = {
             listName: cardName,
+            //cardImage: defaultSelectedImage,
         };
 
         try {
@@ -156,24 +157,8 @@ function MyLists() {
                             onPress={() => { }}
                         >
                             <View>
-                                <Text style={styles.cardName} > Card Name </Text>
-                                <View style={styles.searchMovie} >
-                                    <TextInput
-                                        value={cardName}
-                                        onChangeText={setCardName}
-                                        placeholder="Kart ismini yazınız.."
-                                        style={styles.searchText}
-                                    />
-                                </View>
                                 <View>
-                                    <View style={styles.seperator2} />
-                                    <Text style={styles.imageBack} > Card Background Images </Text>
-        
-                                    <ImageSwiper/>
-
-                                    <TouchableOpacity style={styles.button} onPress={saveList} >
-                                        <Text style={styles.buttonText} >Kartı Kaydet</Text>
-                                    </TouchableOpacity>
+                                    <ImageSwiper value={cardName} onChangeText={setCardName} onPressButton={saveList}  />
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -187,5 +172,5 @@ function MyLists() {
     )
 };
 
-export default MyLists;
+export default MyMovieList;
 

@@ -84,36 +84,8 @@ export default StyleSheet.create({
         height: 1,
         backgroundColor: "black",
     },
-    seperator2: {
-        height: 1,
-        backgroundColor: "black",
-        marginTop: 10,
-    },
     bottomText: {
         textAlign: "center",
         paddingTop: 6,
     },
-    searchMovie: {
-        height: 40,
-        borderWidth: 0.5,
-        borderRadius: 8,
-    },
-    searchText: {
-        flex: 1,
-        paddingLeft: 14,
-        fontSize: 14,
-    },
-    cardName: {
-        textAlign: 'center',
-        fontSize: 16,
-        paddingBottom: 8,
-        fontWeight: 'bold',
-    },
-    imageBack: {
-        paddingTop: 10,
-        textAlign: 'center',
-        fontSize: 16,
-        paddingBottom: 2,
-        fontWeight: 'bold',
-    }
 });

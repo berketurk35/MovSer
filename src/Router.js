@@ -15,8 +15,9 @@ import SeriesList from "./pages/Series/SeriesList/SeriesList";
 import ActiveSeriesList from "./pages/Series/ActiveSeriesList/ActiveSeriesList";
 import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
 
-import MyMoviesList from "./pages/MyLists/MyMoviesList/MyMovieList";
+import MyMovieList from "./pages/MyLists/MyMoviesList/MyMovieList";
 import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
+import ImageSwiper from "./components/ImageSwiper/ImageSwiper";
 
 
 const Stack = createNativeStackNavigator();
@@ -47,8 +48,11 @@ function Router() {
                 <Stack.Screen name="ActiveSeriesList" component={ActiveSeriesList} />
 
                 <Stack.Screen name="TopNavigator3" component={TopNavigator3} />
-                <Stack.Screen name="MyMoviesList" component={MyMoviesList} />
+                <Stack.Screen name="MyMovieList" component={MyMovieList} />
                 <Stack.Screen name="MySeriesList" component={MySeriesList} />
+
+                <Stack.Screen name="ImageSwiper" component={ImageSwiper} options={({ navigation }) => ({ navigation })} />
+                
 
             </Stack.Navigator>
         </NavigationContainer>
