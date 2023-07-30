@@ -107,15 +107,18 @@ export default StyleSheet.create({
         height: Dimensions.get("window").height / 14,
         flexDirection: "row",
         alignItems: "center",
-    },
-    headerText: {
-        flex: 1,
-        textAlign: "center",
+      },
+      headerTextContainer: {
+        flex: 5, 
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerText: {
+        color: "black",
         fontSize: 16,
         fontWeight: "bold",
-    },
-    backIcon: {
-        alignSelf: "center",
+      },
+      backIcon: {
         paddingLeft: 12,
-    }
+      }
 });

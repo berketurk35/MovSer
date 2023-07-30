@@ -192,8 +192,8 @@ function MyMovieList({navigation}) {
                 return;
         }
     }
-    function goToListDetails() {
-        navigation.navigate("ListDetails");
+    function goToListDetails(listName) {
+        navigation.navigate("ListDetails", {listName} );
     }
 
     return (
@@ -219,7 +219,7 @@ function MyMovieList({navigation}) {
                                     key={index}
                                     cardName={movie.listName}
                                     imageName={movie.cardImage}
-                                    onPressDetail={goToListDetails}
+                                    onPressDetail={() => goToListDetails(movie.listName)}
                                     onPressDelete={() => handleDeleteCard(movie, index)}
                                 />
                             ))}

@@ -18,6 +18,8 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
 function ListDetails({ navigation, route }) {
 
+    const { listName } = route.params;
+
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
@@ -27,29 +29,12 @@ function ListDetails({ navigation, route }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
-    
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
         //clearData();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedMovies = [Movie, ...savedMovies];
-            setSavedMovies(updatedMovies);
-            AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
-            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
-          }
-        }, [route.params]);
+    }, []);
 
     const fetchSavedMovies = async () => {
         try {
@@ -256,7 +241,10 @@ function ListDetails({ navigation, route }) {
         <SafeAreaView style={styles.container}>
             <View style={styles.customHeader}>
                 <Icon name="arrow-back" size={22} color={"black"} style={styles.backIcon} onPress={back} />
-                <Text style={styles.headerText} >Deneme</Text>
+                <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText}>{listName}</Text>
+                </View>
+                <View style={{ flex: 0.5 }} /> 
             </View>
             <KeyboardAvoidingView style={styles.container} >
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
