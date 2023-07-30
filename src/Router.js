@@ -18,11 +18,12 @@ import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
 import MyMovieList from "./pages/MyLists/MyMoviesList/MyMovieList";
 import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
 
+import ListDetails from "./pages/MyLists/ListDetails/ListDetails";
 
 const Stack = createNativeStackNavigator();
 
 function Router() {
-    return(
+    return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{
                 headerShown: false,
@@ -32,7 +33,7 @@ function Router() {
                     fontWeight: "bold",
                 },
                 headerStyle: {
-                    backgroundColor: "pink",
+                    backgroundColor: "white",
                 },
             }} >
                 <Stack.Screen name="TabNavigator" component={TabNavigator} />
@@ -48,7 +49,9 @@ function Router() {
 
                 <Stack.Screen name="TopNavigator3" component={TopNavigator3} />
                 <Stack.Screen name="MyMovieList" component={MyMovieList} />
-                <Stack.Screen name="MySeriesList" component={MySeriesList} />                
+                <Stack.Screen name="MySeriesList" component={MySeriesList} />
+
+                <Stack.Screen name="ListDetails" component={ListDetails} />
 
             </Stack.Navigator>
         </NavigationContainer>

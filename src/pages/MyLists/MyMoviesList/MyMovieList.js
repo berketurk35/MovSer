@@ -11,7 +11,7 @@ import Swiper from "react-native-swiper";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function MyMovieList() {
+function MyMovieList({navigation}) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovieList, setSavedMovieList] = useState([]);
@@ -31,9 +31,9 @@ function MyMovieList() {
 
     const fetchSavedMovies = async () => {
         try {
-            const movieList = await AsyncStorage.getItem('movieList');
-            if (movieList) {
-                setSavedMovieList(JSON.parse(movieList));
+            const updatedMovieLists = await AsyncStorage.getItem('movieList');
+            if (updatedMovieLists) {
+                setSavedMovieList(JSON.parse(updatedMovieLists));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -192,6 +192,9 @@ function MyMovieList() {
                 return;
         }
     }
+    function goToListDetails() {
+        navigation.navigate("ListDetails");
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -203,15 +206,20 @@ function MyMovieList() {
                             onChangeText={setSearchMovie} />
                     </View>
                 </View>
-                
+
                 <ScrollView>
                     <View style={styles.content}>
                         {savedMovieList
+                            .filter(
+                                (movie) =>
+                                    movie.listName.toLowerCase().includes(searchMovie.toLowerCase())
+                            )
                             .map((movie, index) => (
                                 <ListCard
                                     key={index}
                                     cardName={movie.listName}
                                     imageName={movie.cardImage}
+                                    onPressDetail={goToListDetails}
                                     onPressDelete={() => handleDeleteCard(movie, index)}
                                 />
                             ))}
@@ -220,7 +228,7 @@ function MyMovieList() {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Kart Ekle"
+                    label="Add Card"
                     color="white"
                     onPress={handleFabPress}
                 />

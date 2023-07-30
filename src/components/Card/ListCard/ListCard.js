@@ -5,9 +5,9 @@ import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-function ListCard({ cardName, onPressDelete, imageName}) {
+function ListCard({ cardName, onPressDelete, imageName, onPressDetail }) {
 
-    const Images= {
+    const Images = {
         netflix: require("../../../images/netflix.png"),
         prime: require("../../../images/prime.png"),
         disney: require("../../../images/disney.png"),
@@ -38,7 +38,9 @@ function ListCard({ cardName, onPressDelete, imageName}) {
                     <Icon name={"cancel"} color={"red"} size={18} />
                 </TouchableOpacity>
             </View>
-            <Image source={Images[imageName]} style={styles.image} />
+            <TouchableOpacity onPress={onPressDetail}  >
+                <Image source={Images[imageName]} style={styles.image} />
+            </TouchableOpacity>
         </View>
     )
 };

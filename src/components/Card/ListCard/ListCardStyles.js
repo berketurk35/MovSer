@@ -18,7 +18,7 @@ export default StyleSheet.create({
     image: {
         alignSelf: "center",
         width: "100%",
-        height: "80%",
+        height: "90%",
         borderBottomRightRadius: 30,
     },
     topM: {
