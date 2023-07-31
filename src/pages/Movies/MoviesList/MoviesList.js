@@ -109,7 +109,7 @@ function MoviesList({ navigation, route }) {
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedMovies);
-
+            
             // Modalı kapat
             setSearchResults("");
             setSelectedMovie("");
@@ -241,6 +241,38 @@ function MoviesList({ navigation, route }) {
             });
     };
 
+    const onPressAddList = (movie) => {
+        Alert.alert(
+            'Listeye Film Taşıma',
+            `"${movie.movieName}" Filmini listeye taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            [
+                {
+                    text: 'Vazgeç',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Taşı ve Sil',
+                    style: 'destructive',
+                    onPress: () => moveDeleteMovie(movie),
+                },
+            ],
+            { cancelable: false }
+        );
+      };
+    
+      const moveDeleteMovie = async (movie) => {
+        navigation.navigate("ListDetails", { Movie: movie || null, listName: 'deneme'  })
+        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
+        setSavedMovies(updatedMovies);
+        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
+            .then(() => {
+                console.log('Film başarıyla silindi.');
+            })
+            .catch((error) => {
+                console.log('Film silinirken bir hata oluştu:', error);
+            });
+    };
+
     const renderMovieItem = ({ item }) => (
         <TouchableOpacity onPress={() => handleMovieSelect(item)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -256,6 +288,7 @@ function MoviesList({ navigation, route }) {
             </View>
         </TouchableOpacity>
     );
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -284,7 +317,7 @@ function MoviesList({ navigation, route }) {
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
-                                    onPressList={null}
+                                    onPressList={() => onPressAddList(movie)}
                                     onPressDelete={() => handleMovieDelete(movie)}
                                     iconName={"library-add"}
                                 />
@@ -355,11 +388,7 @@ function MoviesList({ navigation, route }) {
                                         renderItem={renderMovieItem}
                                     />
                                 )}
-
                             </View>
-
-
-
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>

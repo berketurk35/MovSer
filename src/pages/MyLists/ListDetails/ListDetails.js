@@ -33,12 +33,30 @@ function ListDetails({ navigation, route }) {
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
-        //clearData();
-    }, []);
+        if (route.params && route.params.Movie) {
+            const { Movie } = route.params;
+            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
+            const updatedListDetails = [Movie, ...savedMovies];
+            setSavedMovies(updatedListDetails);
+            AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
+              .then(() => {
+                console.log("Film başarıyla eklendi.");
+                fetchSavedMovies();
+              })
+              .catch((error) => {
+                console.log("Film eklenirken bir hata oluştu:", error);
+              });
+      
+            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
+            navigation.setParams({ Movie: null });
+          }
+    }, [route.params]);
 
     const fetchSavedMovies = async () => {
         try {
-            const movies = await AsyncStorage.getItem('listDetails');
+            const movies = await AsyncStorage.getItem(listName);
+            console.log("Buraya da bakam", movies);
+            console.log("list adı?", listName);
             if (movies) {
                 setSavedMovies(JSON.parse(movies));
             }
@@ -69,7 +87,7 @@ function ListDetails({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('listDetails');
+            const existingMovies = await AsyncStorage.getItem(listName);
             let updatedListDetails = [];
 
             if (existingMovies) {
@@ -81,11 +99,11 @@ function ListDetails({ navigation, route }) {
             updatedListDetails.unshift(movieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('listDetails', JSON.stringify(updatedListDetails));
+            await AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails));
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedListDetails);
-
+            console.log("Burası" ,updatedListDetails);
             // Modalı kapat
             setSearchResults("");
             setSelectedMovie("");
@@ -208,7 +226,7 @@ function ListDetails({ navigation, route }) {
     const deleteMovie = async (movie) => {
         const updatedListDetails = savedMovies.filter((m) => m.movieId !== movie.movieId);
         setSavedMovies(updatedListDetails);
-        AsyncStorage.setItem('listDetails', JSON.stringify(updatedListDetails))
+        AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
             .then(() => {
                 console.log('Film başarıyla silindi.');
             })
@@ -271,9 +289,8 @@ function ListDetails({ navigation, route }) {
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
-                                    onPressList={null}
                                     onPressDelete={() => handleMovieDelete(movie)}
-                                    iconName={"library-add"}
+                                    
                                 />
                             ))}
                     </View>
@@ -342,11 +359,7 @@ function ListDetails({ navigation, route }) {
                                         renderItem={renderMovieItem}
                                     />
                                 )}
-
                             </View>
-
-
-
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>

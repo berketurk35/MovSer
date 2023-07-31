@@ -20,6 +20,7 @@ export default StyleSheet.create({
     fab: {
         position: "absolute",
         margin: 22,
+        marginBottom: 40,
         right: 0,
         bottom: 0,
         backgroundColor: "#1565C0",
