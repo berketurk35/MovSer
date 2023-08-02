@@ -17,7 +17,7 @@ import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const SONG_HEIGHT = 300;
+const SONG_HEIGHT = 230;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
 function Card({cardName, onPressDelete, imageName, onPressDetail }) {
@@ -177,7 +177,7 @@ function ListCard({
     return (
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '80%' }}>
+                <Animated.View style={{ maxWidth: '90%' }}>
                     <Card cardName={cardName} imageName={imageName} onPressDelete={onPressDelete} onPressDetail={onPressDetail} />
                 </Animated.View>
             </PanGestureHandler>

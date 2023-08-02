@@ -34,11 +34,10 @@ function MyMovieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
 
+    console.log("savedMovieList", savedMovieList);
+
     useEffect(() => {
         fetchSavedMovies();
-
-        
-
     }, []);
 
     const fetchSavedMovies = async () => {
@@ -64,6 +63,7 @@ function MyMovieList({ navigation }) {
     const saveList = async () => {
         // Verileri bir obje olarak hazırla
         const listData = {
+            id: cardName,
             listName: cardName,
             cardImage: selectedImage,
         };
@@ -236,17 +236,33 @@ function MyMovieList({ navigation }) {
     const SONGS = shuffle([
         {
             id: 'veridis-quo',
-            listName: 'Veridis Quo',
+            listName: 'veridis-quo',
             cardImage: "netflix",
         },
         {
             id: 'make-love',
-            listName: 'Make Love',
+            listName: 'make-love',
             cardImage: "netflix",
         },
+        {
+            id: 'berke3',
+            listName: 'berke3',
+            cardImage: "prime",
+        },
+        {
+            id: 'berke32',
+            listName: 'berke32',
+            cardImage: "hbo",
+        },
+        {
+            id: 'berke112',
+            listName: 'berke112',
+            cardImage: "3",
+        },
+        
     ]);
 
-    const SONG_HEIGHT = 400;
+    const SONG_HEIGHT = 240;
 
     const positions = useSharedValue(listToObject(SONGS));
     const scrollY = useSharedValue(0);
@@ -262,7 +278,7 @@ function MyMovieList({ navigation }) {
     });
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={styles.container}>
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -277,8 +293,8 @@ function MyMovieList({ navigation }) {
                         <Animated.ScrollView
                             ref={scrollViewRef}
                             onScroll={handleScroll}
-                            scrollEventThrottle={16}
-                            style={{ flex: 1, position: 'relative', backgroundColor: 'white' }}
+                            scrollEventThrottle={20}
+                            style={{ position: 'relative', backgroundColor: 'black' }}
                             contentContainerStyle={{ height: SONGS.length * SONG_HEIGHT }}
                         >
                             <View style={styles.content}>
