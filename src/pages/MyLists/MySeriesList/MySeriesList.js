@@ -257,6 +257,10 @@ function MyLists({ navigation, route }) {
         </TouchableOpacity>
     );
 
+    function banaTikla() {
+        navigation.navigate("Test");
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -265,6 +269,7 @@ function MyLists({ navigation, route }) {
                         <Icon name="search" size={20} color={"black"} style={styles.icon} />
                         <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
+                            <Text onPress={banaTikla} > Bana tıkla </Text>
                     </View>
                 </View>
                 <View style={styles.seperator} />
