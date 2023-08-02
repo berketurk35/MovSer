@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, useWindowDimensions } from "react-native";
+import React, { useState } from 'react';
+import { View, Image, Text, useWindowDimensions } from "react-native";
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 import Animated, {
     cancelAnimation,
     runOnJS,
@@ -13,52 +14,44 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
-import styles from "./ListCardStyles";
-
-import Icon from "react-native-vector-icons/MaterialIcons";
-
-const SONG_HEIGHT = 300;
+const SONG_HEIGHT = 70;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
-function Card({cardName, onPressDelete, imageName, onPressDetail }) {
-
-    const Images = {
-        netflix: require("../../../images/netflix.png"),
-        prime: require("../../../images/prime.png"),
-        disney: require("../../../images/disney.png"),
-        blutv: require("../../../images/blutv.png"),
-        mubi: require("../../../images/mubi.png"),
-        exxen: require("../../../images/exxen.png"),
-        appletv: require("../../../images/appletv.png"),
-        hbo: require("../../../images/hbo.png"),
-        1: require("../../../images/1.png"),
-        2: require("../../../images/2.png"),
-        3: require("../../../images/3.png"),
-        4: require("../../../images/4.png"),
-        5: require("../../../images/5.png"),
-        6: require("../../../images/6.png"),
-        7: require("../../../images/7.png"),
-        8: require("../../../images/8.png"),
-        9: require("../../../images/9.png"),
-        10: require("../../../images/10.png"),
-        11: require("../../../images/11.png"),
-        12: require("../../../images/12.png"),
-    };
-
+function Song({ artist, cover, title }) {
     return (
-        <View style={styles.container} >
-            <View style={styles.cardTop} >
-                <Text style={styles.cardName} > {cardName} </Text>
-                <TouchableOpacity onPress={onPressDelete} style={styles.iconDel}>
-                    <Icon name={"cancel"} color={"red"} size={18} />
-                </TouchableOpacity>
+        <View
+            style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                height: 70,
+                padding: 10,
+            }}
+        >
+            <Image
+                source={{ uri: cover }}
+                style={{ height: 50, width: 50, borderRadius: 4 }}
+            />
+
+            <View
+                style={{
+                    marginLeft: 10,
+                }}
+            >
+                <Text
+                    style={{
+                        fontSize: 16,
+                        fontWeight: '600',
+                        marginBottom: 4,
+                    }}
+                >
+                    {title}
+                </Text>
+
+                <Text style={{ fontSize: 12, color: 'gray' }}>{artist}</Text>
             </View>
-            <TouchableOpacity onPress={onPressDetail}  >
-                <Image source={Images[imageName]} style={styles.image} />
-            </TouchableOpacity>
         </View>
-    )
-};
+    );
+}
 
 function clamp(value, lowerBound, upperBound) {
     'worklet';
@@ -82,12 +75,11 @@ function objectMove(object, from, to) {
     return newObject;
 }
 
-function ListCard({
+function MovableSong({
     id,
-    cardName,
-    onPressDelete,
-    imageName,
-    onPressDetail,
+    artist,
+    cover,
+    title,
     positions,
     scrollY,
     songsCount,
@@ -178,11 +170,12 @@ function ListCard({
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
                 <Animated.View style={{ maxWidth: '80%' }}>
-                    <Card cardName={cardName} imageName={imageName} onPressDelete={onPressDelete} onPressDetail={onPressDetail} />
+                    <Song artist={artist} cover={cover} title={title} />
                 </Animated.View>
             </PanGestureHandler>
         </Animated.View>
     );
 };
 
-export default ListCard;
+export default MovableSong;
+
