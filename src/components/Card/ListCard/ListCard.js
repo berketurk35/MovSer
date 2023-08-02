@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, useWindowDimensions } from "react-native";
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
     cancelAnimation,
     runOnJS,
@@ -9,7 +9,7 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
-    withTiming,
+    withTiming, 
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
@@ -19,46 +19,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const SONG_HEIGHT = 230;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
-
-function Card({cardName, onPressDelete, imageName, onPressDetail }) {
-
-    const Images = {
-        netflix: require("../../../images/netflix.png"),
-        prime: require("../../../images/prime.png"),
-        disney: require("../../../images/disney.png"),
-        blutv: require("../../../images/blutv.png"),
-        mubi: require("../../../images/mubi.png"),
-        exxen: require("../../../images/exxen.png"),
-        appletv: require("../../../images/appletv.png"),
-        hbo: require("../../../images/hbo.png"),
-        1: require("../../../images/1.png"),
-        2: require("../../../images/2.png"),
-        3: require("../../../images/3.png"),
-        4: require("../../../images/4.png"),
-        5: require("../../../images/5.png"),
-        6: require("../../../images/6.png"),
-        7: require("../../../images/7.png"),
-        8: require("../../../images/8.png"),
-        9: require("../../../images/9.png"),
-        10: require("../../../images/10.png"),
-        11: require("../../../images/11.png"),
-        12: require("../../../images/12.png"),
-    };
-
-    return (
-        <View style={styles.container} >
-            <View style={styles.cardTop} >
-                <Text style={styles.cardName} > {cardName} </Text>
-                <TouchableOpacity onPress={onPressDelete} style={styles.iconDel}>
-                    <Icon name={"cancel"} color={"red"} size={18} />
-                </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={onPressDetail}  >
-                <Image source={Images[imageName]} style={styles.image} />
-            </TouchableOpacity>
-        </View>
-    )
-};
 
 function clamp(value, lowerBound, upperBound) {
     'worklet';
@@ -97,6 +57,8 @@ function ListCard({
     const [moving, setMoving] = useState(false);
     const top = useSharedValue(positions.value[id] * SONG_HEIGHT);
 
+    const pressed = useSharedValue(false);
+
     useAnimatedReaction(
         () => positions.value[id],
         (currentPosition, previousPosition) => {
@@ -112,13 +74,14 @@ function ListCard({
     const gestureHandler = useAnimatedGestureHandler({
         onStart() {
             runOnJS(setMoving)(true);
+            pressed.value = true;
         },
         onActive(event) {
             const positionY = event.absoluteY + scrollY.value;
 
             if (positionY <= scrollY.value + SCROLL_HEIGHT_THRESHOLD) {
                 // Scroll up
-                scrollY.value = withTiming(0, { duration: 1500 });
+                scrollY.value = withTiming(0, { duration: 2500 });
             } else if (
                 positionY >=
                 scrollY.value + dimensions.height - SCROLL_HEIGHT_THRESHOLD
@@ -128,13 +91,13 @@ function ListCard({
                 const containerHeight =
                     dimensions.height - insets.top - insets.bottom;
                 const maxScroll = contentHeight - containerHeight;
-                scrollY.value = withTiming(maxScroll, { duration: 1500 });
+                scrollY.value = withTiming(maxScroll, { duration: 2500 });
             } else {
                 cancelAnimation(scrollY);
             }
 
             top.value = withTiming(positionY - SONG_HEIGHT, {
-                duration: 16,
+                duration: 30,
             });
 
             const newPosition = clamp(
@@ -154,6 +117,7 @@ function ListCard({
         onFinish() {
             top.value = positions.value[id] * SONG_HEIGHT;
             runOnJS(setMoving)(false);
+            pressed.value = false;
         },
     });
 
@@ -164,21 +128,49 @@ function ListCard({
             right: 0,
             top: top.value,
             zIndex: moving ? 1 : 0,
-            shadowColor: 'black',
-            shadowOffset: {
-                height: 0,
-                width: 0,
-            },
-            shadowOpacity: withSpring(moving ? 0.2 : 0),
-            shadowRadius: 10,
+            //shadowOpacity: withSpring(pressed.value ? 0.2 : 0),
+            transform: [{ scale: pressed.value ? 0.6 : 1 }],
         };
-    }, [moving]);
+    }, [moving, pressed]);
+
+    const Images = {
+        netflix: require("../../../images/netflix.png"),
+        prime: require("../../../images/prime.png"),
+        disney: require("../../../images/disney.png"),
+        blutv: require("../../../images/blutv.png"),
+        mubi: require("../../../images/mubi.png"),
+        exxen: require("../../../images/exxen.png"),
+        appletv: require("../../../images/appletv.png"),
+        hbo: require("../../../images/hbo.png"),
+        1: require("../../../images/1.png"),
+        2: require("../../../images/2.png"),
+        3: require("../../../images/3.png"),
+        4: require("../../../images/4.png"),
+        5: require("../../../images/5.png"),
+        6: require("../../../images/6.png"),
+        7: require("../../../images/7.png"),
+        8: require("../../../images/8.png"),
+        9: require("../../../images/9.png"),
+        10: require("../../../images/10.png"),
+        11: require("../../../images/11.png"),
+        12: require("../../../images/12.png"),
+    };
 
     return (
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '90%' }}>
-                    <Card cardName={cardName} imageName={imageName} onPressDelete={onPressDelete} onPressDetail={onPressDetail} />
+                <Animated.View style={{ maxWidth: '90%'}}>
+                    <View style={styles.container} >
+                        <View style={styles.cardTop} >
+                            <Text style={styles.cardName} > {cardName} </Text>
+                            <TouchableOpacity onPress={onPressDelete} style={styles.iconDel}>
+                                <Icon name={"cancel"} color={"red"} size={18} />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity onPress={onPressDetail}  >
+                            <Image source={Images[imageName]} style={styles.image} />
+                        </TouchableOpacity>
+                    </View>
                 </Animated.View>
             </PanGestureHandler>
         </Animated.View>
