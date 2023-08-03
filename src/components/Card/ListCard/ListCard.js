@@ -9,7 +9,7 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
-    withTiming, 
+    withTiming,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
@@ -17,7 +17,7 @@ import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const SONG_HEIGHT = 230;
+const SONG_HEIGHT = 180;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
 function clamp(value, lowerBound, upperBound) {
@@ -81,7 +81,7 @@ function ListCard({
 
             if (positionY <= scrollY.value + SCROLL_HEIGHT_THRESHOLD) {
                 // Scroll up
-                scrollY.value = withTiming(0, { duration: 2500 });
+                scrollY.value = withTiming(0, { duration: 1500 });
             } else if (
                 positionY >=
                 scrollY.value + dimensions.height - SCROLL_HEIGHT_THRESHOLD
@@ -91,13 +91,13 @@ function ListCard({
                 const containerHeight =
                     dimensions.height - insets.top - insets.bottom;
                 const maxScroll = contentHeight - containerHeight;
-                scrollY.value = withTiming(maxScroll, { duration: 2500 });
+                scrollY.value = withTiming(maxScroll, { duration: 1500 });
             } else {
                 cancelAnimation(scrollY);
             }
 
             top.value = withTiming(positionY - SONG_HEIGHT, {
-                duration: 30,
+                duration: 16,
             });
 
             const newPosition = clamp(
@@ -128,8 +128,13 @@ function ListCard({
             right: 0,
             top: top.value,
             zIndex: moving ? 1 : 0,
-            //shadowOpacity: withSpring(pressed.value ? 0.2 : 0),
-            transform: [{ scale: pressed.value ? 0.6 : 1 }],
+            shadowColor: 'black',
+            shadowOffset: {
+                height: 0,
+                width: 0,
+            },
+            shadowOpacity: withSpring(moving ? 0.2 : 0),
+            shadowRadius: 10,
         };
     }, [moving, pressed]);
 
@@ -159,17 +164,16 @@ function ListCard({
     return (
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '90%'}}>
+                <Animated.View style={{ maxWidth: '70%' }}>
                     <View style={styles.container} >
-                        <View style={styles.cardTop} >
-                            <Text style={styles.cardName} > {cardName} </Text>
-                            <TouchableOpacity onPress={onPressDelete} style={styles.iconDel}>
-                                <Icon name={"cancel"} color={"red"} size={18} />
-                            </TouchableOpacity>
-                        </View>
                         <TouchableOpacity onPress={onPressDetail}  >
                             <Image source={Images[imageName]} style={styles.image} />
                         </TouchableOpacity>
+                        <View style={{flexDirection: "row"}} >
+                            <Text style={styles.cardName} > {cardName} </Text>
+                            
+                        </View>
+
                     </View>
                 </Animated.View>
             </PanGestureHandler>

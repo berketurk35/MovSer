@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
-const SONG_HEIGHT = 60;
+const SONG_HEIGHT = 160;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
 function Song({ artist, cover, title }) {
@@ -23,13 +23,15 @@ function Song({ artist, cover, title }) {
             style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                height: 70,
+                height: 170,
                 padding: 10,
+                borderWidth: 5,
+                backgroundColor: "red"
             }}
         >
             <Image
                 source={{ uri: cover }}
-                style={{ height: 50, width: 50, borderRadius: 4 }}
+                style={{ height: 150, width: 180, borderRadius: 4 }}
             />
 
             <View
@@ -169,7 +171,7 @@ function MovableSong({
     return (
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '100%' }}>
+                <Animated.View style={{ maxWidth: '30%'}}>
                     <Song artist={artist} cover={cover} title={title} />
                 </Animated.View>
             </PanGestureHandler>

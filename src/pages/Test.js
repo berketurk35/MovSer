@@ -76,7 +76,7 @@ const SONGS = shuffle([
     },
 ]);
 
-const SONG_HEIGHT = 100;
+const SONG_HEIGHT = 300;
 
 export default function Test() {
     const positions = useSharedValue(listToObject(SONGS));
@@ -115,7 +115,7 @@ export default function Test() {
                         ref={scrollViewRef}
                         onScroll={handleScroll}
                         scrollEventThrottle={16}
-                        style={{ flex: 1, position: 'relative', backgroundColor: 'white' }}
+                        style={{position: 'relative', backgroundColor: 'white' }}
                         contentContainerStyle={{ height: SONGS.length * SONG_HEIGHT }}
                     >
                         {renderSongs()}

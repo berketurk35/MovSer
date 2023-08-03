@@ -2,35 +2,35 @@ import { StyleSheet, Dimensions } from "react-native";
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        marginBottom: 20,
-        marginHorizontal: Dimensions.get("window").width / 12,
-        height: Dimensions.get("screen").height / 4,
+        flexDirection: 'row',
+        height: 160,
+        width: 200,
+        padding: 10,
+        margin: 10,
+        borderWidth: 0.5,
+        borderColor: "white",
+        backgroundColor: "black",
+        borderRadius: 12,
+        elevation: 40,
+        shadowColor: "black"
     },
     cardName: {
-        flex: 1,
+        width: Dimensions.get("screen").width / 3,
+        height: 40,
+        borderRadius: 12,
         color: "black",
-        padding: 6,
+        paddingLeft: 16,
         fontWeight: "bold",
         fontSize: 16,
-        textAlign: "center",
+        alignSelf: "center",
+        backgroundColor: "#dce2e5"
     },
     image: {
-        alignSelf: "center",
-        width: "100%",
-        height: "90%",
-        borderBottomRightRadius: 30,
-    },
-    topM: {
-        margin: 20,
-    },
-    cardTop: {
-        flexDirection: "row",
-        backgroundColor: "white",
-        borderTopLeftRadius: 30,
+        width: Dimensions.get("screen").width / 2,
+        height: 149,
+        borderRadius: 12,
     },
     iconDel: {
-        justifyContent: "center",
-        paddingRight: 10,
+        //backgroundColor: "gray"
     }
 });

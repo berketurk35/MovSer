@@ -262,7 +262,7 @@ function MyMovieList({ navigation }) {
         
     ]);
 
-    const SONG_HEIGHT = 240;
+    const SONG_HEIGHT = 300;
 
     const positions = useSharedValue(listToObject(SONGS));
     const scrollY = useSharedValue(0);
@@ -282,7 +282,7 @@ function MyMovieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7, marginBottom: 20, }} >
+                        <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7}} >
                             <View style={styles.search} >
                                 <Icon name="search" size={20} color={"black"} style={styles.icon} />
                                 <TextInput placeholder="Search Card Name" placeholderTextColor={"black"} value={searchMovie}
@@ -293,8 +293,8 @@ function MyMovieList({ navigation }) {
                         <Animated.ScrollView
                             ref={scrollViewRef}
                             onScroll={handleScroll}
-                            scrollEventThrottle={20}
-                            style={{ position: 'relative', backgroundColor: 'black' }}
+                            scrollEventThrottle={16}
+                            style={{flex: 1, position: 'relative', backgroundColor: 'white' }}
                             contentContainerStyle={{ height: SONGS.length * SONG_HEIGHT }}
                         >
                             <View style={styles.content}>
