@@ -21,6 +21,7 @@ import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
 import ListDetails from "./pages/MyLists/ListDetails/ListDetails";
 
 import Test from "./pages/Test";
+import ListeTesti from "./pages/ListeTesti";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,7 @@ function Router() {
                 <Stack.Screen name="ListDetails" component={ListDetails} />
 
                 <Stack.Screen name="Test" component={Test} />
+                <Stack.Screen name="ListeTesti" component={ListeTesti} />
 
             </Stack.Navigator>
         </NavigationContainer>

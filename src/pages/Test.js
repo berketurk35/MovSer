@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaProvider,SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
     scrollTo,
     useAnimatedReaction,
@@ -10,6 +10,7 @@ import Animated, {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import MovableSong from '../components/MovableSong';
+import { Text } from 'react-native';
 
 
 function shuffle(array) {
@@ -51,25 +52,25 @@ const DAFT_PUNK = 'Daft Punk';
 
 const SONGS = shuffle([
     {
-        id: 'veridis-quo',
+        id: '1',
         title: 'Veridis Quo',
         artist: DAFT_PUNK,
         cover: ALBUM_COVERS.DISCOVERY,
     },
     {
-        id: 'make-love',
+        id: '2',
         title: 'Make Love',
         artist: DAFT_PUNK,
         cover: ALBUM_COVERS.HUMAN_AFTER_ALL,
     },
     {
-        id: 'television-rules-the-nation',
+        id: '3',
         title: 'Television Rules the Nation',
         artist: DAFT_PUNK,
         cover: ALBUM_COVERS.HUMAN_AFTER_ALL,
     },
     {
-        id: 'phoenix',
+        id: '4',
         title: 'Phoenix',
         artist: DAFT_PUNK,
         cover: ALBUM_COVERS.HOMEWORK,
@@ -78,7 +79,8 @@ const SONGS = shuffle([
 
 const SONG_HEIGHT = 300;
 
-export default function Test() {
+
+export default function Test({navigation}) {
     const positions = useSharedValue(listToObject(SONGS));
     const scrollY = useSharedValue(0);
     const scrollViewRef = useAnimatedRef();
@@ -91,6 +93,10 @@ export default function Test() {
     const handleScroll = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     });
+
+    function git() {
+        navigation.navigate("ListeTesti");
+    };
 
     const renderSongs = () => {
         return SONGS.map((song) => (
@@ -111,14 +117,16 @@ export default function Test() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider >
                 <SafeAreaView style={{ flex: 1 }}>
+                    <Text onPress={git} >Selam</Text>
                     <Animated.ScrollView
                         ref={scrollViewRef}
                         onScroll={handleScroll}
                         scrollEventThrottle={16}
-                        style={{position: 'relative', backgroundColor: 'white' }}
+                        style={{ position: 'relative', backgroundColor: 'white' }}
                         contentContainerStyle={{ height: SONGS.length * SONG_HEIGHT }}
                     >
                         {renderSongs()}
+
                     </Animated.ScrollView>
                 </SafeAreaView>
             </SafeAreaProvider>

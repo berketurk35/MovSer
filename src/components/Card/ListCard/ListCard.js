@@ -17,7 +17,7 @@ import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const SONG_HEIGHT = 180;
+const SONG_HEIGHT = 170;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
 function clamp(value, lowerBound, upperBound) {
@@ -169,11 +169,7 @@ function ListCard({
                         <TouchableOpacity onPress={onPressDetail}  >
                             <Image source={Images[imageName]} style={styles.image} />
                         </TouchableOpacity>
-                        <View style={{flexDirection: "row"}} >
-                            <Text style={styles.cardName} > {cardName} </Text>
-                            
-                        </View>
-
+                        <Text style={styles.cardName} > {cardName} </Text>
                     </View>
                 </Animated.View>
             </PanGestureHandler>

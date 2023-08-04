@@ -12,18 +12,16 @@ export default StyleSheet.create({
         backgroundColor: "black",
         borderRadius: 12,
         elevation: 40,
-        shadowColor: "black"
+        shadowColor: "black",
     },
     cardName: {
-        width: Dimensions.get("screen").width / 3,
-        height: 40,
+        width: Dimensions.get("screen").width / 4,
         borderRadius: 12,
         color: "black",
-        paddingLeft: 16,
+        paddingLeft: 12,
         fontWeight: "bold",
         fontSize: 16,
         alignSelf: "center",
-        backgroundColor: "#dce2e5"
     },
     image: {
         width: Dimensions.get("screen").width / 2,

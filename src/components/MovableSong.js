@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Image, Text, useWindowDimensions } from "react-native";
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Animated, {
     cancelAnimation,
@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
-const SONG_HEIGHT = 160;
+const SONG_HEIGHT = 170;
 const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
 
 function Song({ artist, cover, title }) {
@@ -171,7 +171,7 @@ function MovableSong({
     return (
         <Animated.View style={animatedStyle}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '30%'}}>
+                <Animated.View style={{ maxWidth: '30%' }}>
                     <Song artist={artist} cover={cover} title={title} />
                 </Animated.View>
             </PanGestureHandler>

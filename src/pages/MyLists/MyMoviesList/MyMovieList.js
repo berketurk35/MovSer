@@ -233,32 +233,19 @@ function MyMovieList({ navigation }) {
         return object;
     }
 
+    const kedi = [
+        {"cardImage": "hbo", "id": "test4", "listName": "test4"}, 
+        {"cardImage": "disney", "id": "test3", "listName": "test3"}, 
+        {"cardImage": "prime", "id": "test2", "listName": "test2"}, 
+        {"cardImage": "netflix", "id": "test1", "listName": "test1"}
+    ]
+
     const SONGS = shuffle([
-        {
-            id: 'veridis-quo',
-            listName: 'veridis-quo',
-            cardImage: "netflix",
-        },
-        {
-            id: 'make-love',
-            listName: 'make-love',
-            cardImage: "netflix",
-        },
-        {
-            id: 'berke3',
-            listName: 'berke3',
-            cardImage: "prime",
-        },
-        {
-            id: 'berke32',
-            listName: 'berke32',
-            cardImage: "hbo",
-        },
-        {
-            id: 'berke112',
-            listName: 'berke112',
-            cardImage: "3",
-        },
+        {"id": "4", "listName": "test4","cardImage": "hbo",}, 
+        {"id": "3", "listName": "test3","cardImage": "netflix",}, 
+        {"id": "2", "listName": "test2","cardImage": "prime",}, 
+        {"id": "1", "listName": "test1","cardImage": "3",}
+        
         
     ]);
 
