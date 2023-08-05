@@ -55,7 +55,6 @@ function ReqMoviesList({ navigation }) {
     };
 
     const saveMovie = async () => {
-        console.log('selam: ', selectedMovie);
         // Verileri bir obje olarak hazırla
         const movieData = {
             movieId: selectedMovie.id,

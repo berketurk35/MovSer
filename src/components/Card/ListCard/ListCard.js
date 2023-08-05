@@ -1,142 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, useWindowDimensions } from "react-native";
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-    cancelAnimation,
-    runOnJS,
-    useAnimatedGestureHandler,
-    useAnimatedReaction,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-    withTiming,
-} from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
+
+import Animated from 'react-native-reanimated';
 
 import styles from "./ListCardStyles";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const SONG_HEIGHT = 170;
-const SCROLL_HEIGHT_THRESHOLD = SONG_HEIGHT;
-
-function clamp(value, lowerBound, upperBound) {
-    'worklet';
-    return Math.max(lowerBound, Math.min(value, upperBound));
-}
-
-function objectMove(object, from, to) {
-    'worklet';
-    const newObject = Object.assign({}, object);
-
-    for (const id in object) {
-        if (object[id] === from) {
-            newObject[id] = to;
-        }
-
-        if (object[id] === to) {
-            newObject[id] = from;
-        }
-    }
-
-    return newObject;
-}
-
 function ListCard({
     id,
     cardName,
-    onPressDelete,
     imageName,
     onPressDetail,
-    positions,
-    scrollY,
-    songsCount,
+    onDrag,
 }) {
-    const dimensions = useWindowDimensions();
-    const insets = useSafeAreaInsets();
-    const [moving, setMoving] = useState(false);
-    const top = useSharedValue(positions.value[id] * SONG_HEIGHT);
-
-    const pressed = useSharedValue(false);
-
-    useAnimatedReaction(
-        () => positions.value[id],
-        (currentPosition, previousPosition) => {
-            if (currentPosition !== previousPosition) {
-                if (!moving) {
-                    top.value = withSpring(currentPosition * SONG_HEIGHT);
-                }
-            }
-        },
-        [moving]
-    );
-
-    const gestureHandler = useAnimatedGestureHandler({
-        onStart() {
-            runOnJS(setMoving)(true);
-            pressed.value = true;
-        },
-        onActive(event) {
-            const positionY = event.absoluteY + scrollY.value;
-
-            if (positionY <= scrollY.value + SCROLL_HEIGHT_THRESHOLD) {
-                // Scroll up
-                scrollY.value = withTiming(0, { duration: 1500 });
-            } else if (
-                positionY >=
-                scrollY.value + dimensions.height - SCROLL_HEIGHT_THRESHOLD
-            ) {
-                // Scroll down
-                const contentHeight = songsCount * SONG_HEIGHT;
-                const containerHeight =
-                    dimensions.height - insets.top - insets.bottom;
-                const maxScroll = contentHeight - containerHeight;
-                scrollY.value = withTiming(maxScroll, { duration: 1500 });
-            } else {
-                cancelAnimation(scrollY);
-            }
-
-            top.value = withTiming(positionY - SONG_HEIGHT, {
-                duration: 16,
-            });
-
-            const newPosition = clamp(
-                Math.floor(positionY / SONG_HEIGHT),
-                0,
-                songsCount - 1
-            );
-
-            if (newPosition !== positions.value[id]) {
-                positions.value = objectMove(
-                    positions.value,
-                    positions.value[id],
-                    newPosition
-                );
-            }
-        },
-        onFinish() {
-            top.value = positions.value[id] * SONG_HEIGHT;
-            runOnJS(setMoving)(false);
-            pressed.value = false;
-        },
-    });
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: top.value,
-            zIndex: moving ? 1 : 0,
-            shadowColor: 'black',
-            shadowOffset: {
-                height: 0,
-                width: 0,
-            },
-            shadowOpacity: withSpring(moving ? 0.2 : 0),
-            shadowRadius: 10,
-        };
-    }, [moving, pressed]);
 
     const Images = {
         netflix: require("../../../images/netflix.png"),
@@ -161,19 +39,24 @@ function ListCard({
         12: require("../../../images/12.png"),
     };
 
+
+    const { isActive } = useOnCellActiveAnimation();
+
     return (
-        <Animated.View style={animatedStyle}>
-            <PanGestureHandler onGestureEvent={gestureHandler}>
-                <Animated.View style={{ maxWidth: '70%' }}>
-                    <View style={styles.container} >
-                        <TouchableOpacity onPress={onPressDetail}  >
-                            <Image source={Images[imageName]} style={styles.image} />
-                        </TouchableOpacity>
-                        <Text style={styles.cardName} > {cardName} </Text>
-                    </View>
-                </Animated.View>
-            </PanGestureHandler>
-        </Animated.View>
+        <ScaleDecorator >
+            <OpacityDecorator activeOpacity={1}>
+                <ShadowDecorator>
+                    <Animated.View>
+                        <View style={styles.container}>
+                            <TouchableOpacity onPress={onPressDetail} onLongPress={onDrag} activeOpacity={1} style={{ elevation: isActive ? 60 : 0, shadowColor: "black"}} >
+                                <Image source={Images[imageName]} style={styles.image} />
+                            </TouchableOpacity>
+                            <Text style={styles.cardName}>{cardName}</Text>
+                        </View>
+                    </Animated.View>
+                </ShadowDecorator>
+            </OpacityDecorator>
+        </ScaleDecorator>
     );
 };
 

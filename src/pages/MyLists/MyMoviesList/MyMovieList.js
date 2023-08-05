@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Animated, {
-    scrollTo,
-    useAnimatedReaction,
-    useAnimatedRef,
-    useAnimatedScrollHandler,
-    useSharedValue,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styles from "./MyMovieListStyles";
 
@@ -34,11 +29,13 @@ function MyMovieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
 
+    const ref = useRef(null);
+
     console.log("savedMovieList", savedMovieList);
 
     useEffect(() => {
         fetchSavedMovies();
-    }, []);
+        }, []);
 
     const fetchSavedMovies = async () => {
         try {
@@ -209,102 +206,35 @@ function MyMovieList({ navigation }) {
         navigation.navigate("ListDetails", { listName });
     }
 
-    function shuffle(array) {
-        let counter = array.length;
-
-        while (counter > 0) {
-            let index = Math.floor(Math.random() * counter);
-            counter--;
-            let temp = array[counter];
-            array[counter] = array[index];
-            array[index] = temp;
-        }
-
-        return array;
-    }
-
-    function listToObject(list) {
-        const values = Object.values(list);
-        const object = {};
-
-        for (let i = 0; i < values.length; i++) {
-            object[values[i].id] = i;
-        }
-        return object;
-    }
-
-    const kedi = [
-        {"cardImage": "hbo", "id": "test4", "listName": "test4"}, 
-        {"cardImage": "disney", "id": "test3", "listName": "test3"}, 
-        {"cardImage": "prime", "id": "test2", "listName": "test2"}, 
-        {"cardImage": "netflix", "id": "test1", "listName": "test1"}
-    ]
-
-    const SONGS = shuffle([
-        {"id": "4", "listName": "test4","cardImage": "hbo",}, 
-        {"id": "3", "listName": "test3","cardImage": "netflix",}, 
-        {"id": "2", "listName": "test2","cardImage": "prime",}, 
-        {"id": "1", "listName": "test1","cardImage": "3",}
-        
-        
-    ]);
-
-    const SONG_HEIGHT = 300;
-
-    const positions = useSharedValue(listToObject(SONGS));
-    const scrollY = useSharedValue(0);
-    const scrollViewRef = useAnimatedRef();
-
-    useAnimatedReaction(
-        () => scrollY.value,
-        (scrolling) => scrollTo(scrollViewRef, 0, scrolling, false)
-    );
-
-    const handleScroll = useAnimatedScrollHandler((event) => {
-        scrollY.value = event.contentOffset.y;
-    });
-
     return (
         <GestureHandlerRootView style={styles.container}>
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7}} >
+                        <View style={{ flexDirection: "row", backgroundColor: "gray", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={20} color={"black"} style={styles.icon} />
                                 <TextInput placeholder="Search Card Name" placeholderTextColor={"black"} value={searchMovie}
                                     onChangeText={setSearchMovie} />
                             </View>
                         </View>
+                        
+                            <DraggableFlatList
+                                ref={ref}
+                                data={savedMovieList}
+                                keyExtractor={(item) => item.id}
+                                onDragEnd={({ data }) => setSavedMovieList(data)}
+                                renderItem={({ item, drag }) => (
+                                    <ListCard
+                                      id={item.id}
+                                      cardName={item.listName}
+                                      imageName={item.cardImage}
+                                      onPressDetail={() => goToListDetails(item.listName)}
+                                      onDrag={drag} 
+                                    />
+                                  )}
+                                />
 
-                        <Animated.ScrollView
-                            ref={scrollViewRef}
-                            onScroll={handleScroll}
-                            scrollEventThrottle={16}
-                            style={{flex: 1, position: 'relative', backgroundColor: 'white' }}
-                            contentContainerStyle={{ height: SONGS.length * SONG_HEIGHT }}
-                        >
-                            <View style={styles.content}>
-                                {SONGS
-                                    .filter(
-                                        (movie) =>
-                                            movie.listName.toLowerCase().includes(searchMovie.toLowerCase())
-                                    )
-                                    .map((movie, index) => (
-                                        <ListCard
-                                            key={index}
-                                            id={movie.id}
-                                            cardName={movie.listName}
-                                            imageName={movie.cardImage}
-                                            onPressDetail={() => goToListDetails(movie.listName)}
-                                            onPressDelete={() => handleDeleteCard(movie, index)}
-                                            positions={positions}
-                                            scrollY={scrollY}
-                                            songsCount={SONGS.length}
-                                        />
-                                    ))}
-                            </View>
-                        </Animated.ScrollView>
                         <FAB
                             style={styles.fab}
                             icon="plus"

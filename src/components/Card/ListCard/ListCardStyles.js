@@ -15,10 +15,10 @@ export default StyleSheet.create({
         shadowColor: "black",
     },
     cardName: {
-        width: Dimensions.get("screen").width / 4,
+        width: Dimensions.get("screen").width / 2.5,
         borderRadius: 12,
         color: "black",
-        paddingLeft: 12,
+        paddingLeft: 16,
         fontWeight: "bold",
         fontSize: 16,
         alignSelf: "center",
