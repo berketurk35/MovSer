@@ -71,7 +71,7 @@ function ReqSeriesCard({ serieName, releaseDate, instaDate, vote, category, post
                         <Icon name={iconName} color={"green"} size={16} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
-                        <Icon name={"cancel"} color={"red"} size={16} />
+                        <Icon name={"cancel"} color={"#ff675c"} size={16} />
                     </TouchableOpacity>
                 </View>
 

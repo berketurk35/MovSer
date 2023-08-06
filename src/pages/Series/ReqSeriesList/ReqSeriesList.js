@@ -278,8 +278,8 @@ function ReqSeriesList({ navigation, route }) {
             <KeyboardAvoidingView style={styles.container} behavior="height" >
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
+                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                        <TextInput style={{ fontSize: 13 }} placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>
