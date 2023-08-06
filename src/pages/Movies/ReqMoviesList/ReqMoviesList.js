@@ -53,6 +53,7 @@ function ReqMoviesList({ navigation }) {
         setModalVisible(false);
         setSearchResults("");
         setSearchText("");
+        setSelectedMovie("");
     };
 
     const saveMovie = async () => {
@@ -172,7 +173,7 @@ function ReqMoviesList({ navigation }) {
     };
 
     const handleMovieSelect = async (movie) => {
-        //console.log(movie);
+        
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);

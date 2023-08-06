@@ -29,7 +29,7 @@ function ActiveSeriesList({ navigation, route }) {
     const [finalDate, setFinalDate] = useState("");
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
-    
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedSeries();
@@ -39,18 +39,18 @@ function ActiveSeriesList({ navigation, route }) {
             const updatedSeries = [Serie, ...savedActiveSeries];
             setSavedActiveSeries(updatedSeries);
             AsyncStorage.setItem("savedActiveSeries", JSON.stringify(updatedSeries))
-              .then(() => {
-                console.log("Dizi başarıyla eklendi.");
-                fetchSavedSeries();
-              })
-              .catch((error) => {
-                console.log("Dizi eklenirken bir hata oluştu:", error);
-              });
-      
+                .then(() => {
+                    console.log("Dizi başarıyla eklendi.");
+                    fetchSavedSeries();
+                })
+                .catch((error) => {
+                    console.log("Dizi eklenirken bir hata oluştu:", error);
+                });
+
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Serie: null });
-          }
-        }, [route.params]);
+        }
+    }, [route.params]);
 
     const fetchSavedSeries = async () => {
         try {
@@ -69,6 +69,9 @@ function ActiveSeriesList({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSearchResults("");
+        setSearchText("");
+        setSelectedSerie("");
     };
 
     const saveSerie = async () => {
@@ -142,8 +145,6 @@ function ActiveSeriesList({ navigation, route }) {
             setFinalDate(formattedDuration);
             setSeasons(response.data.number_of_seasons);
             setEpisodes(response.data.number_of_episodes);
-            //const test = JSON.stringify(response, null, 2);
-            //console.log("id den ne geliyor?", test);
 
         } catch (error) {
             console.error(error);
@@ -185,7 +186,7 @@ function ActiveSeriesList({ navigation, route }) {
     };
 
     const handleSerieSelect = async (serie) => {
-        //console.log("Ne geliyor?",serie)
+
         setSelectedSerie(serie);
         setSearchText(serie.name);
         getSerieDetails(serie.id);
@@ -241,6 +242,7 @@ function ActiveSeriesList({ navigation, route }) {
                 />
                 <View>
                     <Text>{item.name} </Text>
+                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
                 </View>
 
             </View>
@@ -264,9 +266,9 @@ function ActiveSeriesList({ navigation, route }) {
             ],
             { cancelable: false }
         );
-      };
-    
-      const moveDeleteSerie = async (serie) => {
+    };
+
+    const moveDeleteSerie = async (serie) => {
         navigation.navigate("SeriesList", { Serie: serie || null })
         const updatedSeries = savedActiveSeries.filter((m) => m.serieId !== serie.serieId);
         setSavedActiveSeries(updatedSeries);
@@ -285,7 +287,7 @@ function ActiveSeriesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Dizi İsmi Sorgula" placeholderTextColor={"black"} value={searchSerie}
+                        <TextInput placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>
@@ -308,7 +310,6 @@ function ActiveSeriesList({ navigation, route }) {
                                     poster={serie.seriePoster}
                                     seasons={serie.serieSeasons}
                                     episodes={serie.serieEpisodes}
-                                    onPressList={null}
                                     onPressAdd={() => onPressAdd(serie)}
                                     onPressDelete={() => handleSerieDelete(serie)}
                                     iconName={"add-circle"}
@@ -320,7 +321,7 @@ function ActiveSeriesList({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Ekle"
+                    label="Serie Add"
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -350,7 +351,7 @@ function ActiveSeriesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Dizi İsmi Ara..."
+                                        placeholder="Search Serie Name..."
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
@@ -359,27 +360,27 @@ function ActiveSeriesList({ navigation, route }) {
                                 {selectedSerie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Dizi"} text={selectedSerie.name} />
+                                        <Input label={"Selected Serie"} text={selectedSerie.name} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedSerie.first_air_date)} />
+                                                <Input label={"Release Date"} text={formatDate(selectedSerie.first_air_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedSerie.vote_average.toFixed(1)} />
+                                                <Input label={"Score"} text={selectedSerie.vote_average.toFixed(1)} />
                                             </View>
                                         </View>
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Sezon Sayısı"} text={seasons} />
+                                                <Input label={"Number Of Seasons"} text={seasons} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Bölüm Sayısı"} text={episodes} />
+                                                <Input label={"Number Of Episodes"} text={episodes} />
                                             </View>
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
+                                        <Input label={"Categories"} text={categoryText} />
 
                                         <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                            <Text style={styles.buttonText} >Diziyi Kaydet</Text>
+                                            <Text style={styles.buttonText} >Save Serie</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (

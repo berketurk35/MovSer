@@ -79,6 +79,7 @@ function MoviesList({ navigation, route }) {
         setModalVisible(false);
         setSearchResults("");
         setSearchText("");
+        setSelectedMovie("");
     };
 
     const saveMovie = async () => {
@@ -196,7 +197,7 @@ function MoviesList({ navigation, route }) {
     };
 
     const handleMovieSelect = async (movie) => {
-        //console.log(movie);
+        
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);

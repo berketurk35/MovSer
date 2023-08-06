@@ -10,16 +10,16 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
 
     function formatSerieName(name, maxLength) {
         if (name.length <= maxLength) {
-          return name;
+            return name;
         } else {
-          return name.substring(0, maxLength - 3) + '...';
+            return name.substring(0, maxLength - 3) + '...';
         }
-      }
-      
-      const sName = serieName;
-      const maxLengthToShow = 34;
-      
-      const formattedSerieName = formatSerieName(sName, maxLengthToShow); 
+    }
+
+    const sName = serieName;
+    const maxLengthToShow = 34;
+
+    const formattedSerieName = formatSerieName(sName, maxLengthToShow);
 
     return (
         <View style={styles.card} >
@@ -32,11 +32,9 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
                     />
                 </View>
                 <View style={styles.rightCard}>
-                    <View style={styles.movieNameCard} >
-                        <Text style={styles.textMovie} >
-                            {formattedSerieName}
-                        </Text>
-                    </View>
+                    <Text style={styles.textMovie} >
+                        {formattedSerieName}
+                    </Text>
                     <Text style={styles.textCategory}>
                         {category}
                     </Text>
@@ -65,19 +63,13 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
                                 {vote}
                             </Text>
                         </View>
-                        <TouchableOpacity onPress={onPressList} style={styles.icon2}>
-                            <Icon name={iconName2} color={"green"} size={18} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
-                            <Icon name={iconName} color={"green"} size={18} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                            <Icon name={"cancel"} color={"red"} size={18} />
-                        </TouchableOpacity>
-
                     </View>
-
-
+                    <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
+                        <Icon name={iconName} color={"green"} size={16} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
+                        <Icon name={"cancel"} color={"red"} size={16} />
+                    </TouchableOpacity>
                 </View>
 
             </View>

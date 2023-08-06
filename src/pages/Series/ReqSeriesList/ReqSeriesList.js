@@ -30,28 +30,10 @@ function ReqSeriesList({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
     const [instantDate, setInstantDate] = useState('');
-    
+
     useEffect(() => {
-        // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedSeries();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedSeries = [Movie, ...savedReqSeries];
-            setSavedReqSeries(updatedSeries);
-            AsyncStorage.setItem("savedReqSeries", JSON.stringify(updatedSeries))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedSeries();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
-            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
-          }
-        }, [route.params]);
+    }, []);
 
     const fetchSavedSeries = async () => {
         try {
@@ -70,6 +52,9 @@ function ReqSeriesList({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSearchResults("");
+        setSelectedSerie("");
+        setSearchText("");
     };
 
     const saveSerie = async () => {
@@ -144,9 +129,7 @@ function ReqSeriesList({ navigation, route }) {
             setFinalDate(formattedDuration);
             setSeasons(response.data.number_of_seasons);
             setEpisodes(response.data.number_of_episodes);
-            //const test = JSON.stringify(response, null, 2);
-            //console.log("id den ne geliyor?", test);
-
+            console.log(response);
         } catch (error) {
             console.error(error);
         }
@@ -194,7 +177,7 @@ function ReqSeriesList({ navigation, route }) {
     };
 
     const handleSerieSelect = async (serie) => {
-        //console.log("Ne geliyor?",serie)
+
         setSelectedSerie(serie);
         setSearchText(serie.name);
         getSerieDetails(serie.id);
@@ -250,8 +233,10 @@ function ReqSeriesList({ navigation, route }) {
                 />
                 <View>
                     <Text>{item.name} </Text>
+                    <View style={{ flexDirection: 'row' }} >
+                        <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
+                    </View>
                 </View>
-
             </View>
         </TouchableOpacity>
     );
@@ -273,9 +258,9 @@ function ReqSeriesList({ navigation, route }) {
             ],
             { cancelable: false }
         );
-      };
-    
-      const moveDeleteSerie = async (serie) => {
+    };
+
+    const moveDeleteSerie = async (serie) => {
         navigation.navigate("ActiveSeriesList", { Serie: serie || null })
         const updatedSeries = savedReqSeries.filter((m) => m.serieId !== serie.serieId);
         setSavedReqSeries(updatedSeries);
@@ -294,7 +279,7 @@ function ReqSeriesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Dizi İsmi Sorgula" placeholderTextColor={"black"} value={searchSerie}
+                        <TextInput placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>
@@ -328,7 +313,7 @@ function ReqSeriesList({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Ekle"
+                    label="Serie Add"
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -358,7 +343,7 @@ function ReqSeriesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Dizi İsmi Ara..."
+                                        placeholder="Search Serie Name..."
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
@@ -367,27 +352,27 @@ function ReqSeriesList({ navigation, route }) {
                                 {selectedSerie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Dizi"} text={selectedSerie.name} />
+                                        <Input label={"Selected Serie"} text={selectedSerie.name} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedSerie.first_air_date)} />
+                                                <Input label={"Release Date"} text={formatDate(selectedSerie.first_air_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedSerie.vote_average.toFixed(1)} />
+                                                <Input label={"Score"} text={selectedSerie.vote_average.toFixed(1)} />
                                             </View>
                                         </View>
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Sezon Sayısı"} text={seasons} />
+                                                <Input label={"Number Of Seasons"} text={seasons} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Bölüm Sayısı"} text={episodes} />
+                                                <Input label={"Number Of Episodes"} text={episodes} />
                                             </View>
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
+                                        <Input label={"Categories"} text={categoryText} />
 
                                         <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                            <Text style={styles.buttonText} >Diziyi Kaydet</Text>
+                                            <Text style={styles.buttonText} >Save Serie</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (

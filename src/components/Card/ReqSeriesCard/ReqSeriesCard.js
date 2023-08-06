@@ -66,16 +66,13 @@ function ReqSeriesCard({ serieName, releaseDate, instaDate, vote, category, post
                                 {vote}
                             </Text>
                         </View>
-                        <TouchableOpacity onPress={onPressList} style={styles.icon2}>
-                            <Icon name={iconName} color={"green"} size={18} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                            <Icon name={"cancel"} color={"red"} size={18} />
-                        </TouchableOpacity>
-
                     </View>
-
-
+                    <TouchableOpacity onPress={onPressList} style={styles.icon2}>
+                        <Icon name={iconName} color={"green"} size={16} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
+                        <Icon name={"cancel"} color={"red"} size={16} />
+                    </TouchableOpacity>
                 </View>
 
             </View>
