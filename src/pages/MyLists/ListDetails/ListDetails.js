@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
+
 import styles from "./ListDetailsStyles";
+import { Dimensions } from "react-native";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
+
 import Icon from "react-native-vector-icons/Ionicons";
+import IconMaterial from "react-native-vector-icons/MaterialIcons";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,6 +37,8 @@ function ListDetails({ navigation, route }) {
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
 
+    const ref = useRef(null);
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
@@ -39,17 +48,17 @@ function ListDetails({ navigation, route }) {
             const updatedListDetails = [Movie, ...savedMovies];
             setSavedMovies(updatedListDetails);
             AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
+                .then(() => {
+                    console.log("Film başarıyla eklendi.");
+                    fetchSavedMovies();
+                })
+                .catch((error) => {
+                    console.log("Film eklenirken bir hata oluştu:", error);
+                });
+
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
-          }
+        }
     }, [route.params]);
 
     const fetchSavedMovies = async () => {
@@ -103,7 +112,7 @@ function ListDetails({ navigation, route }) {
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedListDetails);
-            console.log("Burası" ,updatedListDetails);
+            console.log("Burası", updatedListDetails);
             // Modalı kapat
             setSearchResults("");
             setSelectedMovie("");
@@ -160,7 +169,6 @@ function ListDetails({ navigation, route }) {
         return formattedDate;
     };
 
-
     const fetchGenreNames = async (genreIds) => {
         try {
             const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
@@ -188,7 +196,7 @@ function ListDetails({ navigation, route }) {
     };
 
     const handleMovieSelect = async (movie) => {
-        //console.log(movie);
+
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);
@@ -204,10 +212,10 @@ function ListDetails({ navigation, route }) {
         setGenreNames([]);
     };
 
-    const handleMovieDelete = (movie) => {
+    const handleMovieDelete = (item) => {
         Alert.alert(
             'Film Silme',
-            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            `"${item.movieName}" Filmini silmek istediğinize emin misiniz?`,
             [
                 {
                     text: 'Vazgeç',
@@ -216,15 +224,15 @@ function ListDetails({ navigation, route }) {
                 {
                     text: 'Sil',
                     style: 'destructive',
-                    onPress: () => deleteMovie(movie),
+                    onPress: () => deleteMovie(item),
                 },
             ],
             { cancelable: false }
         );
     };
 
-    const deleteMovie = async (movie) => {
-        const updatedListDetails = savedMovies.filter((m) => m.movieId !== movie.movieId);
+    const deleteMovie = async (item) => {
+        const updatedListDetails = savedMovies.filter((m) => m.movieId !== item.movieId);
         setSavedMovies(updatedListDetails);
         AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
             .then(() => {
@@ -255,117 +263,178 @@ function ListDetails({ navigation, route }) {
         navigation.goBack();
     };
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.customHeader}>
-                <Icon name="arrow-back" size={22} color={"black"} style={styles.backIcon} onPress={back} />
-                <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerText}>{listName}</Text>
-                </View>
-                <View style={{ flex: 0.5 }} /> 
-            </View>
-            <KeyboardAvoidingView style={styles.container} >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
-                    </View>
-                </View>
-                <View style={styles.seperator} />
-                <ScrollView>
-                    <View style={styles.content}>
-                        {savedMovies
-                            .filter(
-                                (movie) =>
-                                    movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
-                            )
-                            .map((movie, index) => (
-                                <MovSerCard
-                                    key={movie.movieId}
-                                    movieName={movie.movieName}
-                                    date={movie.movieDate}
-                                    vote={movie.movieVote}
-                                    category={movie.movieCategory}
-                                    poster={movie.moviePoster}
-                                    time={movie.movieTime}
-                                    onPressDelete={() => handleMovieDelete(movie)}
-                                    
-                                />
-                            ))}
-                    </View>
-                </ScrollView>
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    label="Ekle"
-                    color="white"
-                    onPress={handleFabPress}
-                />
+    function formatMovieName(name, maxLength) {
+        if (name.length <= maxLength) {
+            return name;
+        } else {
+            return name.substring(0, maxLength - 3) + '...';
+        }
+    }
 
-            </KeyboardAvoidingView>
+    const renderItem = ({ item, drag }) => {
 
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity
-                    style={styles.modalBackground}
-                    activeOpacity={1}
-                    onPress={closeModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.modalContent}
-                            onPress={() => { }}
-                        >
-                            <View>
-                                <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                    <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder="Film İsmi Ara..."
-                                        onFocus={handleSearchBarPress}
-                                        style={styles.searchText}
-                                    />
-                                </View>
+        const sName = item.movieName;
+        const maxLengthToShow = 34;
 
-                                {selectedMovie ? (
-                                    <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+        const formattedMovieName = formatMovieName(sName, maxLengthToShow);
+
+        const { isActive } = useOnCellActiveAnimation();
+
+        return (
+            <ScaleDecorator>
+                <OpacityDecorator activeOpacity={1} >
+                    <ShadowDecorator>
+                        <TouchableOpacity onLongPress={drag} activeOpacity={1} style={{ height: Dimensions.get("window").height / 5, elevation: isActive ? 60 : 0, shadowColor: "white",}} >
+                            <Animated.View>
+                                <View style={styles.card} >
+                                    <View style={styles.topCard} >
+                                        <View style={styles.poster} >
+                                            <Image
+                                                source={{ uri: `${IMAGE_BASE_URL}${item.moviePoster}` }}
+                                                resizeMode="contain"
+                                                style={styles.image}
+                                            />
+                                        </View>
+                                        <View style={styles.rightCard}>
+                                            <View style={styles.movieNameCard} >
+                                                <Text style={styles.textMovie} >
+                                                    {formattedMovieName}
+                                                </Text>
                                             </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                            <Text style={styles.textCategory}>
+                                                {item.movieCategory}
+                                            </Text>
+                                            <View style={styles.topCard}>
+                                                <IconMaterial name={"date-range"} color={"yellow"} size={16} style={styles.iconx} />
+                                                <Text style={styles.textDate}>
+                                                    {item.movieDate}
+                                                </Text>
+                                                <Text style={styles.textDate}>
+                                                    |    {item.movieTime}
+                                                </Text>
+                                            </View>
+                                            <View style={styles.topCard} >
+                                                <View style={{ flexDirection: "row", flex: 1 }} >
+                                                    <Icon name={"star"} color={"green"} size={16} style={styles.iconx} />
+                                                    <Text style={styles.textVote}>
+                                                        {item.movieVote}
+                                                    </Text>
+                                                </View>
+                                                <TouchableOpacity onPress={() => handleMovieDelete(item)} style={styles.icon2}>
+                                                    <IconMaterial name={"cancel"} color={"red"} size={18} />
+                                                </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
-
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
-                                        </TouchableOpacity>
                                     </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
-                                    />
-                                )}
-                            </View>
+                                </View>
+                            </Animated.View>
                         </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+                    </ShadowDecorator>
+                </OpacityDecorator>
+            </ScaleDecorator>
+        );
+    };
 
-        </SafeAreaView>
+    return (
+        <GestureHandlerRootView style={styles.container} >
+            <SafeAreaView style={styles.container}>
+                <View style={styles.customHeader}>
+                    <Icon name="arrow-back" size={22} color={"black"} style={styles.backIcon} onPress={back} />
+                    <View style={styles.headerTextContainer}>
+                        <Text style={styles.headerText}>{listName}</Text>
+                    </View>
+                    <View style={{ flex: 0.5 }} />
+                </View>
+                <KeyboardAvoidingView style={styles.container} >
+                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                        <View style={styles.search} >
+                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                            <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
+                                onChangeText={setSearchMovie} />
+                        </View>
+                    </View>
+                    <View style={styles.seperator} />
+
+                    <DraggableFlatList
+                        ref={ref}
+                        data={savedMovies}
+                        keyExtractor={(item) => item.movieId}
+                        onDragEnd={({ data }) => setSavedMovies(data)}
+                        renderItem={renderItem}
+                    />
+                    <FAB
+                        style={styles.fab}
+                        icon="plus"
+                        label="Ekle"
+                        color="white"
+                        onPress={handleFabPress}
+                    />
+
+                </KeyboardAvoidingView>
+
+                <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View>
+                                    <View style={styles.searchMovie} >
+                                        <Icon name={"search"} size={16} color="black" style={styles.icon} />
+                                        <TextInput
+                                            value={searchText}
+                                            onChangeText={handleTextChange}
+                                            placeholder="Film İsmi Ara..."
+                                            onFocus={handleSearchBarPress}
+                                            style={styles.searchText}
+                                        />
+                                    </View>
+
+                                    {selectedMovie ? (
+                                        <View>
+                                            <View style={styles.seperator2} />
+                                            <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                            <View style={{ flexDirection: "row" }} >
+                                                <View style={{ flex: 1, marginRight: 10, }} >
+                                                    <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                                </View>
+                                                <View style={{ flex: 1 }}>
+                                                    <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                                </View>
+                                            </View>
+                                            <Input label={"Kategorileri"} text={categoryText} />
+
+                                            <TouchableOpacity style={styles.button} onPress={saveMovie} >
+                                                <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (
+                                        <FlatList
+                                            data={searchResults}
+                                            keyExtractor={(item) => item.id.toString()}
+                                            renderItem={renderMovieItem}
+                                        />
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+            </SafeAreaView>
+        </GestureHandlerRootView>
+
 
 
     )
