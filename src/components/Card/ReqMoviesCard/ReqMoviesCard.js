@@ -10,16 +10,16 @@ function ReqMoviesCard({ instaDate, movieName, date, vote, category, poster, tim
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
-          return name;
+            return name;
         } else {
-          return name.substring(0, maxLength - 3) + '...';
+            return name.substring(0, maxLength - 3) + '...';
         }
-      }
-      
-      const sName = movieName;
-      const maxLengthToShow = 34;
-      
-      const formattedMovieName = formatMovieName(sName, maxLengthToShow); 
+    }
+
+    const sName = movieName;
+    const maxLengthToShow = 34;
+
+    const formattedMovieName = formatMovieName(sName, maxLengthToShow);
 
     return (
         <View style={styles.card} >
@@ -57,18 +57,14 @@ function ReqMoviesCard({ instaDate, movieName, date, vote, category, poster, tim
                                 {vote}
                             </Text>
                         </View>
-                        <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
-                            <Icon name={iconName} color={"green"} size={18} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                            <Icon name={"cancel"} color={"red"} size={18} />
-                        </TouchableOpacity>
-
                     </View>
-
-
                 </View>
-
+                <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
+                    <Icon name={iconName} color={"green"} size={16} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
+                    <Icon name={"cancel"} color={"#ff675c"} size={16} />
+                </TouchableOpacity>
             </View>
         </View>
 

@@ -102,4 +102,7 @@ export default StyleSheet.create({
         flex: 1,
         fontSize: 14,
     },
+    flatlistBox: {
+        height: Dimensions.get("window").height / 2.5,
+    }
 });

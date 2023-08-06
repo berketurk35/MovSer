@@ -41,7 +41,6 @@ export default StyleSheet.create({
     poster: {
         flex: 0.8,
     },
-    
     image: {
         height: Dimensions.get("window").height / 5.5,
         margin: 6,
@@ -57,8 +56,18 @@ export default StyleSheet.create({
         paddingLeft: 6,
     },
     icon2: {
-        alignSelf: "center",
-        marginRight: 10,
+        position: "absolute",
+        top: 0,
+        right: 25,
+        marginTop: 10,
+        marginRight: 14,
+    },
+    icon3: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+        marginTop: 10,
+        marginRight: 14,
     },
     movieNameCard: {
         backgroundColor: "#1f1f1f",

@@ -27,7 +27,7 @@ function MoviesList({ navigation, route }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
-    
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
@@ -38,18 +38,18 @@ function MoviesList({ navigation, route }) {
             const updatedMovies = [Movie, ...savedMovies];
             setSavedMovies(updatedMovies);
             AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
+                .then(() => {
+                    console.log("Film başarıyla eklendi.");
+                    fetchSavedMovies();
+                })
+                .catch((error) => {
+                    console.log("Film eklenirken bir hata oluştu:", error);
+                });
+
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
-          }
-        }, [route.params]);
+        }
+    }, [route.params]);
 
     const fetchSavedMovies = async () => {
         try {
@@ -77,6 +77,8 @@ function MoviesList({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSearchResults("");
+        setSearchText("");
     };
 
     const saveMovie = async () => {
@@ -109,7 +111,7 @@ function MoviesList({ navigation, route }) {
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedMovies);
-            
+
             // Modalı kapat
             setSearchResults("");
             setSelectedMovie("");
@@ -241,38 +243,6 @@ function MoviesList({ navigation, route }) {
             });
     };
 
-    const onPressAddList = (movie) => {
-        Alert.alert(
-            'Listeye Film Taşıma',
-            `"${movie.movieName}" Filmini listeye taşımak ve buradan silmek istediğinize emin misiniz ? `,
-            [
-                {
-                    text: 'Vazgeç',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Taşı ve Sil',
-                    style: 'destructive',
-                    onPress: () => moveDeleteMovie(movie),
-                },
-            ],
-            { cancelable: false }
-        );
-      };
-    
-      const moveDeleteMovie = async (movie) => {
-        navigation.navigate("ListDetails", { Movie: movie || null, listName: 'deneme'  })
-        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
-        setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
-            .then(() => {
-                console.log('Film başarıyla silindi.');
-            })
-            .catch((error) => {
-                console.log('Film silinirken bir hata oluştu:', error);
-            });
-    };
-
     const renderMovieItem = ({ item }) => (
         <TouchableOpacity onPress={() => handleMovieSelect(item)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -282,9 +252,8 @@ function MoviesList({ navigation, route }) {
                 />
                 <View>
                     <Text>{item.title} </Text>
-
+                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
                 </View>
-
             </View>
         </TouchableOpacity>
     );
@@ -295,9 +264,9 @@ function MoviesList({ navigation, route }) {
             <KeyboardAvoidingView style={styles.container} behavior="height" >
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
+                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                        <TextInput style={{ fontSize: 13 }} placeholder="Filter Movie Name" placeholderTextColor={"black"} value={searchMovie}
+                            onChangeText={setSearchMovie}  />
                     </View>
                 </View>
                 <View style={styles.seperator} />
@@ -317,9 +286,7 @@ function MoviesList({ navigation, route }) {
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
-                                    onPressList={() => onPressAddList(movie)}
                                     onPressDelete={() => handleMovieDelete(movie)}
-                                    iconName={"library-add"}
                                 />
                             ))}
                     </View>
@@ -327,7 +294,7 @@ function MoviesList({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Ekle"
+                    label="Movie Add"
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -357,7 +324,7 @@ function MoviesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Film İsmi Ara..."
+                                        placeholder="Search Movie Name..."
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
@@ -366,19 +333,19 @@ function MoviesList({ navigation, route }) {
                                 {selectedMovie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                        <Input label={"Selected Movie"} text={selectedMovie.title} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                                <Input label={"Release Date"} text={formatDate(selectedMovie.release_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                                <Input label={"Score"} text={selectedMovie.vote_average.toFixed(1)} />
                                             </View>
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
+                                        <Input label={"Categories"} text={categoryText} />
 
                                         <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                            <Text style={styles.buttonText} >Save Movie</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (
