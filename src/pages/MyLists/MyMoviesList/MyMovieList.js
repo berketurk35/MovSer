@@ -203,7 +203,7 @@ function MyMovieList({ navigation }) {
     }
 
     function goToListDetails(listName) {
-        navigation.navigate("ListDetails", { listName });
+        navigation.navigate("MovieListDetails", { listName });
     }
 
     return (

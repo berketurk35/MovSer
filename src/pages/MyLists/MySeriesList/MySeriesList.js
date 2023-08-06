@@ -1,73 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated';
+import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import styles from "./MySeriesListStyles";
 
-import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
-import Input from "../../../components/Input/Input";
+import ListCard from "../../../components/Card/ListCard/ListCard";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 
+import Swiper from "react-native-swiper";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import axios from "react-native-axios";
-
-const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
-const BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
-
-function MyLists({ navigation, route }) {
+function MySerieList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [savedMovies, setSavedMovies] = useState([]);
-    const [searchMovie, setSearchMovie] = useState('');
-    const [searchText, setSearchText] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [selectedMovie, setSelectedMovie] = useState(null);
-    const [genreNames, setGenreNames] = useState([]);
-    const [categoryText, setCategoryText] = useState("");
-    const [duration, setDuration] = useState("");
+    const [savedSeriesList, setSavedSeriesList] = useState([]);
+    const [searchSerie, setSearchSerie] = useState('');
+    const [cardName, setCardName] = useState("");
+
+    const [platformVisible, setPlatformVisible] = useState(false);
+    const [picturesVisible, setPicturesVisible] = useState(false);
+    const [swiperVisible, setSwiperVisible] = useState(false);
+    const [swiperVisible2, setSwiperVisible2] = useState(false);
+    const [selectedPlatform, setSelectedPlatform] = useState(null);
+    const [selectedImage, setSelectedImage] = useState("");
+
+    const ref = useRef(null);
     
     useEffect(() => {
-        // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedMovies();
-        //clearData();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedMovies = [Movie, ...savedMovies];
-            setSavedMovies(updatedMovies);
-            AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
-              .then(() => {
-                console.log("Film başarıyla eklendi.");
-                fetchSavedMovies();
-              })
-              .catch((error) => {
-                console.log("Film eklenirken bir hata oluştu:", error);
-              });
-      
-            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
-          }
-        }, [route.params]);
+        fetchSavedSeries();
+        }, []);
 
-    const fetchSavedMovies = async () => {
+    const fetchSavedSeries = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedMovies');
-            if (movies) {
-                setSavedMovies(JSON.parse(movies));
+            const updatedSerieLists = await AsyncStorage.getItem('serieList');
+            if (updatedSerieLists) {
+                setSavedMovies(JSON.parse(updatedSerieLists));
             }
         } catch (error) {
             console.log('Hata: ', error);
-        }
-    };
-
-    const clearData = async () => {
-        try {
-            await AsyncStorage.clear();
-            console.log('Veriler başarıyla sıfırlandı.');
-        } catch (error) {
-            console.log('Veriler sıfırlanırken bir hata oluştu:', error);
         }
     };
 
@@ -77,143 +53,47 @@ function MyLists({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setCardName("");
     };
 
-    const saveMovie = async () => {
+    const saveList = async () => {
         // Verileri bir obje olarak hazırla
-        const movieData = {
-            movieId: selectedMovie.id,
-            movieName: selectedMovie.title,
-            movieDate: formatDate(selectedMovie.release_date),
-            movieVote: selectedMovie.vote_average.toFixed(1),
-            movieCategory: categoryText,
-            moviePoster: selectedMovie.poster_path,
-            movieTime: duration
+        const listData = {
+            id: cardName,
+            listName: cardName,
+            cardImage: selectedImage,
         };
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedMovies');
-            let updatedMovies = [];
+            const existingMovies = await AsyncStorage.getItem('serieList');
+            let updatedSerieLists = [];
 
             if (existingMovies) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
-                updatedMovies = JSON.parse(existingMovies);
+                updatedSerieLists = JSON.parse(existingMovies);
             }
 
             // Yeni filmi ekle
-            updatedMovies.unshift(movieData);
+            updatedSerieLists.unshift(listData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem('serieList', JSON.stringify(updatedSerieLists));
 
             // Kaydedilen filmleri güncelle
-            setSavedMovies(updatedMovies);
+            setSavedSeriesList(updatedSerieLists);
 
             // Modalı kapat
-            setSearchResults("");
-            setSelectedMovie("");
-            setSearchText("");
             closeModal();
         } catch (error) {
             console.log('Hata: ', error);
         }
     };
 
-    const searchMovies = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/search/movie`, {
-                params: {
-                    api_key: API_KEY,
-                    query: searchText,
-                },
-            });
-
-            const results = response.data.results.slice(0, 4);
-            setSearchResults(results);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const getMovieDetails = async (movieId) => {
-        try {
-            const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
-                params: {
-                    api_key: API_KEY,
-                },
-            });
-            const runtime = response.data.runtime;
-            const formattedDuration = formatDuration(runtime);
-            setDuration(formattedDuration);
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const formatDuration = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-
-        return `${hours} h ${remainingMinutes} m`;
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const formattedDate = date.toLocaleDateString('tr-TR'); // tr-TR, Türkiye'nin bölgesel kodudur
-
-        return formattedDate;
-    };
-
-
-    const fetchGenreNames = async (genreIds) => {
-        try {
-            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
-                params: {
-                    api_key: API_KEY,
-                },
-            });
-
-            const genres = response.data.genres;
-            const names = genreIds.map((genreId) => {
-                const genre = genres.find((g) => g.id === genreId);
-                return genre ? genre.name : '';
-            });
-
-            return names;
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-    };
-
-    const handleTextChange = (text) => {
-        setSearchText(text);
-        searchMovies();
-    };
-
-    const handleMovieSelect = async (movie) => {
-        //console.log(movie);
-        setSelectedMovie(movie);
-        setSearchText(movie.title);
-        getMovieDetails(movie.id);
-        // Film tür adlarını al
-        const genreNames = await fetchGenreNames(movie.genre_ids);
-
-        // Kategori adlarını ekrana yazdır
-        setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
-    };
-
-    const handleSearchBarPress = () => {
-        setSelectedMovie(null);
-        setGenreNames([]);
-    };
-
-    const handleMovieDelete = (movie) => {
+    const handleDeleteCard = (serie, index) => {
         Alert.alert(
-            'Film Silme',
-            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            'Kart Silme',
+            `"${serie.listName}" isimli kartını silmek istediğinize emin misiniz?`,
             [
                 {
                     text: 'Vazgeç',
@@ -222,159 +102,538 @@ function MyLists({ navigation, route }) {
                 {
                     text: 'Sil',
                     style: 'destructive',
-                    onPress: () => deleteMovie(movie),
+                    onPress: () => deleteSerie(index),
                 },
             ],
             { cancelable: false }
         );
     };
 
-    const deleteMovie = async (movie) => {
-        const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
-        setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
+    const deleteSerie = async (index) => {
+        const updatedSerieLists = [...savedSeriesList];
+        updatedSerieLists.splice(index, 1);
+        setSavedSeriesList(updatedSerieLists);
+        AsyncStorage.setItem('serieList', JSON.stringify(updatedSerieLists))
             .then(() => {
-                console.log('Film başarıyla silindi.');
+                console.log('Kart başarıyla silindi.');
             })
             .catch((error) => {
-                console.log('Film silinirken bir hata oluştu:', error);
+                console.log('Kart silinirken bir hata oluştu:', error);
             });
     };
 
-    const renderMovieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.title} </Text>
+    function openPlatform() {
+        setPlatformVisible(!platformVisible);
+        setPicturesVisible(false);
+    }
 
-                </View>
+    function openPictures() {
+        setPicturesVisible(!picturesVisible);
+        setPlatformVisible(false);
+    }
 
-            </View>
-        </TouchableOpacity>
-    );
+    function handleImageClick(platform) {
+        setSelectedPlatform(platform);
+        setSelectedImage(platform);
+        setSwiperVisible(true);
+        setSwiperVisible2(false);
+    }
 
-    function banaTikla() {
-        navigation.navigate("Test");
+    function handleImageClick2(platform) {
+        setSelectedPlatform(platform);
+        setSelectedImage(platform);
+        setSwiperVisible2(true);
+        setSwiperVisible(false);
+
+    }
+
+    function getPlatformImage(platform) {
+        switch (platform) {
+            case "netflix":
+                return require("../../../images/netflix.png");
+            case "prime":
+                return require("../../../images/prime.png");
+            case "disney":
+                return require("../../../images/disney.png");
+            case "blutv":
+                return require("../../../images/blutv.png");
+            case "mubi":
+                return require("../../../images/mubi.png");
+            case "exxen":
+                return require("../../../images/exxen.png");
+            case "appletv":
+                return require("../../../images/appletv.png");
+            case "hbo":
+                return require("../../../images/hbo.png");
+            default:
+                return;
+        }
+    }
+
+    function getCategoryImage(platform) {
+        switch (platform) {
+            case "1":
+                return require("../../../images/1.png");
+            case "2":
+                return require("../../../images/2.png");
+            case "3":
+                return require("../../../images/3.png");
+            case "4":
+                return require("../../../images/4.png");
+            case "5":
+                return require("../../../images/5.png");
+            case "6":
+                return require("../../../images/6.png");
+            case "7":
+                return require("../../../images/7.png");
+            case "8":
+                return require("../../../images/8.png");
+            case "9":
+                return require("../../../images/9.png");
+            case "10":
+                return require("../../../images/10.png");
+            case "11":
+                return require("../../../images/11.png");
+            case "12":
+                return require("../../../images/12.png");
+            default:
+                return;
+        }
+    };
+
+    function goToListDetails(listName) {
+        navigation.navigate("SerieListDetails", { listName });
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                        <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
-                            <Text onPress={banaTikla} > Bana tıkla </Text>
-                    </View>
-                </View>
-                <View style={styles.seperator} />
-                <ScrollView>
-                    <View style={styles.content}>
-                        {savedMovies
-                            .filter(
-                                (movie) =>
-                                    movie.movieName.toLowerCase().includes(searchMovie.toLowerCase())
-                            )
-                            .map((movie, index) => (
-                                <MovSerCard
-                                    key={movie.movieId}
-                                    movieName={movie.movieName}
-                                    date={movie.movieDate}
-                                    vote={movie.movieVote}
-                                    category={movie.movieCategory}
-                                    poster={movie.moviePoster}
-                                    time={movie.movieTime}
-                                    onPressList={null}
-                                    onPressDelete={() => handleMovieDelete(movie)}
-                                    iconName={"library-add"}
-                                />
-                            ))}
-                    </View>
-                </ScrollView>
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    label="Ekle"
-                    color="white"
-                    onPress={handleFabPress}
-                />
-
-            </KeyboardAvoidingView>
-
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity
-                    style={styles.modalBackground}
-                    activeOpacity={1}
-                    onPress={closeModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.modalContent}
-                            onPress={() => { }}
-                        >
-                            <View>
-                                <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                    <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder="Film İsmi Ara..."
-                                        onFocus={handleSearchBarPress}
-                                        style={styles.searchText}
+        <GestureHandlerRootView style={styles.container}>
+            <SafeAreaProvider >
+                <SafeAreaView style={styles.container}>
+                    <KeyboardAvoidingView style={styles.container} behavior="height" >
+                        <View style={{ flexDirection: "row", backgroundColor: "gray", opacity: 0.7 }} >
+                            <View style={styles.search} >
+                                <Icon name="search" size={20} color={"black"} style={styles.icon} />
+                                <TextInput placeholder="Search Card Name" placeholderTextColor={"black"} value={searchSerie}
+                                    onChangeText={setSearchSerie} />
+                            </View>
+                        </View>
+                        
+                            <DraggableFlatList
+                                ref={ref}
+                                data={savedSeriesList}
+                                keyExtractor={(item) => item.id}
+                                onDragEnd={({ data }) => setSavedSeriesList(data)}
+                                renderItem={({ item, drag }) => (
+                                    <ListCard
+                                      id={item.id}
+                                      cardName={item.listName}
+                                      imageName={item.cardImage}
+                                      onPressDetail={() => goToListDetails(item.listName)}
+                                      onDrag={drag} 
                                     />
-                                </View>
+                                  )}
+                                />
 
-                                {selectedMovie ? (
+                        <FAB
+                            style={styles.fab}
+                            icon="plus"
+                            label="Add Card"
+                            color="white"
+                            onPress={handleFabPress}
+                        />
+
+                    </KeyboardAvoidingView>
+
+                    <Modal
+                        visible={modalVisible}
+                        transparent={true}
+                        animationType="fade"
+                        onRequestClose={closeModal}
+                    >
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            activeOpacity={1}
+                            onPress={closeModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity
+                                    activeOpacity={1}
+                                    style={styles.modalContent}
+                                    onPress={() => { }}
+                                >
                                     <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={"Seçilen Film"} text={selectedMovie.title} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                        <View>
+                                            <Text style={styles.cardName} > Card Name </Text>
+                                            <View style={styles.searchMovie} >
+                                                <TextInput
+                                                    value={cardName}
+                                                    autoCapitalize="sentences"
+                                                    onChangeText={setCardName}
+                                                    placeholder="Kart ismini yazınız.."
+                                                    style={styles.searchText}
+                                                />
                                             </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
-                                            </View>
+                                            <View style={styles.seperator2} />
+                                            <Text style={styles.imageBack} > Card Background Images </Text>
+                                            <TouchableOpacity onPress={openPlatform}>
+                                                <Text style={styles.text}> -&gt; Video Streaming Platforms</Text>
+                                            </TouchableOpacity>
                                         </View>
-                                        <Input label={"Kategorileri"} text={categoryText} />
+                                        {platformVisible && (
+                                            <View>
+                                                <View style={styles.bodyRow}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("netflix")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/netflix.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("prime")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/prime.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("disney")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/disney.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("blutv")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/blutv.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={styles.bodyRow}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("mubi")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/mubi.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("exxen")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/exxen.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("appletv")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/appletv.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick("hbo")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/hbo.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        )}
+                                        <TouchableOpacity onPress={openPictures}>
+                                            <Text style={styles.text}> -&gt; Pictures from Different Categories</Text>
+                                        </TouchableOpacity>
+                                        {picturesVisible && (
+                                            <View>
+                                                <View style={styles.bodyRow}>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("1")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/1.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("2")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/2.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("3")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/3.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("4")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/4.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={styles.bodyRow}>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("5")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/5.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("6")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/6.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("7")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/7.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("8")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/8.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={styles.bodyRow}>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("9")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/9.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("10")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/10.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("11")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/11.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => handleImageClick2("12")}>
+                                                        <Image
+                                                            style={styles.miniImg}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/12.png")}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        )}
+                                        <View style={styles.seperator3} />
+                                        {swiperVisible && (
+                                            <View style={styles.body}>
+                                                <Text style={styles.preview} >Preview</Text>
+                                                <Swiper
+                                                    showsButtons={true}
+                                                    dotColor="white"
+                                                    showsPagination={true}
 
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                                >
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={getPlatformImage(selectedPlatform)}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/netflix.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/prime.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/disney.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/blutv.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/mubi.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/exxen.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/appletv.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/hbo.png")}
+                                                        />
+                                                    </View>
+                                                </Swiper>
+                                            </View>
+                                        )}
+
+                                        {swiperVisible2 && (
+                                            <View style={styles.body}>
+                                                <Text style={styles.preview} >Preview</Text>
+                                                <Swiper
+                                                    showsButtons={true}
+                                                    dotColor="white"
+                                                    showsPagination={true}
+
+                                                >
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={getCategoryImage(selectedPlatform)}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/1.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/2.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/3.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/4.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/5.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/6.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/7.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/8.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/9.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/10.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/11.png")}
+                                                        />
+                                                    </View>
+                                                    <View style={styles.slide}>
+                                                        <Image
+                                                            style={styles.image}
+                                                            resizeMode="contain"
+                                                            source={require("../../../images/12.png")}
+                                                        />
+                                                    </View>
+                                                </Swiper>
+                                            </View>
+                                        )}
+                                        <TouchableOpacity style={styles.button} onPress={saveList} >
+                                            <Text style={styles.buttonText} >Kartı Kaydet</Text>
                                         </TouchableOpacity>
                                     </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
-                                    />
-                                )}
-
+                                </TouchableOpacity>
                             </View>
-
-
-
                         </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
+                    </Modal>
 
-        </SafeAreaView>
-
-
+                </SafeAreaView>
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
     )
 };
 
-export default MyLists;
+export default MySerieList;
 

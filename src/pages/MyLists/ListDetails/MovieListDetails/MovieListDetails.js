@@ -4,11 +4,11 @@ import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, u
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
-import styles from "./ListDetailsStyles";
+import styles from "./MovieListDetailsStyles";
 import { Dimensions } from "react-native";
 
-import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
-import Input from "../../../components/Input/Input";
+import MovSerCard from "../../../../components/Card/MoviesCard/MoviesCard";
+import Input from "../../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 
@@ -23,7 +23,7 @@ const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
-function ListDetails({ navigation, route }) {
+function MovieListDetails({ navigation, route }) {
 
     const { listName } = route.params;
 
@@ -42,30 +42,11 @@ function ListDetails({ navigation, route }) {
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
-        if (route.params && route.params.Movie) {
-            const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedListDetails = [Movie, ...savedMovies];
-            setSavedMovies(updatedListDetails);
-            AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
-                .then(() => {
-                    console.log("Film başarıyla eklendi.");
-                    fetchSavedMovies();
-                })
-                .catch((error) => {
-                    console.log("Film eklenirken bir hata oluştu:", error);
-                });
-
-            // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
-            navigation.setParams({ Movie: null });
-        }
-    }, [route.params]);
+    }, []);
 
     const fetchSavedMovies = async () => {
         try {
             const movies = await AsyncStorage.getItem(listName);
-            console.log("Buraya da bakam", movies);
-            console.log("list adı?", listName);
             if (movies) {
                 setSavedMovies(JSON.parse(movies));
             }
@@ -440,5 +421,5 @@ function ListDetails({ navigation, route }) {
     )
 };
 
-export default ListDetails;
+export default MovieListDetails;
 

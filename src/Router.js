@@ -18,7 +18,8 @@ import ReqSeriesList from "./pages/Series/ReqSeriesList/ReqSeriesList";
 import MyMovieList from "./pages/MyLists/MyMoviesList/MyMovieList";
 import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
 
-import ListDetails from "./pages/MyLists/ListDetails/ListDetails";
+import MovieListDetails from "./pages/MyLists/ListDetails/MovieListDetails/MovieListDetails";
+import SerieListDetails from "./pages/MyLists/ListDetails/SerieListDetails/SerieListDetails";
 
 import Test from "./pages/Test";
 import ListeTesti from "./pages/ListeTesti";
@@ -54,7 +55,8 @@ function Router() {
                 <Stack.Screen name="MyMovieList" component={MyMovieList} />
                 <Stack.Screen name="MySeriesList" component={MySeriesList} />
 
-                <Stack.Screen name="ListDetails" component={ListDetails} />
+                <Stack.Screen name="MovieListDetails" component={MovieListDetails} />
+                <Stack.Screen name="SerieListDetails" component={SerieListDetails} />
 
                 <Stack.Screen name="Test" component={Test} />
                 <Stack.Screen name="ListeTesti" component={ListeTesti} />

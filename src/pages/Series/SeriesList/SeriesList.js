@@ -142,8 +142,6 @@ function SeriesList({ navigation, route }) {
             setFinalDate(formattedDuration);
             setSeasons(response.data.number_of_seasons);
             setEpisodes(response.data.number_of_episodes);
-            //const test = JSON.stringify(response, null, 2);
-            //console.log("id den ne geliyor?", test);
 
         } catch (error) {
             console.error(error);
