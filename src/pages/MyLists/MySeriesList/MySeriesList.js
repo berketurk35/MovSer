@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, Keyboard } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
@@ -40,7 +40,7 @@ function MySerieList({ navigation }) {
         try {
             const updatedSerieLists = await AsyncStorage.getItem('serieList');
             if (updatedSerieLists) {
-                setSavedMovies(JSON.parse(updatedSerieLists));
+                setSavedSeriesList(JSON.parse(updatedSerieLists));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -54,6 +54,10 @@ function MySerieList({ navigation }) {
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
+        setPlatformVisible(false);
+        setPicturesVisible(false);
+        setSwiperVisible2(false);
+        setSwiperVisible(false);
     };
 
     const saveList = async () => {
@@ -84,10 +88,18 @@ function MySerieList({ navigation }) {
             setSavedSeriesList(updatedSerieLists);
 
             // Modalı kapat
+            setPicturesVisible(false);
+            setPlatformVisible(false);
+            setSwiperVisible2(false);
+            setSwiperVisible(false);
             closeModal();
         } catch (error) {
             console.log('Hata: ', error);
         }
+    };
+
+    const filterSerieListByName = (list, searchSerie) => {
+        return list.filter((item) => item.listName.toLowerCase().includes(searchSerie.toLowerCase()));
     };
 
     const handleDeleteCard = (serie, index) => {
@@ -125,11 +137,13 @@ function MySerieList({ navigation }) {
     function openPlatform() {
         setPlatformVisible(!platformVisible);
         setPicturesVisible(false);
+        Keyboard.dismiss();
     }
 
     function openPictures() {
         setPicturesVisible(!picturesVisible);
         setPlatformVisible(false);
+        Keyboard.dismiss();
     }
 
     function handleImageClick(platform) {
@@ -210,17 +224,17 @@ function MySerieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "gray", opacity: 0.7 }} >
+                        <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
-                                <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                                <TextInput placeholder="Search Card Name" placeholderTextColor={"black"} value={searchSerie}
+                                <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                                <TextInput style={{fontSize: 13}} placeholder="Filter Card Name" placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
                         </View>
                         
                             <DraggableFlatList
                                 ref={ref}
-                                data={savedSeriesList}
+                                data={filterSerieListByName(savedSeriesList, searchSerie)}
                                 keyExtractor={(item) => item.id}
                                 onDragEnd={({ data }) => setSavedSeriesList(data)}
                                 renderItem={({ item, drag }) => (
@@ -269,7 +283,7 @@ function MySerieList({ navigation }) {
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
-                                                    placeholder="Kart ismini yazınız.."
+                                                    placeholder="Write Card Name.."
                                                     style={styles.searchText}
                                                 />
                                             </View>
@@ -440,7 +454,7 @@ function MySerieList({ navigation }) {
                                                 </View>
                                             </View>
                                         )}
-                                        <View style={styles.seperator3} />
+                                        <View style={styles.seperator2} />
                                         {swiperVisible && (
                                             <View style={styles.body}>
                                                 <Text style={styles.preview} >Preview</Text>
@@ -621,7 +635,7 @@ function MySerieList({ navigation }) {
                                             </View>
                                         )}
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
-                                            <Text style={styles.buttonText} >Kartı Kaydet</Text>
+                                            <Text style={styles.buttonText} >Save Card</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>

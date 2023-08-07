@@ -197,7 +197,7 @@ function MoviesList({ navigation, route }) {
     };
 
     const handleMovieSelect = async (movie) => {
-        
+
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);
@@ -267,7 +267,7 @@ function MoviesList({ navigation, route }) {
                     <View style={styles.search} >
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
                         <TextInput style={{ fontSize: 13 }} placeholder="Filter Movie Name" placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie}  />
+                            onChangeText={setSearchMovie} />
                     </View>
                 </View>
                 <View style={styles.seperator} />
@@ -292,6 +292,7 @@ function MoviesList({ navigation, route }) {
                             ))}
                     </View>
                 </ScrollView>
+                
                 <FAB
                     style={styles.fab}
                     icon="plus"

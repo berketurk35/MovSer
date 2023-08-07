@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
@@ -31,11 +31,9 @@ function MyMovieList({ navigation }) {
 
     const ref = useRef(null);
 
-    console.log("savedMovieList", savedMovieList);
-
     useEffect(() => {
         fetchSavedMovies();
-        }, []);
+    }, []);
 
     const fetchSavedMovies = async () => {
         try {
@@ -55,6 +53,10 @@ function MyMovieList({ navigation }) {
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
+        setPlatformVisible(false);
+        setPicturesVisible(false);
+        setSwiperVisible2(false);
+        setSwiperVisible(false);
     };
 
     const saveList = async () => {
@@ -85,10 +87,18 @@ function MyMovieList({ navigation }) {
             setSavedMovieList(updatedMovieLists);
 
             // Modalı kapat
+            setPicturesVisible(false);
+            setPlatformVisible(false);
+            setSwiperVisible2(false);
+            setSwiperVisible(false);
             closeModal();
         } catch (error) {
             console.log('Hata: ', error);
         }
+    };
+
+    const filterMovieListByName = (list, searchMovie) => {
+        return list.filter((item) => item.listName.toLowerCase().includes(searchMovie.toLowerCase()));
     };
 
     const handleDeleteCard = (movie, index) => {
@@ -126,11 +136,13 @@ function MyMovieList({ navigation }) {
     function openPlatform() {
         setPlatformVisible(!platformVisible);
         setPicturesVisible(false);
+        Keyboard.dismiss();
     }
 
     function openPictures() {
         setPicturesVisible(!picturesVisible);
         setPlatformVisible(false);
+        Keyboard.dismiss();
     }
 
     function handleImageClick(platform) {
@@ -211,29 +223,29 @@ function MyMovieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "gray", opacity: 0.7 }} >
+                        <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
-                                <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                                <TextInput placeholder="Search Card Name" placeholderTextColor={"black"} value={searchMovie}
+                                <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                                <TextInput style={{ fontSize: 13 }} placeholder="Filter Card Name" placeholderTextColor={"black"} value={searchMovie}
                                     onChangeText={setSearchMovie} />
                             </View>
                         </View>
-                        
-                            <DraggableFlatList
-                                ref={ref}
-                                data={savedMovieList}
-                                keyExtractor={(item) => item.id}
-                                onDragEnd={({ data }) => setSavedMovieList(data)}
-                                renderItem={({ item, drag }) => (
-                                    <ListCard
-                                      id={item.id}
-                                      cardName={item.listName}
-                                      imageName={item.cardImage}
-                                      onPressDetail={() => goToListDetails(item.listName)}
-                                      onDrag={drag} 
-                                    />
-                                  )}
+
+                        <DraggableFlatList
+                            ref={ref}
+                            data={filterMovieListByName(savedMovieList, searchMovie)}
+                            keyExtractor={(item) => item.id}
+                            onDragEnd={({ data }) => setSavedMovieList(data)}
+                            renderItem={({ item, drag }) => (
+                                <ListCard
+                                    id={item.id}
+                                    cardName={item.listName}
+                                    imageName={item.cardImage}
+                                    onPressDetail={() => goToListDetails(item.listName)}
+                                    onDrag={drag}
                                 />
+                            )}
+                        />
 
                         <FAB
                             style={styles.fab}
@@ -270,15 +282,15 @@ function MyMovieList({ navigation }) {
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
-                                                    placeholder="Kart ismini yazınız.."
+                                                    placeholder="Write Card Name.."
                                                     style={styles.searchText}
                                                 />
                                             </View>
                                             <View style={styles.seperator2} />
                                             <Text style={styles.imageBack} > Card Background Images </Text>
-                                            <TouchableOpacity onPress={openPlatform}>
+                                            <TouchableWithoutFeedback onPress={openPlatform}>
                                                 <Text style={styles.text}> -&gt; Video Streaming Platforms</Text>
-                                            </TouchableOpacity>
+                                            </TouchableWithoutFeedback>
                                         </View>
                                         {platformVisible && (
                                             <View>
@@ -441,7 +453,7 @@ function MyMovieList({ navigation }) {
                                                 </View>
                                             </View>
                                         )}
-                                        <View style={styles.seperator3} />
+                                        <View style={styles.seperator2} />
                                         {swiperVisible && (
                                             <View style={styles.body}>
                                                 <Text style={styles.preview} >Preview</Text>
@@ -622,7 +634,7 @@ function MyMovieList({ navigation }) {
                                             </View>
                                         )}
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
-                                            <Text style={styles.buttonText} >Kartı Kaydet</Text>
+                                            <Text style={styles.buttonText} >Save Card</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>

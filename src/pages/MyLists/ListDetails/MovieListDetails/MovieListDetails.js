@@ -61,6 +61,9 @@ function MovieListDetails({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSearchResults("");
+        setSelectedMovie("");
+        setSearchText("");
     };
 
     const saveMovie = async () => {
@@ -93,7 +96,7 @@ function MovieListDetails({ navigation, route }) {
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedListDetails);
-            console.log("Burası", updatedListDetails);
+
             // Modalı kapat
             setSearchResults("");
             setSelectedMovie("");
@@ -102,6 +105,10 @@ function MovieListDetails({ navigation, route }) {
         } catch (error) {
             console.log('Hata: ', error);
         }
+    };
+
+    const filterMovieListByName = (list, searchMovie) => {
+        return list.filter((item) => item.movieName.toLowerCase().includes(searchMovie.toLowerCase()));
     };
 
     const searchMovies = async () => {
@@ -233,7 +240,7 @@ function MovieListDetails({ navigation, route }) {
                 />
                 <View>
                     <Text>{item.title} </Text>
-
+                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
                 </View>
 
             </View>
@@ -265,7 +272,7 @@ function MovieListDetails({ navigation, route }) {
             <ScaleDecorator>
                 <OpacityDecorator activeOpacity={1} >
                     <ShadowDecorator>
-                        <TouchableOpacity onLongPress={drag} activeOpacity={1} style={{ height: Dimensions.get("window").height / 5, elevation: isActive ? 60 : 0, shadowColor: "white",}} >
+                        <TouchableOpacity onLongPress={drag} activeOpacity={1} style={{ height: Dimensions.get("window").height / 5, elevation: isActive ? 60 : 0, shadowColor: "white", }} >
                             <Animated.View>
                                 <View style={styles.card} >
                                     <View style={styles.topCard} >
@@ -301,10 +308,10 @@ function MovieListDetails({ navigation, route }) {
                                                         {item.movieVote}
                                                     </Text>
                                                 </View>
-                                                <TouchableOpacity onPress={() => handleMovieDelete(item)} style={styles.icon2}>
-                                                    <IconMaterial name={"cancel"} color={"red"} size={18} />
-                                                </TouchableOpacity>
                                             </View>
+                                            <TouchableOpacity onPress={() => handleMovieDelete(item)} style={styles.icon2}>
+                                                <IconMaterial name={"cancel"} color={"#ff675c"} size={16} />
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 </View>
@@ -329,8 +336,8 @@ function MovieListDetails({ navigation, route }) {
                 <KeyboardAvoidingView style={styles.container} >
                     <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                         <View style={styles.search} >
-                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Search Movie Name" placeholderTextColor={"black"} value={searchMovie}
+                            <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                            <TextInput style={{ fontSize: 13 }} placeholder="Filter Movie Name" placeholderTextColor={"black"} value={searchMovie}
                                 onChangeText={setSearchMovie} />
                         </View>
                     </View>
@@ -338,7 +345,7 @@ function MovieListDetails({ navigation, route }) {
 
                     <DraggableFlatList
                         ref={ref}
-                        data={savedMovies}
+                        data={filterMovieListByName(savedMovies, searchMovie)}
                         keyExtractor={(item) => item.movieId}
                         onDragEnd={({ data }) => setSavedMovies(data)}
                         renderItem={renderItem}
@@ -346,7 +353,7 @@ function MovieListDetails({ navigation, route }) {
                     <FAB
                         style={styles.fab}
                         icon="plus"
-                        label="Ekle"
+                        label="Add Movie"
                         color="white"
                         onPress={handleFabPress}
                     />
@@ -376,7 +383,7 @@ function MovieListDetails({ navigation, route }) {
                                         <TextInput
                                             value={searchText}
                                             onChangeText={handleTextChange}
-                                            placeholder="Film İsmi Ara..."
+                                            placeholder="Search Movie Name..."
                                             onFocus={handleSearchBarPress}
                                             style={styles.searchText}
                                         />
@@ -385,19 +392,19 @@ function MovieListDetails({ navigation, route }) {
                                     {selectedMovie ? (
                                         <View>
                                             <View style={styles.seperator2} />
-                                            <Input label={"Seçilen Film"} text={selectedMovie.title} />
+                                            <Input label={"Selected Movie"} text={selectedMovie.title} />
                                             <View style={{ flexDirection: "row" }} >
                                                 <View style={{ flex: 1, marginRight: 10, }} >
-                                                    <Input label={"Çıkış Tarihi"} text={formatDate(selectedMovie.release_date)} />
+                                                    <Input label={"Release Date"} text={formatDate(selectedMovie.release_date)} />
                                                 </View>
                                                 <View style={{ flex: 1 }}>
-                                                    <Input label={"Puanı"} text={selectedMovie.vote_average.toFixed(1)} />
+                                                    <Input label={"Score"} text={selectedMovie.vote_average.toFixed(1)} />
                                                 </View>
                                             </View>
-                                            <Input label={"Kategorileri"} text={categoryText} />
+                                            <Input label={"Categories"} text={categoryText} />
 
                                             <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                                <Text style={styles.buttonText} >Filmi Kaydet</Text>
+                                                <Text style={styles.buttonText} >Save Movie</Text>
                                             </TouchableOpacity>
                                         </View>
                                     ) : (

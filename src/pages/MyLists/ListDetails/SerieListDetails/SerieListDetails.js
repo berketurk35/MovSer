@@ -25,6 +25,7 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 function SerieListDetails({ navigation, route }) {
 
     const { listName } = route.params;
+    const serieListName = (listName + "serie");
 
     const [modalVisible, setModalVisible] = useState(false);
     const [savedSeries, setSavedSeries] = useState([]);
@@ -47,7 +48,7 @@ function SerieListDetails({ navigation, route }) {
 
     const fetchSavedSeries = async () => {
         try {
-            const series = await AsyncStorage.getItem(listName);
+            const series = await AsyncStorage.getItem(serieListName);
             if (series) {
                 setSavedSeries(JSON.parse(series));
             }
@@ -62,6 +63,9 @@ function SerieListDetails({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setSearchResults("");
+        setSelectedSerie("");
+        setSearchText("");
     };
 
     const saveSerie = async () => {
@@ -80,7 +84,7 @@ function SerieListDetails({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingSeries = await AsyncStorage.getItem(listName);
+            const existingSeries = await AsyncStorage.getItem(serieListName);
             let updatedListDetails = [];
 
             if (existingSeries) {
@@ -92,7 +96,7 @@ function SerieListDetails({ navigation, route }) {
             updatedListDetails.unshift(serieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails));
+            await AsyncStorage.setItem(serieListName, JSON.stringify(updatedListDetails));
 
             // Kaydedilen filmleri güncelle
             setSavedSeries(updatedListDetails);
@@ -105,6 +109,10 @@ function SerieListDetails({ navigation, route }) {
         } catch (error) {
             console.log('Hata: ', error);
         }
+    };
+
+    const filterSerieListByName = (list, searchSerie) => {
+        return list.filter((item) => item.serieName.toLowerCase().includes(searchSerie.toLowerCase()));
     };
 
     const searchSeries = async () => {
@@ -180,7 +188,7 @@ function SerieListDetails({ navigation, route }) {
         setSearchText(serie.name);
         getSerieDetails(serie.id);
         // Film tür adlarını al
-        const genreNames = await fetchGenreNames(movie.genre_ids);
+        const genreNames = await fetchGenreNames(serie.genre_ids);
 
         // Kategori adlarını ekrana yazdır
         setCategoryText(genreNames.length > 0 ? genreNames.join(', ') : 'Belirtilmemiş');
@@ -213,7 +221,7 @@ function SerieListDetails({ navigation, route }) {
     const deleteSerie = async (item) => {
         const updatedListDetails = savedSeries.filter((m) => m.serieId !== item.serieId);
         setSavedSeries(updatedListDetails);
-        AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
+        AsyncStorage.setItem(serieListName, JSON.stringify(updatedListDetails))
             .then(() => {
                 console.log('Dizi başarıyla silindi.');
             })
@@ -231,6 +239,7 @@ function SerieListDetails({ navigation, route }) {
                 />
                 <View>
                     <Text>{item.name} </Text>
+                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -291,12 +300,12 @@ function SerieListDetails({ navigation, route }) {
                                                 </Text>
                                             </View>
                                             <View style={styles.topCard}>
-                                                <Icon name={"analytics"} color={"pink"} size={16} style={styles.iconx} />
+                                                <IconMaterial name={"analytics"} color={"pink"} size={16} style={styles.iconx} />
                                                 <Text style={styles.textSeasons}>
-                                                    {item.seasons} Season
+                                                    {item.serieSeasons} Season
                                                 </Text>
                                                 <Text style={styles.textSeasons}>
-                                                    |    {item.episodes} Episode
+                                                    |    {item.serieEpisodes} Episode
                                                 </Text>
                                             </View>
                                             <View style={styles.topCard} >
@@ -306,10 +315,10 @@ function SerieListDetails({ navigation, route }) {
                                                         {item.serieVote}
                                                     </Text>
                                                 </View>
-                                                <TouchableOpacity onPress={() => handleSerieDelete(item)} style={styles.icon2}>
-                                                    <IconMaterial name={"cancel"} color={"red"} size={18} />
-                                                </TouchableOpacity>
                                             </View>
+                                            <TouchableOpacity onPress={() => handleSerieDelete(item)} style={styles.icon2}>
+                                                <IconMaterial name={"cancel"} color={"#ff675c"} size={16} />
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 </View>
@@ -334,8 +343,8 @@ function SerieListDetails({ navigation, route }) {
                 <KeyboardAvoidingView style={styles.container} >
                     <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                         <View style={styles.search} >
-                            <Icon name="search" size={20} color={"black"} style={styles.icon} />
-                            <TextInput placeholder="Search Serie Name" placeholderTextColor={"black"} value={searchSerie}
+                            <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                            <TextInput style={{ fontSize: 13 }} placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
                                 onChangeText={setSearchSerie} />
                         </View>
                     </View>
@@ -343,7 +352,7 @@ function SerieListDetails({ navigation, route }) {
 
                     <DraggableFlatList
                         ref={ref}
-                        data={savedSeries}
+                        data={filterSerieListByName(savedSeries, searchSerie)}
                         keyExtractor={(item) => item.serieId}
                         onDragEnd={({ data }) => setSavedSeries(data)}
                         renderItem={renderItem}
@@ -381,7 +390,7 @@ function SerieListDetails({ navigation, route }) {
                                         <TextInput
                                             value={searchText}
                                             onChangeText={handleTextChange}
-                                            placeholder="Dizi İsmi Ara..."
+                                            placeholder="Search Serie Name..."
                                             onFocus={handleSearchBarPress}
                                             style={styles.searchText}
                                         />
@@ -390,27 +399,27 @@ function SerieListDetails({ navigation, route }) {
                                     {selectedSerie ? (
                                         <View>
                                             <View style={styles.seperator2} />
-                                            <Input label={"Seçilen Dizi"} text={selectedSerie.name} />
+                                            <Input label={"Selected Serie"} text={selectedSerie.name} />
                                             <View style={{ flexDirection: "row" }} >
                                                 <View style={{ flex: 1, marginRight: 10, }} >
-                                                    <Input label={"Çıkış Tarihi"} text={formatDate(selectedSerie.first_air_date)} />
+                                                    <Input label={"Release Date"} text={formatDate(selectedSerie.first_air_date)} />
                                                 </View>
                                                 <View style={{ flex: 1 }}>
-                                                    <Input label={"Puanı"} text={selectedSerie.vote_average.toFixed(1)} />
+                                                    <Input label={"Score"} text={selectedSerie.vote_average.toFixed(1)} />
                                                 </View>
                                             </View>
                                             <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Sezon Sayısı"} text={seasons} />
+                                                <View style={{ flex: 1, marginRight: 10, }} >
+                                                    <Input label={"Number Of Seasons"} text={seasons} />
+                                                </View>
+                                                <View style={{ flex: 1 }}>
+                                                    <Input label={"Number Of Episodes"} text={episodes} />
+                                                </View>
                                             </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={"Bölüm Sayısı"} text={episodes} />
-                                            </View>
-                                        </View>
-                                            <Input label={"Kategorileri"} text={categoryText} />
+                                            <Input label={"Categories"} text={categoryText} />
 
                                             <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                                <Text style={styles.buttonText} >Diziyi Kaydet</Text>
+                                                <Text style={styles.buttonText} >Save Serie</Text>
                                             </TouchableOpacity>
                                         </View>
                                     ) : (
