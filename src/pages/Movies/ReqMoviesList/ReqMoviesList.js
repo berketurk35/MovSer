@@ -233,7 +233,7 @@ function ReqMoviesList({ navigation }) {
                 />
                 <View>
                     <Text>{item.title} </Text>
-
+                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
                 </View>
 
             </View>

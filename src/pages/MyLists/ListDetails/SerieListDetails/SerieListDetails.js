@@ -360,7 +360,7 @@ function SerieListDetails({ navigation, route }) {
                     <FAB
                         style={styles.fab}
                         icon="plus"
-                        label="Ekle"
+                        label="Add Serie"
                         color="white"
                         onPress={handleFabPress}
                     />
