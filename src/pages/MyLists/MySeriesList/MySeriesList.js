@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, Keyboard } from "react-native";
+import { useStats } from "../../../Context/StatContext";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Animated from 'react-native-reanimated';
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
@@ -30,11 +31,14 @@ function MySerieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
 
+    const { serieListCounter, setSerieListCounter } = useStats();
+
     const ref = useRef(null);
     
     useEffect(() => {
         fetchSavedSeries();
-        }, []);
+        setSerieListCounter(savedSeriesList.length);
+        }, [savedSeriesList]);
 
     const fetchSavedSeries = async () => {
         try {

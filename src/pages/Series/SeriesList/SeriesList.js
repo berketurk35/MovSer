@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { useStats } from "../../../Context/StatContext";
 import styles from "./SeriesListStyles";
 
 import SeriesCard from "../../../components/Card/SeriesCard/SeriesCard";
@@ -30,9 +31,12 @@ function SeriesList({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
 
+    const { serieCounter, setSerieCounter } = useStats();
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedSeries();
+        setSerieCounter(savedSeries.length);
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
             // Eğer bir dizi aktarıldıysa, savedSeries dizisine ekleyin
@@ -50,7 +54,7 @@ function SeriesList({ navigation, route }) {
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Serie: null });
         }
-    }, [route.params]);
+    }, [route.params, savedSeries]);
 
     const fetchSavedSeries = async () => {
         try {

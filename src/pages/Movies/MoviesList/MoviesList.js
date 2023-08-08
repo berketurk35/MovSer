@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
+import { useStats } from "../../../Context/StatContext";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./MovieListStyles";
 
@@ -28,9 +29,12 @@ function MoviesList({ navigation, route }) {
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
 
+    const { movieCounter, setMovieCounter } = useStats();
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
+        setMovieCounter(savedMovies.length);
         //clearData();
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
@@ -49,7 +53,7 @@ function MoviesList({ navigation, route }) {
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
         }
-    }, [route.params]);
+    }, [route.params, savedMovies]);
 
     const fetchSavedMovies = async () => {
         try {
@@ -292,7 +296,7 @@ function MoviesList({ navigation, route }) {
                             ))}
                     </View>
                 </ScrollView>
-                
+
                 <FAB
                     style={styles.fab}
                     icon="plus"

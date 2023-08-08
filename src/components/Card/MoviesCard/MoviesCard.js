@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function MoviesCard({ movieName, date, vote, category, poster, time, onPressList, onPressDelete, iconName }) {
+function MoviesCard({ movieName, date, vote, category, poster, time, onPressDelete, iconName }) {
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -32,9 +32,6 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressList
                     />
                 </View>
                 <View style={styles.rightCard}>
-                    <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                        <Icon name={"cancel"} color={"#ff675c"} size={16} />
-                    </TouchableOpacity>
                     <Text style={styles.textMovie} >
                         {formattedMovieName}
                     </Text>
@@ -59,6 +56,9 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressList
                         </View>
                     </View>
                 </View>
+                <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
+                    <Icon name={"cancel"} color={"#ff675c"} size={16} />
+                </TouchableOpacity>
             </View>
         </View>
 

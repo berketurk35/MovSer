@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { useStats } from "../../../Context/StatContext";
 import styles from "./ReqSeriesListStyles";
 
 import ReqSeriesCard from "../../../components/Card/ReqSeriesCard/ReqSeriesCard";
@@ -30,10 +31,13 @@ function ReqSeriesList({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
     const [instantDate, setInstantDate] = useState('');
+    
+    const { reqSerieCounter, setReqSerieCounter } = useStats();
 
     useEffect(() => {
         fetchSavedSeries();
-    }, []);
+        setReqSerieCounter(savedReqSeries.length);
+    }, [savedReqSeries]);
 
     const fetchSavedSeries = async () => {
         try {

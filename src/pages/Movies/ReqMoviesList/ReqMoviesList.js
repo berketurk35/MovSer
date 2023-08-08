@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useStats } from "../../../Context/StatContext";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
@@ -29,10 +30,13 @@ function ReqMoviesList({ navigation }) {
     const [duration, setDuration] = useState("");
     const [instantDate, setInstantDate] = useState('');
 
+    const { reqMovieCounter, setReqMovieCounter } = useStats();
+
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
         fetchSavedMovies();
-    }, []);
+        setReqMovieCounter(savedMovies.length);
+    }, [savedMovies]);
 
     const fetchSavedMovies = async () => {
         try {
