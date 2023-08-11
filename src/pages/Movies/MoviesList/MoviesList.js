@@ -272,6 +272,7 @@ function MoviesList({ navigation, route }) {
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
                         <TextInput style={{ fontSize: 13 }} placeholder="Filter Movie Name" placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
+                            <Text onPress={clearData} > Datayı Sil </Text>
                     </View>
                 </View>
                 <View style={styles.seperator} />

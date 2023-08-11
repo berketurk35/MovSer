@@ -9,7 +9,11 @@ import styles from "./FriendsStyles";
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 
-function Friends() {
+function Friends({navigation}) {
+
+    function banaTıkla() {
+        navigation.navigate("ListeTesti");
+    }
 
     return (
         <SafeAreaProvider >
@@ -22,7 +26,7 @@ function Friends() {
                                 onChangeText={null} />
                         </View>
                     </View>
-
+                    
                     <FriendBox/>
                     <FriendBox/>
                     <FriendBox/>

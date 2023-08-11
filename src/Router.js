@@ -7,6 +7,7 @@ import TabNavigator from "./navigators/TabNavigator";
 import TopNavigator from "./navigators/TopNavigator";
 import TopNavigator2 from "./navigators/TopNavigator2";
 import TopNavigator3 from "./navigators/TopNavigator3";
+import TopNavigator4 from "./navigators/TopNavigator4";
 
 import MoviesList from "./pages/Movies/MoviesList/MoviesList";
 import ReqMoviesList from "./pages/Movies/ReqMoviesList/ReqMoviesList";
@@ -21,10 +22,10 @@ import MySeriesList from "./pages/MyLists/MySeriesList/MySeriesList";
 import MovieListDetails from "./pages/MyLists/ListDetails/MovieListDetails/MovieListDetails";
 import SerieListDetails from "./pages/MyLists/ListDetails/SerieListDetails/SerieListDetails";
 
-import { StatProvider } from "./Context/StatContext";
+import ProfileInfo from "./pages/Profile/ProfileInfo/ProfileInfo";
+import Friends from "./pages/Profile/Friends/Friends";
 
-import Test from "./pages/Test";
-import ListeTesti from "./pages/ListeTesti";
+import { StatProvider } from "./Context/StatContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,8 +62,8 @@ function Router() {
                     <Stack.Screen name="MovieListDetails" component={MovieListDetails} />
                     <Stack.Screen name="SerieListDetails" component={SerieListDetails} />
 
-                    <Stack.Screen name="Test" component={Test} />
-                    <Stack.Screen name="ListeTesti" component={ListeTesti} />
+                    <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
+                    <Stack.Screen name="Friends" component={Friends} />
 
                 </Stack.Navigator>
             </NavigationContainer>
