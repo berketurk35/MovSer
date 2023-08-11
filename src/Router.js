@@ -62,6 +62,7 @@ function Router() {
                     <Stack.Screen name="MovieListDetails" component={MovieListDetails} />
                     <Stack.Screen name="SerieListDetails" component={SerieListDetails} />
 
+                    <Stack.Screen name="TopNavigator4" component={TopNavigator4} />
                     <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
                     <Stack.Screen name="Friends" component={Friends} />
 

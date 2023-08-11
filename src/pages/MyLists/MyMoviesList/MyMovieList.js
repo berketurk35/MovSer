@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useStats } from "../../../Context/StatContext";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Animated from 'react-native-reanimated';
-import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
+
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styles from "./MyMovieListStyles";
 

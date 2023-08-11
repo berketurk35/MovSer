@@ -7,7 +7,6 @@ import Animated from 'react-native-reanimated';
 import styles from "./MovieListDetailsStyles";
 import { Dimensions } from "react-native";
 
-import MovSerCard from "../../../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";

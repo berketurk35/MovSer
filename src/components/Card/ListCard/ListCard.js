@@ -6,8 +6,6 @@ import Animated from 'react-native-reanimated';
 
 import styles from "./ListCardStyles";
 
-import Icon from "react-native-vector-icons/MaterialIcons";
-
 function ListCard({
     id,
     cardName,
