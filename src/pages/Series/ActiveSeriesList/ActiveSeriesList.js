@@ -35,8 +35,18 @@ function ActiveSeriesList({ navigation, route }) {
 
     useEffect(() => {
         // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedSeries();
-        setActiveSerieCounter(savedActiveSeries.length);
+        const fetchAndSetMovies = async () => {
+            try {
+                const series = await AsyncStorage.getItem('savedActiveSeries');
+                if (series) {
+                    setSavedActiveSeries(JSON.parse(series));
+                    setActiveSerieCounter(JSON.parse(series).length);
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
+            }
+        };
+        fetchAndSetMovies();
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
@@ -54,7 +64,7 @@ function ActiveSeriesList({ navigation, route }) {
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Serie: null });
         }
-    }, [route.params,savedActiveSeries]);
+    }, [route.params]);
 
     const fetchSavedSeries = async () => {
         try {

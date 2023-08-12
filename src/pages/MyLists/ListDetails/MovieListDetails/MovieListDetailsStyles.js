@@ -19,13 +19,13 @@ export default StyleSheet.create({
     },
     fab: {
         position: "absolute",
-        margin: 22,
-        marginBottom: 40,
+        margin: 12,
         right: 0,
         bottom: 0,
         backgroundColor: "#1565C0",
-        elevation: 24,
-        shadowColor: "black",
+        borderWidth: 1,
+        borderColor: "white",
+        opacity: 0.8
     },
     modalBackground: {
         flex: 1,
@@ -188,5 +188,11 @@ export default StyleSheet.create({
         backgroundColor: "#1f1f1f",
         elevation: 50,
         marginRight: 6,
+    },
+    info: {
+        textAlign: "center",
+        color: "white",
+        fontSize: 12,
+        paddingBottom: 5,
     }
 });

@@ -30,25 +30,27 @@ function MyMovieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
 
+    const [draggedMovieList, setDraggedMovieList] = useState([]);
     const { movieListCounter, setMovieListCounter } = useStats();
 
     const ref = useRef(null);
 
     useEffect(() => {
-        fetchSavedMovies();
-        setMovieListCounter(savedMovieList.length);
-    }, [savedMovieList]);
-
-    const fetchSavedMovies = async () => {
-        try {
-            const updatedMovieLists = await AsyncStorage.getItem('movieList');
-            if (updatedMovieLists) {
-                setSavedMovieList(JSON.parse(updatedMovieLists));
+        const fetchAndSetMovies = async () => {
+            try {
+                const updatedMovieLists = await AsyncStorage.getItem('movieList');
+                if (updatedMovieLists) {
+                    setSavedMovieList(JSON.parse(updatedMovieLists));
+                    setDraggedMovieList(JSON.parse(updatedMovieLists));
+                    setMovieListCounter(JSON.parse(updatedMovieLists).length);
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
             }
-        } catch (error) {
-            console.log('Hata: ', error);
-        }
-    };
+        };
+
+        fetchAndSetMovies();
+    }, []);
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -89,6 +91,7 @@ function MyMovieList({ navigation }) {
 
             // Kaydedilen filmleri güncelle
             setSavedMovieList(updatedMovieLists);
+            setDraggedMovieList(updatedMovieLists);
 
             // Modalı kapat
             setPicturesVisible(false);
@@ -125,9 +128,9 @@ function MyMovieList({ navigation }) {
     };
 
     const deleteMovie = async (index) => {
-        const updatedMovieLists = [...savedMovieList];
+        const updatedMovieLists = [...draggedMovieList];
         updatedMovieLists.splice(index, 1);
-        setSavedMovieList(updatedMovieLists);
+        setDraggedMovieList(updatedMovieLists);
         AsyncStorage.setItem('movieList', JSON.stringify(updatedMovieLists))
             .then(() => {
                 console.log('Kart başarıyla silindi.');
@@ -218,6 +221,16 @@ function MyMovieList({ navigation }) {
         }
     }
 
+    function handleDragEnd({ data }) {
+        try {
+            AsyncStorage.setItem('movieList', JSON.stringify(data));
+            setSavedMovieList(data);
+            setDraggedMovieList(data);
+        } catch (error) {
+            console.log('Hata:', error);
+        }
+    }
+
     function goToListDetails(listName) {
         navigation.navigate("MovieListDetails", { listName });
     }
@@ -234,23 +247,25 @@ function MyMovieList({ navigation }) {
                                     onChangeText={setSearchMovie} />
                             </View>
                         </View>
-
-                        <DraggableFlatList
-                            ref={ref}
-                            data={filterMovieListByName(savedMovieList, searchMovie)}
-                            keyExtractor={(item) => item.id}
-                            onDragEnd={({ data }) => setSavedMovieList(data)}
-                            renderItem={({ item, drag }) => (
-                                <ListCard
-                                    id={item.id}
-                                    cardName={item.listName}
-                                    imageName={item.cardImage}
-                                    onPressDetail={() => goToListDetails(item.listName)}
-                                    onDrag={drag}
-                                />
-                            )}
-                        />
-
+                        <Text style={styles.info}>
+                                You can rearrange the cards by pressing and holding them.</Text>
+                        <View style={{ flex: 1 }} >
+                            <DraggableFlatList
+                                ref={ref}
+                                data={filterMovieListByName(draggedMovieList, searchMovie)}
+                                keyExtractor={(item) => item.id}
+                                onDragEnd={handleDragEnd}
+                                renderItem={({ item, drag }) => (
+                                    <ListCard
+                                        id={item.id}
+                                        cardName={item.listName}
+                                        imageName={item.cardImage}
+                                        onPressDetail={() => goToListDetails(item.listName)}
+                                        onDrag={drag}
+                                    />
+                                )}
+                            />
+                        </View>
                         <FAB
                             style={styles.fab}
                             icon="plus"
@@ -258,9 +273,7 @@ function MyMovieList({ navigation }) {
                             color="white"
                             onPress={handleFabPress}
                         />
-
                     </KeyboardAvoidingView>
-
                     <Modal
                         visible={modalVisible}
                         transparent={true}
@@ -645,7 +658,6 @@ function MyMovieList({ navigation }) {
                             </View>
                         </TouchableOpacity>
                     </Modal>
-
                 </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>

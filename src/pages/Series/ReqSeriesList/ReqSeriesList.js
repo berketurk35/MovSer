@@ -35,20 +35,19 @@ function ReqSeriesList({ navigation, route }) {
     const { reqSerieCounter, setReqSerieCounter } = useStats();
 
     useEffect(() => {
-        fetchSavedSeries();
-        setReqSerieCounter(savedReqSeries.length);
-    }, [savedReqSeries]);
-
-    const fetchSavedSeries = async () => {
-        try {
-            const series = await AsyncStorage.getItem('savedReqSeries');
-            if (series) {
-                setSavedReqSeries(JSON.parse(series));
+        const fetchAndSetMovies = async () => {
+            try {
+                const series = await AsyncStorage.getItem('savedReqSeries');
+                if (series) {
+                    setSavedReqSeries(JSON.parse(series));
+                    setReqSerieCounter(JSON.parse(series).length);
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
             }
-        } catch (error) {
-            console.log('Hata: ', error);
-        }
-    };
+        };
+        fetchAndSetMovies();
+    }, []);
 
     const handleFabPress = () => {
         setModalVisible(true);

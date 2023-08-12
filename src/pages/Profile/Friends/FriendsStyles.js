@@ -15,9 +15,8 @@ export default StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: "#1565C0",
-        elevation: 24,
-        shadowColor: "black",
-        opacity: 0.9
+        borderWidth: 1,
+        borderColor: "white"
     },
     modalBackground: {
         flex: 1,

@@ -39,6 +39,8 @@ function SerieListDetails({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
 
+    const [draggedSeries, setDraggedSeries] = useState([]);
+
     const ref = useRef(null);
 
     useEffect(() => {
@@ -51,6 +53,7 @@ function SerieListDetails({ navigation, route }) {
             const series = await AsyncStorage.getItem(serieListName);
             if (series) {
                 setSavedSeries(JSON.parse(series));
+                setDraggedSeries(JSON.parse(series));
             }
         } catch (error) {
             console.log('Hata: ', error);
@@ -100,6 +103,7 @@ function SerieListDetails({ navigation, route }) {
 
             // Kaydedilen filmleri güncelle
             setSavedSeries(updatedListDetails);
+            setDraggedSeries(updatedListDetails);
 
             // Modalı kapat
             setSearchResults("");
@@ -249,6 +253,16 @@ function SerieListDetails({ navigation, route }) {
         navigation.goBack();
     };
 
+    function handleDragEnd({ data }) {
+        try {
+            AsyncStorage.setItem(serieListName, JSON.stringify(data));
+            setSavedSeries(data);
+            setDraggedSeries(data);
+        } catch (error) {
+            console.log('Hata:', error);
+        }
+    }
+
     function formatSerieName(name, maxLength) {
         if (name.length <= maxLength) {
             return name;
@@ -349,14 +363,17 @@ function SerieListDetails({ navigation, route }) {
                         </View>
                     </View>
                     <View style={styles.seperator} />
-
-                    <DraggableFlatList
-                        ref={ref}
-                        data={filterSerieListByName(savedSeries, searchSerie)}
-                        keyExtractor={(item) => item.serieId}
-                        onDragEnd={({ data }) => setSavedSeries(data)}
-                        renderItem={renderItem}
-                    />
+                    <Text style={styles.info}>
+                        You can rearrange the movies by pressing and holding them.</Text>
+                    <View style={{ flex: 1 }} >
+                        <DraggableFlatList
+                            ref={ref}
+                            data={filterSerieListByName(draggedSeries, searchSerie)}
+                            keyExtractor={(item) => item.serieId}
+                            onDragEnd={handleDragEnd}
+                            renderItem={renderItem}
+                        />
+                    </View>
                     <FAB
                         style={styles.fab}
                         icon="plus"

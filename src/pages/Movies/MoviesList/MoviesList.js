@@ -32,10 +32,18 @@ function MoviesList({ navigation, route }) {
     const { movieCounter, setMovieCounter } = useStats();
 
     useEffect(() => {
-        // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedMovies();
-        setMovieCounter(savedMovies.length);
-        //clearData();
+        const fetchAndSetMovies = async () => {
+            try {
+                const movies = await AsyncStorage.getItem('savedMovies');
+                if (movies) {
+                    setSavedMovies(JSON.parse(movies));
+                    setMovieCounter(JSON.parse(movies).length);
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
+            }
+        };
+        fetchAndSetMovies();
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
@@ -53,7 +61,7 @@ function MoviesList({ navigation, route }) {
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
         }
-    }, [route.params, savedMovies]);
+    }, [route.params]);
 
     const fetchSavedMovies = async () => {
         try {

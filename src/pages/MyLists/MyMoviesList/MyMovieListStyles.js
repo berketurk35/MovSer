@@ -15,8 +15,9 @@ export default StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: "#1565C0",
-        elevation: 24,
-        shadowColor: "black",
+        borderWidth: 1,
+        borderColor: "black",
+        opacity: 0.8
     },
     modalBackground: {
         flex: 1,
@@ -135,4 +136,8 @@ export default StyleSheet.create({
         color: "white",
         padding: 10,
     },
+    info: {
+        textAlign : "center",
+        fontSize: 12,
+    }
 });

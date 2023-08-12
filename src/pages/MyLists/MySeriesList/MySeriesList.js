@@ -31,25 +31,26 @@ function MySerieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
 
+    const [draggedSerieList, setDraggedSerieList] = useState([]);
     const { serieListCounter, setSerieListCounter } = useStats();
 
     const ref = useRef(null);
-    
-    useEffect(() => {
-        fetchSavedSeries();
-        setSerieListCounter(savedSeriesList.length);
-        }, [savedSeriesList]);
 
-    const fetchSavedSeries = async () => {
-        try {
-            const updatedSerieLists = await AsyncStorage.getItem('serieList');
-            if (updatedSerieLists) {
-                setSavedSeriesList(JSON.parse(updatedSerieLists));
+    useEffect(() => {
+        const fetchAndSetMovies = async () => {
+            try {
+                const updatedSerieLists = await AsyncStorage.getItem('serieList');
+                if (updatedSerieLists) {
+                    setSavedSeriesList(JSON.parse(updatedSerieLists));
+                    setDraggedSerieList(JSON.parse(updatedSerieLists));
+                    setSerieListCounter(JSON.parse(updatedSerieLists).length);
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
             }
-        } catch (error) {
-            console.log('Hata: ', error);
-        }
-    };
+        };
+        fetchAndSetMovies();
+    }, []);
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -90,6 +91,7 @@ function MySerieList({ navigation }) {
 
             // Kaydedilen filmleri güncelle
             setSavedSeriesList(updatedSerieLists);
+            setDraggedSerieList(updatedSerieLists);
 
             // Modalı kapat
             setPicturesVisible(false);
@@ -219,6 +221,16 @@ function MySerieList({ navigation }) {
         }
     };
 
+    function handleDragEnd({ data }) {
+        try {
+            AsyncStorage.setItem('serieList', JSON.stringify(data));
+            setSavedSeriesList(data);
+            setDraggedSerieList(data);
+        } catch (error) {
+            console.log('Hata:', error);
+        }
+    }
+
     function goToListDetails(listName) {
         navigation.navigate("SerieListDetails", { listName });
     }
@@ -231,27 +243,29 @@ function MySerieList({ navigation }) {
                         <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                <TextInput style={{fontSize: 13}} placeholder="Filter Card Name" placeholderTextColor={"black"} value={searchSerie}
+                                <TextInput style={{ fontSize: 13 }} placeholder="Filter Card Name" placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
                         </View>
-                        
+                        <Text style={styles.info}>
+                                You can rearrange the cards by pressing and holding them.</Text>
+                        <View style={{ flex: 1 }}>
                             <DraggableFlatList
                                 ref={ref}
-                                data={filterSerieListByName(savedSeriesList, searchSerie)}
+                                data={filterSerieListByName(draggedSerieList, searchSerie)}
                                 keyExtractor={(item) => item.id}
-                                onDragEnd={({ data }) => setSavedSeriesList(data)}
+                                onDragEnd={handleDragEnd}
                                 renderItem={({ item, drag }) => (
                                     <ListCard
-                                      id={item.id}
-                                      cardName={item.listName}
-                                      imageName={item.cardImage}
-                                      onPressDetail={() => goToListDetails(item.listName)}
-                                      onDrag={drag} 
+                                        id={item.id}
+                                        cardName={item.listName}
+                                        imageName={item.cardImage}
+                                        onPressDetail={() => goToListDetails(item.listName)}
+                                        onDrag={drag}
                                     />
-                                  )}
-                                />
-
+                                )}
+                            />
+                        </View>
                         <FAB
                             style={styles.fab}
                             icon="plus"

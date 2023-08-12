@@ -11,10 +11,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 function Friends({navigation}) {
 
-    function banaTıkla() {
-        navigation.navigate("ListeTesti");
-    }
-
     return (
         <SafeAreaProvider >
             <SafeAreaView style={styles.container}>
