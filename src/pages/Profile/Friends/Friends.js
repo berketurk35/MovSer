@@ -5,11 +5,15 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import FriendBox from "../../../components/FriendBox/FriendBox";
 
 import styles from "./FriendsStyles";
+import Translations from "../../../languages/Translation";
+import { useStats } from "../../../Context/StatContext";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 
 function Friends({navigation}) {
+
+    const { language, setLanguage } = useStats();
 
     return (
         <SafeAreaProvider >
@@ -18,7 +22,7 @@ function Friends({navigation}) {
                     <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13 }} placeholder="Search" placeholderTextColor={"black"} value={null}
+                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={null}
                                 onChangeText={null} />
                         </View>
                     </View>
@@ -30,7 +34,7 @@ function Friends({navigation}) {
                     <FAB
                         style={styles.fab}
                         icon="plus"
-                        label="Add Friend"
+                        label={Translations[language].addFriend}
                         color="white"
                         onPress={null}
                     />

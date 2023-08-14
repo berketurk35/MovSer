@@ -13,7 +13,7 @@ export function StatProvider({ children }) {
     const [movieListCounter, setMovieListCounter] = useState(0);
     const [serieListCounter, setSerieListCounter] = useState(0);
 
-    const [language, setLanguage] = useState("en");
+    const [language, setLanguage] = useState("tr");
 
     return (
         <StatContext.Provider

@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./SeriesCardStyles";
+import Translations from "../../../languages/Translation";
+import { useStats } from "../../../Context/StatContext";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -20,6 +22,8 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
     const maxLengthToShow = 34;
 
     const formattedSerieName = formatSerieName(sName, maxLengthToShow);
+
+    const { language, setLanguage} = useStats();
 
     return (
         <View style={styles.card} >
@@ -50,10 +54,10 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
                     <View style={styles.topCard}>
                         <Icon name={"analytics"} color={"pink"} size={16} style={styles.icon} />
                         <Text style={styles.textSeasons}>
-                            {seasons} Season
+                            {seasons} {Translations[language].season}
                         </Text>
                         <Text style={styles.textSeasons}>
-                            |    {episodes} Episode
+                            |    {episodes} {Translations[language].episode}
                         </Text>
                     </View>
                     <View style={styles.topCard} >

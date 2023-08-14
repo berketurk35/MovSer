@@ -1,4 +1,6 @@
 import React from "react";
+import { useStats } from "../Context/StatContext";
+import Translations from "../languages/Translation";
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
@@ -13,6 +15,7 @@ import Iconx from "react-native-vector-icons/MaterialIcons";
 function TabNavigator() {
 
     const Tab = createMaterialBottomTabNavigator();
+    const { language, setLanguage } = useStats();
 
     return (
         <Tab.Navigator >
@@ -20,28 +23,28 @@ function TabNavigator() {
                 options={
                     {
                         tabBarIcon: ({ color, size }) => (<Icon name="movie-open" size={20} color={"black"} />),
-                        title: "Movies",
+                        title: Translations[language].movies,
                     }
                 } />
             <Tab.Screen name="TopNavigator2" component={TopNavigator2}
                 options={
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="connected-tv" size={20} color={"black"} />),
-                        title: "Series",
+                        title: Translations[language].series,
                     }
                 } />
             <Tab.Screen name="TopNavigator3" component={TopNavigator3}
                 options={
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="list-alt" size={20} color={"black"} />),
-                        title: "Lists",
+                        title: Translations[language].lists,
                     }
                 } />
             <Tab.Screen name="TopNavigator4" component={TopNavigator4}
                 options={
                     {
                         tabBarIcon: ({ color, size }) => (<Iconx name="self-improvement" size={20} color={"black"} />),
-                        title: "Profile",
+                        title: Translations[language].profile,
                     }
                 } />
         </Tab.Navigator>

@@ -1,11 +1,13 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
+import { useStats } from "../Context/StatContext";
+import Translations from "../languages/Translation";
 import ProfileInfo from '../pages/Profile/ProfileInfo/ProfileInfo';
 import Friends from '../pages/Profile/Friends/Friends';
 
 function TopNavigator4() {
 
   const Tab = createMaterialTopTabNavigator();
+  const { language, setLanguage } = useStats();
 
   return (
     <Tab.Navigator screenOptions={
@@ -26,13 +28,13 @@ function TopNavigator4() {
       <Tab.Screen name="ProfileInfo" component={ProfileInfo}
         options={
           {
-            title: "Profile Information",
+            title: Translations[language].profileTitle1,
           }
         } />
         <Tab.Screen name="Friends" component={Friends}
         options={
           {
-            title: "Friends",
+            title: Translations[language].profileTitle2,
           }
         } />
     </Tab.Navigator>

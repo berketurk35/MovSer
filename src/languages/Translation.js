@@ -42,6 +42,8 @@ const Translations = {
         numberSeasons: "Number Of Seasons",
         numberEpisodes: "Number Of Episodes",
         saveSerie: "Save Serie",
+        season: "Season",
+        episode: "Episode",
 
         cardName: "Card Name",
         writeCardName: "Write Card Name..",
@@ -55,6 +57,7 @@ const Translations = {
 
         info1: "You can rearrange the cards by pressing and holding them.",
         info2: "You can rearrange the movies by pressing and holding them.",
+        info3: "You can rearrange the series by pressing and holding them.",
 
     },
     tr: {
@@ -67,11 +70,11 @@ const Translations = {
         moviesTitle2: "İzlenecek Filmler",
 
         seriesTitle1: "İzlenen Diziler",
-        seriesTitle2: "Şu Anda İzlenenler",
+        seriesTitle2: "Anlık İzlenenler",
         seriesTitle3: "İzlenecek Diziler",
 
-        listTitle1: "Film Listesi",
-        listTitle2: "Dizi Listesi",
+        listTitle1: "Film Listeleri",
+        listTitle2: "Dizi Listeleri",
 
         profileTitle1: "Profil Bilgileri",
         profileTitle2: "Arkadaşlar",
@@ -100,6 +103,8 @@ const Translations = {
         numberSeasons: "Sezon Sayısı",
         numberEpisodes: "Bölüm Sayısı",
         saveSerie: "Diziyi Kaydet",
+        season: "Sezon",
+        episode: "Bölüm",
 
         cardName: "Kart Adı",
         writeCardName: "Kart Adını Yaz..",
@@ -113,6 +118,7 @@ const Translations = {
 
         info1: "Kartları sürükleyerek yeniden düzenleyebilirsiniz.",
         info2: "Filmleri sürükleyerek yeniden düzenleyebilirsiniz.",
+        info3: "Dizileri sürükleyerek yeniden düzenleyebilirsiniz.",
 
     },
 };

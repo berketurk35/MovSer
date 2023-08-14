@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import { useStats } from "../Context/StatContext";
+import Translations from "../languages/Translation";
+
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import MoviesList from '../pages/Movies/MoviesList/MoviesList';
 import ReqMoviesList from '../pages/Movies/ReqMoviesList/ReqMoviesList';
 
-import Translations from '../languages/Translation';
-
 function TopNavigator() {
 
   const Tab = createMaterialTopTabNavigator();
 
-  const [language, setLanguage] = useState("en");
+  const { language, setLanguage } = useStats();
 
   return (
     <Tab.Navigator screenOptions={{
@@ -29,13 +30,13 @@ function TopNavigator() {
       <Tab.Screen name="MoviesList" component={MoviesList}
         options={
           {
-            title: "Watched Films",
+            title: Translations[language].moviesTitle1,
           }
         } />
       <Tab.Screen name="ReqMoviesList" component={ReqMoviesList}
         options={
           {
-            title: "Movies to Watch",
+            title: Translations[language].moviesTitle2,
           }
         } />
     </Tab.Navigator>

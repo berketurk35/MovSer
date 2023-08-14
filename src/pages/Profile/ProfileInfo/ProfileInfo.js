@@ -1,12 +1,13 @@
 import React from "react";
 import { useStats } from "../../../Context/StatContext";
 import { View, Text, Image } from "react-native";
+import Translations from "../../../languages/Translation";
 
 import styles from "./ProfileInfoStyles";
 
 function ProfileInfo() {
 
-    const { movieCounter,reqMovieCounter,serieCounter,activeSerieCounter,reqSerieCounter,movieListCounter,serieListCounter} = useStats();
+    const { movieCounter,reqMovieCounter,serieCounter,activeSerieCounter,reqSerieCounter,movieListCounter,serieListCounter,language} = useStats();
 
     return (
         <View style={styles.container} >
@@ -20,22 +21,22 @@ function ProfileInfo() {
             </View>
             <View style={styles.seperator2} />
             <View style={styles.body} >
-                <Text style={styles.title}>Stats</Text>
+                <Text style={styles.title}>{Translations[language].stats}</Text>
                 <View style={styles.fBox}>
-                    <Text style={styles.text}>Friends : 5</Text>
+                    <Text style={styles.text}>{Translations[language].stats} : 5</Text>
                 </View>
                 <View style={styles.box}>
-                    <Text style={styles.text}>Watched Films : {movieCounter} </Text>
-                    <Text style={styles.text}>Movies To Watch : {reqMovieCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].moviesTitle1} : {movieCounter} </Text>
+                    <Text style={styles.text}>{Translations[language].moviesTitle2} : {reqMovieCounter}</Text>
                 </View>
                 <View style={styles.box}>
-                    <Text style={styles.text}>Watched Series : {serieCounter}</Text>
-                    <Text style={styles.text}>Watching Now : {activeSerieCounter}</Text>
-                    <Text style={styles.text}>Series To Watch : {reqSerieCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].seriesTitle1} : {serieCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].seriesTitle2} : {activeSerieCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].seriesTitle3} : {reqSerieCounter}</Text>
                 </View>
                 <View style={styles.box}>
-                    <Text style={styles.text}>Movies List : {movieListCounter}</Text>
-                    <Text style={styles.text}>Series List : {serieListCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].listTitle1} : {movieListCounter}</Text>
+                    <Text style={styles.text}>{Translations[language].listTitle2} : {serieListCounter}</Text>
                 </View>
             </View>
         </View>
