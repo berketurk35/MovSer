@@ -13,7 +13,7 @@ function RemoveCard({ name, onPressDelete }) {
 
     return (
         <View style={styles.container} >
-            <Text style={styles.cardName}>{name} {Translations[language].deleteCard}</Text>
+            <Text style={styles.cardName}>{name}</Text>
             <TouchableOpacity onPress={onPressDelete} style={styles.icon}>
                 <Icon name={"cancel"} color={"#ff675c"} size={16} />
             </TouchableOpacity>
