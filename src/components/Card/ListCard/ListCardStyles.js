@@ -29,6 +29,10 @@ export default StyleSheet.create({
         borderRadius: 12,
     },
     iconDel: {
-        //backgroundColor: "gray"
+        position: "absolute",
+        top: 0,
+        right: 0,
+        marginTop: 15,
+        marginRight: 14,
     }
 });

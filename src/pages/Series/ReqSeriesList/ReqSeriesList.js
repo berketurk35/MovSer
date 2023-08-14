@@ -73,7 +73,8 @@ function ReqSeriesList({ navigation, route }) {
             serieCategory: categoryText,
             seriePoster: selectedSerie.poster_path,
             serieSeasons: seasons,
-            serieEpisodes: episodes
+            serieEpisodes: episodes,
+            savedDate: new Date().toLocaleDateString('tr-TR'),
         };
 
         try {
@@ -299,7 +300,7 @@ function ReqSeriesList({ navigation, route }) {
                             .map((serie, index) => (
                                 <ReqSeriesCard
                                     key={serie.serieId}
-                                    instaDate={instantDate}
+                                    savedDate={serie.savedDate}
                                     serieName={serie.serieName}
                                     releaseDate={serie.serieReleaseDate}
                                     finalDate={serie.serieFinaldate}

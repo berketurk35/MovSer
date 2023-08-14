@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 
 import Animated from 'react-native-reanimated';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 import styles from "./ListCardStyles";
 
@@ -46,7 +47,7 @@ function ListCard({
                 <ShadowDecorator>
                     <Animated.View>
                         <View style={styles.container}>
-                            <TouchableOpacity onPress={onPressDetail} onLongPress={onDrag} activeOpacity={1} style={{ elevation: isActive ? 60 : 0, shadowColor: "black"}} >
+                            <TouchableOpacity onPress={onPressDetail} onLongPress={onDrag} activeOpacity={1} style={{ elevation: isActive ? 60 : 0, shadowColor: "black" }} >
                                 <Image source={Images[imageName]} style={styles.image} />
                             </TouchableOpacity>
                             <Text style={styles.cardName}>{cardName}</Text>

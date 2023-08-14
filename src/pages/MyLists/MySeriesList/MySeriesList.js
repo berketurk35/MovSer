@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styles from "./MySeriesListStyles";
 
 import ListCard from "../../../components/Card/ListCard/ListCard";
+import RemoveCard from "../../../components/Card/RemoveCard/RemoveCard";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -21,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function MySerieList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalRemoveVisible, setModalRemoveVisible] = useState(false);
     const [savedSeriesList, setSavedSeriesList] = useState([]);
     const [searchSerie, setSearchSerie] = useState('');
     const [cardName, setCardName] = useState("");
@@ -59,6 +61,10 @@ function MySerieList({ navigation }) {
         setModalVisible(true);
     };
 
+    const handleRemovePress = () => {
+        setModalRemoveVisible(true);
+    };
+
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
@@ -66,6 +72,10 @@ function MySerieList({ navigation }) {
         setPicturesVisible(false);
         setSwiperVisible2(false);
         setSwiperVisible(false);
+    };
+
+    const closeRemoveModal = () => {
+        setModalRemoveVisible(false);
     };
 
     const saveList = async () => {
@@ -111,29 +121,10 @@ function MySerieList({ navigation }) {
         return list.filter((item) => item.listName.toLowerCase().includes(searchSerie.toLowerCase()));
     };
 
-    const handleDeleteCard = (serie, index) => {
-        Alert.alert(
-            'Kart Silme',
-            `"${serie.listName}" isimli kartını silmek istediğinize emin misiniz?`,
-            [
-                {
-                    text: 'Vazgeç',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Sil',
-                    style: 'destructive',
-                    onPress: () => deleteSerie(index),
-                },
-            ],
-            { cancelable: false }
-        );
-    };
-
-    const deleteSerie = async (index) => {
-        const updatedSerieLists = [...savedSeriesList];
+    const deleteCard = async (index) => {
+        const updatedSerieLists = [...draggedSerieList];
         updatedSerieLists.splice(index, 1);
-        setSavedSeriesList(updatedSerieLists);
+        setDraggedSerieList(updatedSerieLists);
         AsyncStorage.setItem('serieList', JSON.stringify(updatedSerieLists))
             .then(() => {
                 console.log('Kart başarıyla silindi.');
@@ -249,9 +240,13 @@ function MySerieList({ navigation }) {
                                 <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
+                            <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
+                                <Icon name="remove-circle" size={16} color={"red"} />
+                                <Text style={styles.removeText}>Remove</Text>
+                            </TouchableOpacity>
                         </View>
                         <Text style={styles.info}>
-                        {Translations[language].info1}</Text>
+                            {Translations[language].info1}</Text>
                         <View style={{ flex: 1 }}>
                             <DraggableFlatList
                                 ref={ref}
@@ -278,6 +273,41 @@ function MySerieList({ navigation }) {
                         />
 
                     </KeyboardAvoidingView>
+                    <Modal
+                        visible={modalRemoveVisible}
+                        transparent={true}
+                        animationType="fade"
+                        onRequestClose={closeRemoveModal}
+                    >
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            activeOpacity={1}
+                            onPress={closeRemoveModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity
+                                    activeOpacity={1}
+                                    style={styles.modalContent}
+                                    onPress={() => { }}
+                                >
+                                    <View>
+                                        <View>
+                                            <Text style={styles.cardName} > Remove Card </Text>
+                                            <View style={styles.seperator2} />
+                                            <ScrollView>
+                                                <View style={styles.content}>
+                                                    {draggedSerieList
+                                                        .map((card, index) => (
+                                                           <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                        ))}
+                                                </View>
+                                            </ScrollView>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
 
                     <Modal
                         visible={modalVisible}

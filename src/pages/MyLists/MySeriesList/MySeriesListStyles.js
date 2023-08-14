@@ -38,7 +38,7 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         backgroundColor: "white", //#FF95AB
-        marginHorizontal: 30,
+        marginLeft: 30,
         marginVertical: 10,
         height: 38,
         borderRadius: 16,
@@ -46,6 +46,15 @@ export default StyleSheet.create({
         elevation: 24,
         shadowColor: "black",
         opacity: 1,
+    },
+    removeBox: {
+        flexDirection: "row",
+        margin: 10,
+        alignItems: "center",
+    },
+    removeText: {
+        fontSize: 10,
+        padding: 2,
     },
     icon: {
         alignSelf: "center",

@@ -71,7 +71,8 @@ function ReqMoviesList({ navigation }) {
             movieCategory: categoryText,
             moviePoster: selectedMovie.poster_path,
             movieTime: duration,
-            instantDate: instantDate
+            instantDate: instantDate,
+            savedDate: new Date().toLocaleDateString('tr-TR'),
         };
 
         try {
@@ -305,7 +306,7 @@ function ReqMoviesList({ navigation }) {
                             .map((movie, index) => (
                                 <ReqMoviesCard
                                     key={movie.movieId}
-                                    instaDate={instantDate}
+                                    savedDate={movie.savedDate}
                                     movieName={movie.movieName}
                                     date={movie.movieDate}
                                     vote={movie.movieVote}

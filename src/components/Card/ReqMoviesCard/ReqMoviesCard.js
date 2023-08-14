@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function ReqMoviesCard({ instaDate, movieName, date, vote, category, poster, time, onPressAdd, onPressDelete, iconName }) {
+function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, time, onPressAdd, onPressDelete, iconName }) {
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -32,7 +32,7 @@ function ReqMoviesCard({ instaDate, movieName, date, vote, category, poster, tim
                     />
                 </View>
                 <View style={styles.rightCard}>
-                    <Text style={styles.instaDate} >{instaDate}</Text>
+                    <Text style={styles.instaDate} >{savedDate}</Text>
                     <View style={styles.movieNameCard} >
                         <Text style={styles.textMovie} >
                             {formattedMovieName}

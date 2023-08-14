@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styles from "./MyMovieListStyles";
 
 import ListCard from "../../../components/Card/ListCard/ListCard";
+import RemoveCard from "../../../components/Card/RemoveCard/RemoveCard";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -20,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function MyMovieList({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalRemoveVisible, setModalRemoveVisible] = useState(false);
     const [savedMovieList, setSavedMovieList] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
     const [cardName, setCardName] = useState("");
@@ -59,6 +61,10 @@ function MyMovieList({ navigation }) {
         setModalVisible(true);
     };
 
+    const handleRemovePress = () => {
+        setModalRemoveVisible(true);
+    };
+
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
@@ -66,6 +72,10 @@ function MyMovieList({ navigation }) {
         setPicturesVisible(false);
         setSwiperVisible2(false);
         setSwiperVisible(false);
+    };
+
+    const closeRemoveModal = () => {
+        setModalRemoveVisible(false);
     };
 
     const saveList = async () => {
@@ -111,26 +121,7 @@ function MyMovieList({ navigation }) {
         return list.filter((item) => item.listName.toLowerCase().includes(searchMovie.toLowerCase()));
     };
 
-    const handleDeleteCard = (movie, index) => {
-        Alert.alert(
-            'Kart Silme',
-            `"${movie.listName}" isimli kartını silmek istediğinize emin misiniz?`,
-            [
-                {
-                    text: 'Vazgeç',
-                    style: 'cancel',
-                },
-                {
-                    text: 'Sil',
-                    style: 'destructive',
-                    onPress: () => deleteMovie(index),
-                },
-            ],
-            { cancelable: false }
-        );
-    };
-
-    const deleteMovie = async (index) => {
+    const deleteCard = async (index) => {
         const updatedMovieLists = [...draggedMovieList];
         updatedMovieLists.splice(index, 1);
         setDraggedMovieList(updatedMovieLists);
@@ -249,6 +240,10 @@ function MyMovieList({ navigation }) {
                                 <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchMovie}
                                     onChangeText={setSearchMovie} />
                             </View>
+                            <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
+                                <Icon name="remove-circle" size={16} color={"red"} />
+                                <Text style={styles.removeText}>Remove</Text>
+                            </TouchableOpacity>
                         </View>
                         <Text style={styles.info}>
                             {Translations[language].info1} </Text>
@@ -277,6 +272,41 @@ function MyMovieList({ navigation }) {
                             onPress={handleFabPress}
                         />
                     </KeyboardAvoidingView>
+                    <Modal
+                        visible={modalRemoveVisible}
+                        transparent={true}
+                        animationType="fade"
+                        onRequestClose={closeRemoveModal}
+                    >
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            activeOpacity={1}
+                            onPress={closeRemoveModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <TouchableOpacity
+                                    activeOpacity={1}
+                                    style={styles.modalContent}
+                                    onPress={() => { }}
+                                >
+                                    <View>
+                                        <View>
+                                            <Text style={styles.cardName} > Remove Card </Text>
+                                            <View style={styles.seperator2} />
+                                            <ScrollView>
+                                                <View style={styles.content}>
+                                                    {draggedMovieList
+                                                        .map((card, index) => (
+                                                           <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                        ))}
+                                                </View>
+                                            </ScrollView>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
                     <Modal
                         visible={modalVisible}
                         transparent={true}

@@ -116,9 +116,9 @@ const Translations = {
 
         stats: "İstatistikler",
 
-        info1: "Kartları sürükleyerek yeniden düzenleyebilirsiniz.",
-        info2: "Filmleri sürükleyerek yeniden düzenleyebilirsiniz.",
-        info3: "Dizileri sürükleyerek yeniden düzenleyebilirsiniz.",
+        info1: "Kartları sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
+        info2: "Filmleri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
+        info3: "Dizileri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
 
     },
 };
