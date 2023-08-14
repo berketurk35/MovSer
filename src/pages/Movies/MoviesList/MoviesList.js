@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./MovieListStyles";
@@ -8,6 +8,7 @@ import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
+import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,6 +31,7 @@ function MoviesList({ navigation, route }) {
     const [duration, setDuration] = useState("");
 
     const { movieCounter, setMovieCounter } = useStats();
+    const { language, setLanguage } = useStats();
 
     useEffect(() => {
         const fetchAndSetMovies = async () => {
@@ -181,7 +183,6 @@ function MoviesList({ navigation, route }) {
         return formattedDate;
     };
 
-
     const fetchGenreNames = async (genreIds) => {
         try {
             const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
@@ -278,9 +279,9 @@ function MoviesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13 }} placeholder="Filter Movie Name" placeholderTextColor={"black"} value={searchMovie}
+                        <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
-                            <Text onPress={clearData} > Datayı Sil </Text>
+                        <Text onPress={clearData} > Datayı Sil </Text>
                     </View>
                 </View>
                 <View style={styles.seperator} />
@@ -309,7 +310,7 @@ function MoviesList({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Movie Add"
+                    label={Translations[language].addMovie}
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -339,7 +340,7 @@ function MoviesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Search Movie Name..."
+                                        placeholder={Translations[language].searchMovie}
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
@@ -348,19 +349,19 @@ function MoviesList({ navigation, route }) {
                                 {selectedMovie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Selected Movie"} text={selectedMovie.title} />
+                                        <Input label={Translations[language].selectedMovie} text={selectedMovie.title} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Release Date"} text={formatDate(selectedMovie.release_date)} />
+                                                <Input label={Translations[language].releaseDate} text={formatDate(selectedMovie.release_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Score"} text={selectedMovie.vote_average.toFixed(1)} />
+                                                <Input label={Translations[language].score} text={selectedMovie.vote_average.toFixed(1)} />
                                             </View>
                                         </View>
-                                        <Input label={"Categories"} text={categoryText} />
+                                        <Input label={Translations[language].categories} text={categoryText} />
 
                                         <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >Save Movie</Text>
+                                            <Text style={styles.buttonText} >{Translations[language].saveMovie}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (
@@ -375,10 +376,7 @@ function MoviesList({ navigation, route }) {
                     </View>
                 </TouchableOpacity>
             </Modal>
-
         </SafeAreaView>
-
-
     )
 };
 

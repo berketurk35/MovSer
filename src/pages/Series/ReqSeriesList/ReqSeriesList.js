@@ -8,6 +8,7 @@ import Input from "../../../components/Input/Input";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
+import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -31,8 +32,9 @@ function ReqSeriesList({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
     const [instantDate, setInstantDate] = useState('');
-    
+
     const { reqSerieCounter, setReqSerieCounter } = useStats();
+    const { language, setLanguage } = useStats();
 
     useEffect(() => {
         const fetchAndSetMovies = async () => {
@@ -282,7 +284,7 @@ function ReqSeriesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13 }} placeholder="Filter Serie Name" placeholderTextColor={"black"} value={searchSerie}
+                        <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>
@@ -316,7 +318,7 @@ function ReqSeriesList({ navigation, route }) {
                 <FAB
                     style={styles.fab}
                     icon="plus"
-                    label="Serie Add"
+                    label={Translations[language].addSerie}
                     color="white"
                     onPress={handleFabPress}
                 />
@@ -346,7 +348,7 @@ function ReqSeriesList({ navigation, route }) {
                                     <TextInput
                                         value={searchText}
                                         onChangeText={handleTextChange}
-                                        placeholder="Search Serie Name..."
+                                        placeholder={Translations[language].searchSerie}
                                         onFocus={handleSearchBarPress}
                                         style={styles.searchText}
                                     />
@@ -355,27 +357,27 @@ function ReqSeriesList({ navigation, route }) {
                                 {selectedSerie ? (
                                     <View>
                                         <View style={styles.seperator2} />
-                                        <Input label={"Selected Serie"} text={selectedSerie.name} />
+                                        <Input label={Translations[language].selectedSerie} text={selectedSerie.name} />
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Release Date"} text={formatDate(selectedSerie.first_air_date)} />
+                                                <Input label={Translations[language].releaseDate} text={formatDate(selectedSerie.first_air_date)} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Score"} text={selectedSerie.vote_average.toFixed(1)} />
+                                                <Input label={Translations[language].score} text={selectedSerie.vote_average.toFixed(1)} />
                                             </View>
                                         </View>
                                         <View style={{ flexDirection: "row" }} >
                                             <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={"Number Of Seasons"} text={seasons} />
+                                                <Input label={Translations[language].numberSeasons} text={seasons} />
                                             </View>
                                             <View style={{ flex: 1 }}>
-                                                <Input label={"Number Of Episodes"} text={episodes} />
+                                                <Input label={Translations[language].numberEpisodes} text={episodes} />
                                             </View>
                                         </View>
-                                        <Input label={"Categories"} text={categoryText} />
+                                        <Input label={Translations[language].categories} text={categoryText} />
 
                                         <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                            <Text style={styles.buttonText} >Save Serie</Text>
+                                            <Text style={styles.buttonText} >{Translations[language].saveSerie}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 ) : (

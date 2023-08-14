@@ -25,6 +25,9 @@ import SerieListDetails from "./pages/MyLists/ListDetails/SerieListDetails/Serie
 import ProfileInfo from "./pages/Profile/ProfileInfo/ProfileInfo";
 import Friends from "./pages/Profile/Friends/Friends";
 
+import Intro from "./pages/Intro/Intro";
+import Login from "./pages/Login/Login";
+
 import { StatProvider } from "./Context/StatContext";
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +47,8 @@ function Router() {
                         backgroundColor: "white",
                     },
                 }} >
+                    <Stack.Screen name="Intro" component={Intro} />
+
                     <Stack.Screen name="TabNavigator" component={TabNavigator} />
 
                     <Stack.Screen name="TopNavigator" component={TopNavigator} />
@@ -65,6 +70,8 @@ function Router() {
                     <Stack.Screen name="TopNavigator4" component={TopNavigator4} />
                     <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
                     <Stack.Screen name="Friends" component={Friends} />
+
+                    <Stack.Screen name="Login" component={Login} />
 
                 </Stack.Navigator>
             </NavigationContainer>

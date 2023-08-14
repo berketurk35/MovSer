@@ -12,6 +12,7 @@ import ListCard from "../../../components/Card/ListCard/ListCard";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
+import Translations from "../../../languages/Translation";
 
 import Swiper from "react-native-swiper";
 
@@ -32,7 +33,9 @@ function MySerieList({ navigation }) {
     const [selectedImage, setSelectedImage] = useState("");
 
     const [draggedSerieList, setDraggedSerieList] = useState([]);
+
     const { serieListCounter, setSerieListCounter } = useStats();
+    const { language, setLanguage } = useStats();
 
     const ref = useRef(null);
 
@@ -243,12 +246,12 @@ function MySerieList({ navigation }) {
                         <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13 }} placeholder="Filter Card Name" placeholderTextColor={"black"} value={searchSerie}
+                                <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
                         </View>
                         <Text style={styles.info}>
-                                You can rearrange the cards by pressing and holding them.</Text>
+                        {Translations[language].info1}</Text>
                         <View style={{ flex: 1 }}>
                             <DraggableFlatList
                                 ref={ref}
@@ -269,7 +272,7 @@ function MySerieList({ navigation }) {
                         <FAB
                             style={styles.fab}
                             icon="plus"
-                            label="Add Card"
+                            label={Translations[language].addCard}
                             color="white"
                             onPress={handleFabPress}
                         />
@@ -295,20 +298,20 @@ function MySerieList({ navigation }) {
                                 >
                                     <View>
                                         <View>
-                                            <Text style={styles.cardName} > Card Name </Text>
+                                            <Text style={styles.cardName} >{Translations[language].cardName}</Text>
                                             <View style={styles.searchMovie} >
                                                 <TextInput
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
-                                                    placeholder="Write Card Name.."
+                                                    placeholder={Translations[language].writeCardName}
                                                     style={styles.searchText}
                                                 />
                                             </View>
                                             <View style={styles.seperator2} />
-                                            <Text style={styles.imageBack} > Card Background Images </Text>
+                                            <Text style={styles.imageBack} > {Translations[language].cardBackground} </Text>
                                             <TouchableOpacity onPress={openPlatform}>
-                                                <Text style={styles.text}> -&gt; Video Streaming Platforms</Text>
+                                                <Text style={styles.text}> -&gt; {Translations[language].videoStream}</Text>
                                             </TouchableOpacity>
                                         </View>
                                         {platformVisible && (
@@ -376,7 +379,7 @@ function MySerieList({ navigation }) {
                                             </View>
                                         )}
                                         <TouchableOpacity onPress={openPictures}>
-                                            <Text style={styles.text}> -&gt; Pictures from Different Categories</Text>
+                                            <Text style={styles.text}> -&gt; {Translations[language].picturesCategories}</Text>
                                         </TouchableOpacity>
                                         {picturesVisible && (
                                             <View>
@@ -475,7 +478,7 @@ function MySerieList({ navigation }) {
                                         <View style={styles.seperator2} />
                                         {swiperVisible && (
                                             <View style={styles.body}>
-                                                <Text style={styles.preview} >Preview</Text>
+                                                <Text style={styles.preview} >{Translations[language].preview}</Text>
                                                 <Swiper
                                                     showsButtons={true}
                                                     dotColor="white"
@@ -551,7 +554,7 @@ function MySerieList({ navigation }) {
 
                                         {swiperVisible2 && (
                                             <View style={styles.body}>
-                                                <Text style={styles.preview} >Preview</Text>
+                                                <Text style={styles.preview} >{Translations[language].preview}</Text>
                                                 <Swiper
                                                     showsButtons={true}
                                                     dotColor="white"
@@ -653,14 +656,13 @@ function MySerieList({ navigation }) {
                                             </View>
                                         )}
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
-                                            <Text style={styles.buttonText} >Save Card</Text>
+                                            <Text style={styles.buttonText} >{Translations[language].saveCard}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>
                             </View>
                         </TouchableOpacity>
                     </Modal>
-
                 </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>
