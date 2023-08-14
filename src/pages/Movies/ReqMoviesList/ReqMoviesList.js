@@ -196,15 +196,15 @@ function ReqMoviesList({ navigation }) {
 
     const handleMovieDelete = (movie) => {
         Alert.alert(
-            'Film Silme',
-            `"${movie.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            Translations[language].movieDeleteTitle,
+            `"${movie.movieName}", ${Translations[language].movieDeleteText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Sil',
+                    text: Translations[language].delete,
                     style: 'destructive',
                     onPress: () => deleteMovie(movie),
                 },
@@ -250,15 +250,15 @@ function ReqMoviesList({ navigation }) {
 
     const onPressAdd = (movie) => {
         Alert.alert(
-            'Film Taşıma',
-            `"${movie.movieName}" Filmini izlediğim filmler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            Translations[language].movieMoveTitle,
+            `"${movie.movieName}", ${Translations[language].movieMoveText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Taşı ve Sil',
+                    text: Translations[language].moveDelete,
                     style: 'destructive',
                     onPress: () => moveDeleteMovie(movie),
                 },

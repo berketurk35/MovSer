@@ -59,6 +59,27 @@ const Translations = {
         info2: "You can rearrange the movies by pressing and holding them.",
         info3: "You can rearrange the series by pressing and holding them.",
 
+        movieDeleteTitle: "Delete Movie",
+        movieDeleteText: "Are you sure you want to delete this movie?",
+
+        serieDeleteTitle: "Delete Serie",
+        serieDeleteText: "Are you sure you want to delete this serie?",
+
+        movieMoveTitle: "Move Movie",
+        movieMoveText: "Are you sure you want to move the movie to the watched movies list and delete it from there?",
+
+        serieMoveTitle: "Move Serie",
+        serieMoveText: "Are you sure you want to move the series to the 'watched series' list and delete it from there?",
+        serieMoveText1: "Are you sure you want to move the series to the 'watching now' list and delete it from there?",
+
+        giveUp: "Gıve Up",
+        delete: "Delete",
+        moveDelete: "Move and Delete",
+
+        remove: "Remove",
+        removeCard: "Remove Card",
+        deleteCard: "Delete Card.",
+
     },
     tr: {
         movies: "Filmler",
@@ -119,6 +140,27 @@ const Translations = {
         info1: "Kartları sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
         info2: "Filmleri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
         info3: "Dizileri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
+
+        movieDeleteTitle: "Film Silme",
+        movieDeleteText: "Filmini silmek istediğinize emin misiniz?",
+
+        serieDeleteTitle: "Dizi Silme",
+        serieDeleteText: "Dizisini silmek istediğinize emin misiniz?",
+
+        movieMoveTitle: "Film Taşıma",
+        movieMoveText: "Filmini 'izlenen filmler' listesine taşımak ve buradan silmek istediğinize emin misiniz?",
+
+        serieMoveTitle: "Dizi Taşıma",
+        serieMoveText: "Dizisini 'izlenen diziler' listesine taşımak ve buradan silmek istediğinize emin misiniz?",
+        serieMoveText1: "Dizisini 'anlık izlenenler' listesine taşımak ve buradan silmek istediğinize emin misiniz?",
+
+        giveUp: "Vazgeç",
+        delete: "Sil",
+        moveDelete: "Taşı ve Sil",
+
+        remove: "Kaldır",
+        removeCard: "Kartı Kaldır",
+        deleteCard: "Kartını Sil.",
 
     },
 };

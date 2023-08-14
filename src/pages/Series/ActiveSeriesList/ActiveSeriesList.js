@@ -220,15 +220,15 @@ function ActiveSeriesList({ navigation, route }) {
 
     const handleSerieDelete = (serie) => {
         Alert.alert(
-            'Dizi Silme',
-            `"${serie.serieName}" Dizisini silmek istediğinize emin misiniz?`,
+            Translations[language].serieDeleteTitle,
+            `"${serie.serieName}", ${Translations[language].serieDeleteText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Sil',
+                    text: Translations[language].delete,
                     style: 'destructive',
                     onPress: () => deleteSerie(serie),
                 },
@@ -267,15 +267,15 @@ function ActiveSeriesList({ navigation, route }) {
 
     const onPressAdd = (serie) => {
         Alert.alert(
-            'Dizi Taşıma',
-            `"${serie.serieName}" Dizisini izlediğim diziler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            Translations[language].serieMoveTitle,
+            `"${serie.serieName}", ${Translations[language].serieMoveText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Taşı ve Sil',
+                    text: Translations[language].moveDelete,
                     style: 'destructive',
                     onPress: () => moveDeleteSerie(serie),
                 },

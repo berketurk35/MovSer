@@ -242,7 +242,7 @@ function MyMovieList({ navigation }) {
                             </View>
                             <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
                                 <Icon name="remove-circle" size={16} color={"red"} />
-                                <Text style={styles.removeText}>Remove</Text>
+                                <Text style={styles.removeText}>{Translations[language].remove}</Text>
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.info}>
@@ -291,7 +291,7 @@ function MyMovieList({ navigation }) {
                                 >
                                     <View>
                                         <View>
-                                            <Text style={styles.cardName} > Remove Card </Text>
+                                            <Text style={styles.cardName} > {Translations[language].removeCard} </Text>
                                             <View style={styles.seperator2} />
                                             <ScrollView>
                                                 <View style={styles.content}>
