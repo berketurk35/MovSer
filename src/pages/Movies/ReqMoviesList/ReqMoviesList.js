@@ -280,10 +280,6 @@ function ReqMoviesList({ navigation }) {
             });
     };
 
-    function git() {
-        navigation.navigate("Login");
-    }
-
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
@@ -292,7 +288,6 @@ function ReqMoviesList({ navigation }) {
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
                         <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
-                            <Text onPress={git} >Git</Text>
                     </View>
                 </View>
                 <View style={styles.seperator} />

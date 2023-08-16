@@ -5,7 +5,7 @@ import styles from "./LoginStyles";
 import CustomButton from "../../components/Button/Button";
 
 import { createClient } from "@supabase/supabase-js";
-import 'react-native-url-polyfill/auto'
+import 'react-native-url-polyfill/auto';
 import { GoogleSignin, statusCodes, GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -72,6 +72,14 @@ function Login({navigation}) {
         navigation.navigate("MailP");
     }
 
+    function goToRegisterPage() {
+        navigation.navigate("Register");
+    }
+
+    function gir() {
+        navigation.navigate("TabNavigator");
+    }
+
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={null} style={styles.languageBox}>
@@ -90,9 +98,12 @@ function Login({navigation}) {
             <CustomButton name={"apple1"} text={"Apple ile giriş yap"} color="black" onPress={signOut} />
             <CustomButton name={"mail"} text={"Mail ile giriş yap"} color="black" onPress={goToMailPage} />
 
-            <TouchableOpacity onPress={null} style={styles.underText} >
+            <TouchableOpacity onPress={goToRegisterPage} style={styles.underText} >
                 <Text> Hesabın yok mu?</Text>
                 <Text style={{ color: "black", fontWeight: "bold" }} > Kayıt Ol </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={gir} style={styles.underText} >
+                <Text style={{ color: "black", fontWeight: "bold" }} > Çaktırmadan Gir </Text>
             </TouchableOpacity>
 
         </View>

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import styles from "./MailPStyles";
+import styles from "./RegisterStyles";
 import FormInput from "../../components/FormInput/FormInput";
+import CustomButton from "../../components/Button/Button";
+
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
 
@@ -20,41 +22,45 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
     },
 });
 
-function MailP({ navigation }) {
+function Register({ navigation }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [username, setUsername] = useState("");
 
-    function goToLoginPage() {
-        navigation.navigate("Login");
-    }
-
-    const signInWithEmail = async () => {
-        const { data, error } = await supabase.auth.signInWithPassword(
+    const signUpwithEmail = async () => {
+        const { data, error } = await supabase.auth.signUp(
             {
                 email: email,
                 password: password,
+                options: {
+                    data: {
+                        username: username,
+                    },
+                    send_verification_email: false
+                }
             }
         )
-        if (error) {
-            setErrorMessage("Kullanıcı bulunamadı veya şifre hatalı."); 
-        } else {
-            navigation.navigate("TabNavigator");
-        }
+        console.log("data", data);
+    };
+
+    function goToLoginPage() {
+        navigation.navigate("Login");
     };
 
     return (
         <View style={styles.container} >
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
-            <Text>Mail ile giriş </Text>
+            <CustomButton name={"google"} text={"Google ile kayıt ol"} color="black" onPress={null} />
+
+            <Text style={styles.or} >Or</Text>
 
             <FormInput name={"email"} placeholder={"Email"} value={email} onChangeText={setEmail} />
             <FormInput name={"vpn-key"} placeholder={"Password"} value={password} onChangeText={setPassword} />
-            <Text>  {errorMessage} </Text>
+            <FormInput name={"person"} placeholder={"Username"} value={username} onChangeText={setUsername} />
 
-            <TouchableOpacity style={styles.button} onPress={signInWithEmail} >
-                <Text style={styles.buttonText}> Giriş Yap </Text>
+            <TouchableOpacity style={styles.button} onPress={signUpwithEmail} >
+                <Text style={styles.buttonText}> Kayıt Ol </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToLoginPage} style={styles.underText} >
                 <Icon name="arrow-back" size={18} color={"black"} style={styles.icon2} />
@@ -64,4 +70,4 @@ function MailP({ navigation }) {
     )
 };
 
-export default MailP;
+export default Register;

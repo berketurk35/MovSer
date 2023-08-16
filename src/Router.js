@@ -28,6 +28,7 @@ import Friends from "./pages/Profile/Friends/Friends";
 import Intro from "./pages/Intro/Intro";
 import Login from "./pages/Login/Login";
 import MailP from "./pages/MailP/MailP";
+import Register from "./pages/Register/Register";
 
 import { StatProvider } from "./Context/StatContext";
 
@@ -50,6 +51,10 @@ function Router() {
                 }} >
                     <Stack.Screen name="Intro" component={Intro} />
 
+                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="MailP" component={MailP} />
+                    <Stack.Screen name="Register" component={Register} />
+
                     <Stack.Screen name="TabNavigator" component={TabNavigator} />
 
                     <Stack.Screen name="TopNavigator" component={TopNavigator} />
@@ -71,9 +76,6 @@ function Router() {
                     <Stack.Screen name="TopNavigator4" component={TopNavigator4} />
                     <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
                     <Stack.Screen name="Friends" component={Friends} />
-
-                    <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="MailP" component={MailP} />
 
                 </Stack.Navigator>
             </NavigationContainer>

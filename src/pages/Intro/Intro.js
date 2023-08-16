@@ -7,7 +7,7 @@ function Intro({navigation}) {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-          navigation.replace('TabNavigator'); 
+          navigation.replace('Login'); 
         }, 3000); 
         return () => clearTimeout(timeout); 
       }, [navigation]);

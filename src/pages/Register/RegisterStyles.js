@@ -32,7 +32,7 @@ export default StyleSheet.create({
         backgroundColor: "#1565C0",
         width: Dimensions.get("window").width / 1.6,
         borderRadius: 14,
-        marginTop: 10,
+        marginTop: 20,
     },
     buttonText: {
         textAlign: "center",
@@ -46,8 +46,11 @@ export default StyleSheet.create({
         flexDirection: "row"
     },
     logo: {
-        height: Dimensions.get("window").height / 6,
-        width: Dimensions.get("window").width / 3,
-        marginBottom: 40,
+        height: Dimensions.get("window").height / 10,
+        width: Dimensions.get("window").width / 5,
+        marginBottom: 10,
     },
+    or: {
+        margin: 5,
+    }
 })
