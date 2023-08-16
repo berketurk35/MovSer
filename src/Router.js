@@ -27,6 +27,7 @@ import Friends from "./pages/Profile/Friends/Friends";
 
 import Intro from "./pages/Intro/Intro";
 import Login from "./pages/Login/Login";
+import MailP from "./pages/MailP/MailP";
 
 import { StatProvider } from "./Context/StatContext";
 
@@ -72,6 +73,7 @@ function Router() {
                     <Stack.Screen name="Friends" component={Friends} />
 
                     <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="MailP" component={MailP} />
 
                 </Stack.Navigator>
             </NavigationContainer>
