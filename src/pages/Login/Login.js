@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Button, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import styles from "./LoginStyles";
+import { useStats } from "../../Context/StatContext";
 
 import CustomButton from "../../components/Button/Button";
 
@@ -10,13 +11,9 @@ import { GoogleSignin, statusCodes, GoogleSigninButton } from "@react-native-goo
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function Login({navigation}) {
+function Login({ navigation }) {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-
-    const [language, setLanguage] = useState('en');
+    const { language, setLanguage } = useStats();
 
     GoogleSignin.configure({
         androidClientId: '214952846412-hl3vdaqtc3eqgnp4jo7637688qkt9rpf.apps.googleusercontent.com',
@@ -38,8 +35,6 @@ function Login({navigation}) {
     const signInWithGoogle = async () => {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
-        const current = await GoogleSignin.getCurrentUser();
-        const token = await GoogleSignin.getTokens();
 
         console.log("userInfo", userInfo);
 
@@ -68,6 +63,18 @@ function Login({navigation}) {
         }
     };
 
+    const changeLanguage = async () => {
+        const newLanguage = language === "en" ? "tr" : "en";
+        
+        try {
+            await AsyncStorage.setItem("language", newLanguage);
+            setLanguage(newLanguage);
+            console.log('Veri güncellendi.');
+        } catch (error) {
+            console.error('Veri güncellenirken hata oluştu:', error);
+        }
+    };
+
     function goToMailPage() {
         navigation.navigate("MailP");
     }
@@ -82,7 +89,7 @@ function Login({navigation}) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={null} style={styles.languageBox}>
+            <TouchableOpacity onPress={changeLanguage} style={styles.languageBox}>
                 <Text style={styles.languageText} >Select Language</Text>
                 {language === "en" ? (
                     <Image source={require("../../images/eng.png")} style={styles.langImg} />
@@ -91,7 +98,6 @@ function Login({navigation}) {
                 )
                 }
             </TouchableOpacity>
-
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
 
             <CustomButton name={"google"} text={"Google ile giriş yap"} color="black" onPress={signInWithGoogle} />
