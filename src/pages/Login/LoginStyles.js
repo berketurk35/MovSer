@@ -18,7 +18,7 @@ export default StyleSheet.create({
         width: 50,
     },
     underText: {
-        marginTop: 15,
+        marginVertical: 15,
         flexDirection: "row"
     },
     languageBox: {
@@ -34,5 +34,39 @@ export default StyleSheet.create({
     languageText: {
         paddingBottom: 6,
         fontSize: 12,
+    },
+    box: {
+        borderWidth: 1,
+        borderRadius: 16,
+        flexDirection: "row",
+        margin: 10,
+        width: Dimensions.get("window").width / 2,
+        backgroundColor: "#f5fcff"
+    },
+    icon: {
+        padding: 10,
+        paddingLeft: 15,
+    },
+    text: {
+        alignSelf: "center",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        fontWeight: "500",
+        fontSize: 10,
+        color: "black"
+    },
+    text2: {
+        alignSelf: "center",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+        fontWeight: "500",
+        fontSize: 8,
+        color: "black"
+    },
+    seperator: {
+        height: 40 ,
+        borderWidth: 0.5,
     }
 })

@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { View, Button, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import styles from "./LoginStyles";
+import Translations from "../../languages/Translation";
 import { useStats } from "../../Context/StatContext";
+
+import Icon from "react-native-vector-icons/Entypo";
 
 import CustomButton from "../../components/Button/Button";
 
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
-import { GoogleSignin, statusCodes, GoogleSigninButton } from "@react-native-google-signin/google-signin";
+import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -65,7 +68,7 @@ function Login({ navigation }) {
 
     const changeLanguage = async () => {
         const newLanguage = language === "en" ? "tr" : "en";
-        
+
         try {
             await AsyncStorage.setItem("language", newLanguage);
             setLanguage(newLanguage);
@@ -90,7 +93,7 @@ function Login({ navigation }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={changeLanguage} style={styles.languageBox}>
-                <Text style={styles.languageText} >Select Language</Text>
+                <Text style={styles.languageText} >{Translations[language].selectLang} </Text>
                 {language === "en" ? (
                     <Image source={require("../../images/eng.png")} style={styles.langImg} />
                 ) : (
@@ -100,16 +103,24 @@ function Login({ navigation }) {
             </TouchableOpacity>
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
 
-            <CustomButton name={"google"} text={"Google ile giriş yap"} color="black" onPress={signInWithGoogle} />
-            <CustomButton name={"apple1"} text={"Apple ile giriş yap"} color="black" onPress={signOut} />
-            <CustomButton name={"mail"} text={"Mail ile giriş yap"} color="black" onPress={goToMailPage} />
+            <CustomButton name={"google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
+            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={signOut} disabled={true} />
+            <CustomButton name={"mail"} text={Translations[language].signInMail} color="black" onPress={goToMailPage} />
 
             <TouchableOpacity onPress={goToRegisterPage} style={styles.underText} >
-                <Text> Hesabın yok mu?</Text>
-                <Text style={{ color: "black", fontWeight: "bold" }} > Kayıt Ol </Text>
+                <Text> {Translations[language].noAccount} </Text>
+                <Text style={{ color: "black", fontWeight: "bold" }} > {Translations[language].register} </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={gir} style={styles.underText} >
-                <Text style={{ color: "black", fontWeight: "bold" }} > Çaktırmadan Gir </Text>
+
+            <Text style={{marginBottom:10, fontSize: 12}} >{Translations[language].or}</Text>
+
+            <TouchableOpacity onPress={gir} style={styles.box}>
+                <Icon name={"mask"} size={18} color={"black"} style={styles.icon} />
+                <View style={styles.seperator} />
+                <View style={{ flex: 1, justifyContent: "center" }} >
+                    <Text style={styles.text} >{Translations[language].sneak}    </Text>
+                    <Text style={styles.text2} > {Translations[language].noSocial}  </Text>
+                </View>
             </TouchableOpacity>
 
         </View>

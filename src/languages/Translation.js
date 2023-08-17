@@ -72,13 +72,34 @@ const Translations = {
         serieMoveText: "Are you sure you want to move the series to the 'watched series' list and delete it from there?",
         serieMoveText1: "Are you sure you want to move the series to the 'watching now' list and delete it from there?",
 
-        giveUp: "Gıve Up",
+        giveUp: "Cancel",
         delete: "Delete",
         moveDelete: "Move and Delete",
 
         remove: "Remove",
         removeCard: "Remove Card",
         deleteCard: "Delete Card.",
+
+        selectLang: "Language",
+        noAccount: "No account?",
+        register: "Register",
+
+        signInGoogle: "Sign in with Google",
+        signInApple: "Sign in with Apple",
+        signInMail: "Sign in with Mail",
+
+        signUpGoogle: "Sign up with Google",
+        or: "____________ Or ____________",
+        sneak: "Sneak Peek",
+        noSocial: "(Social parts are not available)",
+
+        email: "Email",
+        password: "Password",
+        username: "Username",
+        login: "Login",
+        returnLogin: "Return to main login page",
+
+        notFoundUser : "User not found or incorrect password.",
 
     },
     tr: {
@@ -161,6 +182,27 @@ const Translations = {
         remove: "Kaldır",
         removeCard: "Kartı Kaldır",
         deleteCard: "Kartını Sil.",
+
+        selectLang: "   Dil Seç   ",
+        noAccount: "Hesabın yok mu?",
+        register: "Kayıt Ol",
+
+        signInGoogle: "Google ile giriş yap",
+        signInApple: "Apple ile giriş yap",
+        signInMail: "Mail ile giriş yap",
+
+        signUpGoogle: "Google ile kayıt ol",
+        or: "____________ Ya Da ____________",
+        sneak: "Gizlice Göz At",
+        noSocial: "(Sosyal kısımlar kullanılamaz)",
+
+        email: "Email",
+        password: "Şifre",
+        username: "Kullanıcı Adı",
+        login: "Giriş Yap",
+        returnLogin: "Ana giriş sayfasına dön",
+
+        notFoundUser : "Kullanıcı bulunamadı veya şifre hatalı.",
 
     },
 };

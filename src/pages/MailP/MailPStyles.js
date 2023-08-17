@@ -50,4 +50,20 @@ export default StyleSheet.create({
         width: Dimensions.get("window").width / 3,
         marginBottom: 40,
     },
+    check: {
+        flexDirection: "row",
+        alignItems: "center",   
+    },
+    checkIcon: {
+        paddingRight: 5,
+    },
+    touchbox: {
+        flexDirection: "row",
+        alignItems: "center",
+        width: Dimensions.get("window").width / 1.5,
+        justifyContent: "flex-end"
+    },
+    forget: {
+        paddingTop: 10,
+    }
 })

@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+
 import styles from "./MailPStyles";
+import Translations from "../../languages/Translation";
+import { useStats } from "../../Context/StatContext";
 import FormInput from "../../components/FormInput/FormInput";
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
@@ -25,40 +28,95 @@ function MailP({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
+
+    const { language, setLanguage } = useStats();
+
+    useEffect(() => {
+        checkRememberMe();
+    }, []);
+
+    const checkRememberMe = async () => {
+        try {
+            const rememberMeValue = await AsyncStorage.getItem('rememberMe');
+            if (rememberMeValue === 'true') {
+                const refreshToken = await AsyncStorage.getItem('token');
+                if (refreshToken) {
+                    // Yenileme belirteci ile sessizce giriş yapın
+                    const { error } = await supabase.auth.getSession({ refreshToken });
+                    if (!error) {
+                        navigation.navigate("TabNavigator");
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('rememberMe değeri okunurken hata oluştu', error);
+        }
+    };
+
+
+
+    const signInWithEmail = async () => {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+        
+        if (!error) {
+            await AsyncStorage.setItem('token', data.session.refresh_token);
+            await AsyncStorage.setItem("userId", data.user.id);
+            if (rememberMe) {
+                await AsyncStorage.setItem('rememberMe', 'true');
+            } else {
+                await AsyncStorage.setItem('rememberMe', 'false');
+            }
+            navigation.navigate("TabNavigator");
+        } else {
+            setErrorMessage(Translations[language].notFoundUser);
+        }
+    };
+    
+
+    const remember = async () => {
+        setRememberMe(!rememberMe);
+        await AsyncStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');
+    };
 
     function goToLoginPage() {
         navigation.navigate("Login");
-    }
-
-    const signInWithEmail = async () => {
-        const { data, error } = await supabase.auth.signInWithPassword(
-            {
-                email: email,
-                password: password,
-            }
-        )
-        if (error) {
-            setErrorMessage("Kullanıcı bulunamadı veya şifre hatalı."); 
-        } else {
-            navigation.navigate("TabNavigator");
-        }
     };
 
     return (
         <View style={styles.container} >
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
-            <Text>Mail ile giriş </Text>
+            <Text>{Translations[language].signInMail} </Text>
 
-            <FormInput name={"email"} placeholder={"Email"} value={email} onChangeText={setEmail} />
-            <FormInput name={"vpn-key"} placeholder={"Password"} value={password} onChangeText={setPassword} />
+            <FormInput name={"email"} placeholder={Translations[language].email} value={email} onChangeText={setEmail} />
+            <FormInput name={"vpn-key"} placeholder={Translations[language].password} value={password} onChangeText={setPassword} />
+
+            <View style={styles.touchbox}>
+                <TouchableOpacity onPress={remember} style={styles.check} >
+                    {rememberMe ? (
+                        <Icon name={"check-box"} size={16} style={styles.checkIcon} color={"blue"} />
+                    ) : (
+                        <Icon name={"check-box-outline-blank"} size={16} style={styles.checkIcon} />
+                    )}
+
+                    <Text style={{ fontSize: 14 }} >Beni Hatırla</Text>
+                </TouchableOpacity>
+            </View>
+
             <Text>  {errorMessage} </Text>
 
             <TouchableOpacity style={styles.button} onPress={signInWithEmail} >
-                <Text style={styles.buttonText}> Giriş Yap </Text>
+                <Text style={styles.buttonText}> {Translations[language].login} </Text>
+            </TouchableOpacity>
+            <TouchableOpacity >
+                <Text style={styles.forget} >Şifremi Unuttum</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToLoginPage} style={styles.underText} >
                 <Icon name="arrow-back" size={18} color={"black"} style={styles.icon2} />
-                <Text style={{ color: "black" }} > Ana giriş sayfasına dön </Text>
+                <Text style={{ color: "black" }} > {Translations[language].returnLogin} </Text>
             </TouchableOpacity>
         </View>
     )

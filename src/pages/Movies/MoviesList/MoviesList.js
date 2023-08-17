@@ -20,6 +20,9 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
 function MoviesList({ navigation, route }) {
 
+    const userID = AsyncStorage.getItem('userId');
+    const savedMoviesAsync = (userID + "savedMovies");
+
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
@@ -36,7 +39,10 @@ function MoviesList({ navigation, route }) {
     useEffect(() => {
         const fetchAndSetMovies = async () => {
             try {
-                const movies = await AsyncStorage.getItem('savedMovies');
+                const userID = await AsyncStorage.getItem('userId');
+                const savedMoviesAsync = (userID + "savedMovies");
+
+                const movies = await AsyncStorage.getItem(savedMoviesAsync);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
                     setMovieCounter(JSON.parse(movies).length);
@@ -51,7 +57,7 @@ function MoviesList({ navigation, route }) {
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
             const updatedMovies = [Movie, ...savedMovies];
             setSavedMovies(updatedMovies);
-            AsyncStorage.setItem("savedMovies", JSON.stringify(updatedMovies))
+            AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies))
                 .then(() => {
                     console.log("Film başarıyla eklendi.");
                     fetchSavedMovies();
@@ -67,7 +73,7 @@ function MoviesList({ navigation, route }) {
 
     const fetchSavedMovies = async () => {
         try {
-            const movies = await AsyncStorage.getItem('savedMovies');
+            const movies = await AsyncStorage.getItem(savedMoviesAsync);
             if (movies) {
                 setSavedMovies(JSON.parse(movies));
             }
@@ -110,7 +116,7 @@ function MoviesList({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('savedMovies');
+            const existingMovies = await AsyncStorage.getItem(savedMoviesAsync);
             let updatedMovies = [];
 
             if (existingMovies) {
@@ -122,7 +128,7 @@ function MoviesList({ navigation, route }) {
             updatedMovies.unshift(movieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies));
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedMovies);
@@ -248,7 +254,7 @@ function MoviesList({ navigation, route }) {
     const deleteMovie = async (movie) => {
         const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
         setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('savedMovies', JSON.stringify(updatedMovies))
+        AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies))
             .then(() => {
                 console.log('Film başarıyla silindi.');
             })
