@@ -30,6 +30,7 @@ function ReqMoviesList({ navigation }) {
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
     const [instantDate, setInstantDate] = useState('');
+    const [reqSavedMoviesAsync, setReqSavedMoviesAsync] = useState("");
 
     const { reqMovieCounter, setReqMovieCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -38,7 +39,11 @@ function ReqMoviesList({ navigation }) {
         // Kaydedilmiş filmleri AsyncStorage'den al
         const fetchAndSetMovies = async () => {
             try {
-                const movies = await AsyncStorage.getItem('reqSavedMovies');
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey = (userID + "reqSavedMovies");
+                setReqSavedMoviesAsync(asyncKey);
+
+                const movies = await AsyncStorage.getItem(reqSavedMoviesAsync);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
                     setReqMovieCounter(JSON.parse(movies).length);
@@ -77,7 +82,7 @@ function ReqMoviesList({ navigation }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('reqSavedMovies');
+            const existingMovies = await AsyncStorage.getItem(reqSavedMoviesAsync);
             let updatedMovies = [];
 
             if (existingMovies) {
@@ -90,7 +95,7 @@ function ReqMoviesList({ navigation }) {
             instaDate();
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies));
+            await AsyncStorage.setItem(reqSavedMoviesAsync, JSON.stringify(updatedMovies));
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedMovies);
@@ -216,7 +221,7 @@ function ReqMoviesList({ navigation }) {
     const deleteMovie = async (movie) => {
         const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
         setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies))
+        AsyncStorage.setItem(reqSavedMoviesAsync, JSON.stringify(updatedMovies))
             .then(() => {
                 console.log('Film başarıyla silindi.');
             })
@@ -271,7 +276,7 @@ function ReqMoviesList({ navigation }) {
         navigation.navigate("MoviesList", { Movie: movie || null })
         const updatedMovies = savedMovies.filter((m) => m.movieId !== movie.movieId);
         setSavedMovies(updatedMovies);
-        AsyncStorage.setItem('reqSavedMovies', JSON.stringify(updatedMovies))
+        AsyncStorage.setItem(reqSavedMoviesAsync, JSON.stringify(updatedMovies))
             .then(() => {
                 console.log('Film başarıyla silindi.');
             })

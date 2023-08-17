@@ -38,6 +38,7 @@ function MovieListDetails({ navigation, route }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
+    const [listNameAsync, setListNameAsync] = useState("");
 
     const [draggedMovies, setDraggedMovies] = useState([]);
 
@@ -52,7 +53,11 @@ function MovieListDetails({ navigation, route }) {
 
     const fetchSavedMovies = async () => {
         try {
-            const movies = await AsyncStorage.getItem(listName);
+            const userID = await AsyncStorage.getItem('userId');
+            const asyncKey = (userID + listName);
+            setListNameAsync(asyncKey);
+
+            const movies = await AsyncStorage.getItem(listNameAsync);
             if (movies) {
                 setSavedMovies(JSON.parse(movies));
                 setDraggedMovies(JSON.parse(movies));
@@ -87,7 +92,7 @@ function MovieListDetails({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem(listName);
+            const existingMovies = await AsyncStorage.getItem(listNameAsync);
             let updatedListDetails = [];
 
             if (existingMovies) {
@@ -99,7 +104,7 @@ function MovieListDetails({ navigation, route }) {
             updatedListDetails.unshift(movieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails));
+            await AsyncStorage.setItem(listNameAsync, JSON.stringify(updatedListDetails));
 
             // Kaydedilen filmleri güncelle
             setSavedMovies(updatedListDetails);
@@ -230,7 +235,7 @@ function MovieListDetails({ navigation, route }) {
     const deleteMovie = async (item) => {
         const updatedListDetails = savedMovies.filter((m) => m.movieId !== item.movieId);
         setSavedMovies(updatedListDetails);
-        AsyncStorage.setItem(listName, JSON.stringify(updatedListDetails))
+        AsyncStorage.setItem(listNameAsync, JSON.stringify(updatedListDetails))
             .then(() => {
                 console.log('Film başarıyla silindi.');
             })
@@ -261,7 +266,7 @@ function MovieListDetails({ navigation, route }) {
 
     function handleDragEnd({ data }) {
         try {
-            AsyncStorage.setItem(listName, JSON.stringify(data));
+            AsyncStorage.setItem(listNameAsync, JSON.stringify(data));
             setSavedMovies(data);
             setDraggedMovies(data);
         } catch (error) {

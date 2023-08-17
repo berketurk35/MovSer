@@ -32,6 +32,7 @@ function ReqSeriesList({ navigation, route }) {
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
     const [instantDate, setInstantDate] = useState('');
+    const [savedReqSeriesAsync, setSavedReqSeriesAsync] = useState("");
 
     const { reqSerieCounter, setReqSerieCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -39,7 +40,11 @@ function ReqSeriesList({ navigation, route }) {
     useEffect(() => {
         const fetchAndSetMovies = async () => {
             try {
-                const series = await AsyncStorage.getItem('savedReqSeries');
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey  = (userID + "savedReqSeries");
+                setSavedReqSeriesAsync(asyncKey);
+
+                const series = await AsyncStorage.getItem(savedReqSeriesAsync);
                 if (series) {
                     setSavedReqSeries(JSON.parse(series));
                     setReqSerieCounter(JSON.parse(series).length);
@@ -79,7 +84,7 @@ function ReqSeriesList({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingSeries = await AsyncStorage.getItem('savedReqSeries');
+            const existingSeries = await AsyncStorage.getItem(savedReqSeriesAsync);
             let updatedSeries = [];
 
             if (existingSeries) {
@@ -92,7 +97,7 @@ function ReqSeriesList({ navigation, route }) {
             instaDate();
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries));
+            await AsyncStorage.setItem(savedReqSeriesAsync, JSON.stringify(updatedSeries));
 
             // Kaydedilen filmleri güncelle
             setSavedReqSeries(updatedSeries);
@@ -221,7 +226,7 @@ function ReqSeriesList({ navigation, route }) {
     const deleteSerie = async (serie) => {
         const updatedSeries = savedReqSeries.filter((m) => m.serieId !== serie.serieId);
         setSavedReqSeries(updatedSeries);
-        AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries))
+        AsyncStorage.setItem(savedReqSeriesAsync, JSON.stringify(updatedSeries))
             .then(() => {
                 console.log('Dizi başarıyla silindi.');
             })
@@ -270,7 +275,7 @@ function ReqSeriesList({ navigation, route }) {
         navigation.navigate("ActiveSeriesList", { Serie: serie || null })
         const updatedSeries = savedReqSeries.filter((m) => m.serieId !== serie.serieId);
         setSavedReqSeries(updatedSeries);
-        AsyncStorage.setItem('savedReqSeries', JSON.stringify(updatedSeries))
+        AsyncStorage.setItem(savedReqSeriesAsync, JSON.stringify(updatedSeries))
             .then(() => {
                 console.log('Dizi başarıyla silindi.');
             })

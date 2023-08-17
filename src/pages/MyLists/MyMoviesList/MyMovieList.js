@@ -32,6 +32,7 @@ function MyMovieList({ navigation }) {
     const [swiperVisible2, setSwiperVisible2] = useState(false);
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
+    const [movieListAsync, setMovieListAsync] = useState("");
 
     const [draggedMovieList, setDraggedMovieList] = useState([]);
 
@@ -43,7 +44,11 @@ function MyMovieList({ navigation }) {
     useEffect(() => {
         const fetchAndSetMovies = async () => {
             try {
-                const updatedMovieLists = await AsyncStorage.getItem('movieList');
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey  = (userID + "movieList");
+                setMovieListAsync(asyncKey);
+
+                const updatedMovieLists = await AsyncStorage.getItem(movieListAsync);
                 if (updatedMovieLists) {
                     setSavedMovieList(JSON.parse(updatedMovieLists));
                     setDraggedMovieList(JSON.parse(updatedMovieLists));
@@ -88,7 +93,7 @@ function MyMovieList({ navigation }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('movieList');
+            const existingMovies = await AsyncStorage.getItem(movieListAsync);
             let updatedMovieLists = [];
 
             if (existingMovies) {
@@ -100,7 +105,7 @@ function MyMovieList({ navigation }) {
             updatedMovieLists.unshift(listData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('movieList', JSON.stringify(updatedMovieLists));
+            await AsyncStorage.setItem(movieListAsync, JSON.stringify(updatedMovieLists));
 
             // Kaydedilen filmleri güncelle
             setSavedMovieList(updatedMovieLists);
@@ -125,7 +130,7 @@ function MyMovieList({ navigation }) {
         const updatedMovieLists = [...draggedMovieList];
         updatedMovieLists.splice(index, 1);
         setDraggedMovieList(updatedMovieLists);
-        AsyncStorage.setItem('movieList', JSON.stringify(updatedMovieLists))
+        AsyncStorage.setItem(movieListAsync, JSON.stringify(updatedMovieLists))
             .then(() => {
                 console.log('Kart başarıyla silindi.');
             })
@@ -217,7 +222,7 @@ function MyMovieList({ navigation }) {
 
     function handleDragEnd({ data }) {
         try {
-            AsyncStorage.setItem('movieList', JSON.stringify(data));
+            AsyncStorage.setItem(movieListAsync, JSON.stringify(data));
             setSavedMovieList(data);
             setDraggedMovieList(data);
         } catch (error) {

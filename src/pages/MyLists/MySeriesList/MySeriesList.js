@@ -33,6 +33,7 @@ function MySerieList({ navigation }) {
     const [swiperVisible2, setSwiperVisible2] = useState(false);
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
+    const [serieListAsync, setSerieListAsync] = useState("");
 
     const [draggedSerieList, setDraggedSerieList] = useState([]);
 
@@ -44,7 +45,11 @@ function MySerieList({ navigation }) {
     useEffect(() => {
         const fetchAndSetMovies = async () => {
             try {
-                const updatedSerieLists = await AsyncStorage.getItem('serieList');
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey  = (userID + "serieList");
+                setSerieListAsync(asyncKey);
+
+                const updatedSerieLists = await AsyncStorage.getItem(serieListAsync);
                 if (updatedSerieLists) {
                     setSavedSeriesList(JSON.parse(updatedSerieLists));
                     setDraggedSerieList(JSON.parse(updatedSerieLists));
@@ -88,7 +93,7 @@ function MySerieList({ navigation }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem('serieList');
+            const existingMovies = await AsyncStorage.getItem(serieListAsync);
             let updatedSerieLists = [];
 
             if (existingMovies) {
@@ -100,7 +105,7 @@ function MySerieList({ navigation }) {
             updatedSerieLists.unshift(listData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('serieList', JSON.stringify(updatedSerieLists));
+            await AsyncStorage.setItem(serieListAsync, JSON.stringify(updatedSerieLists));
 
             // Kaydedilen filmleri güncelle
             setSavedSeriesList(updatedSerieLists);
@@ -125,7 +130,7 @@ function MySerieList({ navigation }) {
         const updatedSerieLists = [...draggedSerieList];
         updatedSerieLists.splice(index, 1);
         setDraggedSerieList(updatedSerieLists);
-        AsyncStorage.setItem('serieList', JSON.stringify(updatedSerieLists))
+        AsyncStorage.setItem(serieListAsync, JSON.stringify(updatedSerieLists))
             .then(() => {
                 console.log('Kart başarıyla silindi.');
             })
@@ -217,7 +222,7 @@ function MySerieList({ navigation }) {
 
     function handleDragEnd({ data }) {
         try {
-            AsyncStorage.setItem('serieList', JSON.stringify(data));
+            AsyncStorage.setItem(serieListAsync, JSON.stringify(data));
             setSavedSeriesList(data);
             setDraggedSerieList(data);
         } catch (error) {

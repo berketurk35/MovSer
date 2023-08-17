@@ -20,9 +20,6 @@ const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
 function MoviesList({ navigation, route }) {
 
-    const userID = AsyncStorage.getItem('userId');
-    const savedMoviesAsync = (userID + "savedMovies");
-
     const [modalVisible, setModalVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
@@ -32,6 +29,7 @@ function MoviesList({ navigation, route }) {
     const [genreNames, setGenreNames] = useState([]);
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
+    const [savedMoviesAsync, setSavedMoviesAsync] = useState("");
 
     const { movieCounter, setMovieCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -40,7 +38,8 @@ function MoviesList({ navigation, route }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const savedMoviesAsync = (userID + "savedMovies");
+                const asyncKey  = (userID + "savedMovies");
+                setSavedMoviesAsync(asyncKey);
 
                 const movies = await AsyncStorage.getItem(savedMoviesAsync);
                 if (movies) {

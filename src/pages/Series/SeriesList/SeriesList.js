@@ -31,6 +31,7 @@ function SeriesList({ navigation, route }) {
     const [finalDate, setFinalDate] = useState("");
     const [seasons, setSeasons] = useState("");
     const [episodes, setEpisodes] = useState("");
+    const [savedSeriesAsync, setSavedSeriesAsync] = useState("");
 
     const { serieCounter, setSerieCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -39,7 +40,11 @@ function SeriesList({ navigation, route }) {
         // Kaydedilmiş filmleri AsyncStorage'den al
         const fetchAndSetMovies = async () => {
             try {
-                const series = await AsyncStorage.getItem('savedSeries');
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey  = (userID + "savedSeries");
+                setSavedSeriesAsync(asyncKey);
+
+                const series = await AsyncStorage.getItem(savedSeriesAsync);
                 if (series) {
                     setSavedSeries(JSON.parse(series));
                     setSerieCounter(JSON.parse(series).length);
@@ -54,7 +59,7 @@ function SeriesList({ navigation, route }) {
             // Eğer bir dizi aktarıldıysa, savedSeries dizisine ekleyin
             const updatedSeries = [Serie, ...savedSeries];
             setSavedSeries(updatedSeries);
-            AsyncStorage.setItem("savedSeries", JSON.stringify(updatedSeries))
+            AsyncStorage.setItem(savedSeriesAsync, JSON.stringify(updatedSeries))
                 .then(() => {
                     console.log("Dizi başarıyla eklendi.");
                     fetchSavedSeries();
@@ -70,7 +75,7 @@ function SeriesList({ navigation, route }) {
 
     const fetchSavedSeries = async () => {
         try {
-            const series = await AsyncStorage.getItem('savedSeries');
+            const series = await AsyncStorage.getItem(savedSeriesAsync);
             if (series) {
                 setSavedSeries(JSON.parse(series));
             }
@@ -106,7 +111,7 @@ function SeriesList({ navigation, route }) {
 
         try {
             // Daha önce kaydedilen filmleri al
-            const existingSeries = await AsyncStorage.getItem('savedSeries');
+            const existingSeries = await AsyncStorage.getItem(savedSeriesAsync);
             let updatedSeries = [];
 
             if (existingSeries) {
@@ -118,7 +123,7 @@ function SeriesList({ navigation, route }) {
             updatedSeries.unshift(serieData);
 
             // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem('savedSeries', JSON.stringify(updatedSeries));
+            await AsyncStorage.setItem(savedSeriesAsync, JSON.stringify(updatedSeries));
 
             // Kaydedilen filmleri güncelle
             setSavedSeries(updatedSeries);
@@ -239,7 +244,7 @@ function SeriesList({ navigation, route }) {
     const deleteSerie = async (serie) => {
         const updatedSeries = savedSeries.filter((m) => m.serieId !== serie.serieId);
         setSavedSeries(updatedSeries);
-        AsyncStorage.setItem('savedSeries', JSON.stringify(updatedSeries))
+        AsyncStorage.setItem(savedSeriesAsync, JSON.stringify(updatedSeries))
             .then(() => {
                 console.log('Dizi başarıyla silindi.');
             })
