@@ -48,27 +48,44 @@ function Friends({ navigation }) {
         else {
             console.log("No users found");
         }
-        async function fetchSentRequests() {
-            try {
-                const currentUserId = await AsyncStorage.getItem("userId");
-                const { data, error } = await supabase
-                    .from("friendship_requests")
-                    .select("*")
-                    .eq("user_id", currentUserId)
-                    .eq("status", "pending");
-
-                if (error) {
-                    console.error("Arkadaşlık istekleri alınırken hata:", error);
-                    return;
-                }
-                setSentRequests(data);
-            } catch (error) {
-                console.error("Arkadaşlık istekleri alınırken hata:", error);
-            }
-        }
-        fetchSentRequests();
 
     }, [searchUser]);
+
+    useEffect(() => {
+        fetchSentRequestsAndFriends();
+    }, []);
+
+    const fetchSentRequestsAndFriends = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+            const { data: sentRequestsData, error: sentRequestsError } = await supabase
+                .from("friendship_requests")
+                .select("*")
+                .eq("user_id", currentUserId)
+                .eq("status", "pending");
+
+            if (sentRequestsError) {
+                console.error("Arkadaşlık istekleri alınırken hata:", sentRequestsError);
+                return;
+            }
+
+            const sentFriendIds = sentRequestsData.map(request => request.friend_id);
+
+            const { data: sentFriendsData, error: sentFriendsError } = await supabase
+                .from("users")
+                .select("*")
+                .in("userID", sentFriendIds);
+
+            if (sentFriendsError) {
+                console.error("Arkadaş detayları alınırken hata:", sentFriendsError);
+                return;
+            }
+
+            setSelectedFriends(sentFriendsData);
+        } catch (error) {
+            console.error("Arkadaşlık istekleri ve detayları alınırken hata:", error);
+        }
+    };
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -92,14 +109,56 @@ function Friends({ navigation }) {
                 .select("*")
                 .not('userID', 'eq', currentUserId)
                 .ilike("userName", `%${searchUser}%`);
-
+    
             if (error) {
                 console.error("Arama hatası:", error);
                 return;
             }
-            setSearchResults(data);
+    
+            // Kullanıcıların istek durumunu kontrol etmek için friendship_requests tablosundan istekleri çekin
+            const { data: sentRequestsData, error: sentRequestsError } = await supabase
+                .from("friendship_requests")
+                .select("friend_id, status")
+                .eq("user_id", currentUserId)
+                .eq("status", "pending");
+    
+            if (sentRequestsError) {
+                console.error("İstekler alınırken hata:", sentRequestsError);
+                return;
+            }
+    
+            // İstek gönderilen kullanıcıların friend_id değerlerini bir diziye aktarın
+            const sentRequestFriendIds = sentRequestsData.map(request => request.friend_id);
+    
+            // Kullanıcılar listesini döngüye alarak her bir kullanıcının istek durumunu kontrol edin
+            const updatedSearchResults = data.map(user => ({
+                ...user,
+                isAlreadySent: sentRequestFriendIds.includes(user.userID)
+            }));
+    
+            setSearchResults(updatedSearchResults);
         } catch (error) {
             console.error("Arama hatası:", error);
+        }
+    };
+    
+
+    const updateSentRequests = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+            const { data, error } = await supabase
+                .from("friendship_requests")
+                .select("*")
+                .eq("user_id", currentUserId)
+                .eq("status", "pending");
+
+            if (error) {
+                console.error("Arkadaşlık istekleri alınırken hata:", error);
+                return;
+            }
+            setSentRequests(data);
+        } catch (error) {
+            console.error("Arkadaşlık istekleri alınırken hata:", error);
         }
     };
 
@@ -129,6 +188,7 @@ function Friends({ navigation }) {
             console.log("Arkadaşlık isteği başarıyla gönderildi:", data);
             setSentRequests([...sentRequests, { friend_id: selectedUserId, status: "pending" }]);
             setIsSendingRequest(false); // İstek gönderme işlemi bitti
+            updateSentRequests();
         } catch (error) {
             console.error("Arkadaşlık isteği gönderme hatası:", error);
             setIsSendingRequest(false); // İstek gönderme işlemi bitti veya hata aldı
@@ -156,11 +216,6 @@ function Friends({ navigation }) {
     };
 
     const renderUserItem = ({ item }) => {
-        // Kullanıcının bu kişiye zaten istek gönderip göndermediğini kontrol ediyoruz
-        const isAlreadySentToThisUser = sentRequests.some(
-            request => request.friend_id === item.userID
-        );
-
         return (
             <View>
                 <View style={{ flexDirection: "row" }} >
@@ -171,10 +226,10 @@ function Friends({ navigation }) {
                     <TouchableOpacity
                         style={styles.addBox}
                         onPress={() => handleUserSelect(item)}
-                        disabled={isAlreadySentToThisUser}
+                        disabled={item.isAlreadySent}
                     >
                         <Text style={styles.add}>
-                            {isAlreadySentToThisUser ? "İstek Gönderildi" : "Arkadaş Ekle"}
+                            {item.isAlreadySent ? "İstek Gönderildi" : "Arkadaş Ekle"}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -209,7 +264,7 @@ function Friends({ navigation }) {
                         <Text style={styles.status}>- Gelen İstekler</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleSentRequistPress} >
-                        <Text style={styles.status}>- Gönderilen İstekler</Text>
+                        <Text style={styles.status}>- Gönderilen İstekler ( {selectedFriends.length} ) </Text>
                     </TouchableOpacity>
                     {sentRequist && renderSelectedFriends()}
                     <TouchableOpacity>
