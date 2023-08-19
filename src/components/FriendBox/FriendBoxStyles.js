@@ -13,6 +13,7 @@ export default StyleSheet.create({
         borderRadius: 100,
     },
     textBody: {
+        flex: 1,
         justifyContent: "center",
     },
     userName: {
@@ -31,5 +32,12 @@ export default StyleSheet.create({
         width: Dimensions.get("window").width /1.1,
         marginHorizontal: 10,
         marginTop: 20,
+    },
+    icon: {
+        paddingRight: 20
+    },
+    iconBox: {
+        alignSelf: "center",
+        flexDirection: "row"
     }
 });

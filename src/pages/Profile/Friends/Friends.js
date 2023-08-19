@@ -34,13 +34,21 @@ function Friends({ navigation }) {
     const [searchUser, setSearchUser] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [sentRequist, setSentRequist] = useState(false);
+    const [incomingRequist, setIncomingRequist] = useState(false);
+    const [friendsList, setFriendsList] = useState(false);
     const [selectedFriends, setSelectedFriends] = useState([]);
+
     const [sentRequests, setSentRequests] = useState([]);
     const [isSendingRequest, setIsSendingRequest] = useState(false);
     const [isAlreadySent, setIsAlreadySent] = useState(false);
 
+    const [receivedRequests, setReceivedRequests] = useState([]);
+
+    const [friends, setFriends] = useState([]);
+
     const { language, setLanguage } = useStats();
 
+    
     useEffect(() => {
         if (searchUser) {
             searchUsers();
@@ -52,10 +60,12 @@ function Friends({ navigation }) {
     }, [searchUser]);
 
     useEffect(() => {
-        fetchSentRequestsAndFriends();
+        fetchSentRequests();
+        fetchInComingRequests();
+        fetchFriends();
     }, []);
 
-    const fetchSentRequestsAndFriends = async () => {
+    const fetchSentRequests = async () => {
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
             const { data: sentRequestsData, error: sentRequestsError } = await supabase
@@ -87,6 +97,78 @@ function Friends({ navigation }) {
         }
     };
 
+    const fetchInComingRequests = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+
+            // Gelen isteklerin bilgilerini çekin
+            const { data: receivedRequestsData, error: receivedRequestsError } = await supabase
+                .from("friendship_requests")
+                .select("user_id, status")
+                .eq("friend_id", currentUserId)
+                .eq("status", "pending");
+
+            if (receivedRequestsError) {
+                console.error("Gelen istekler alınırken hata:", receivedRequestsError);
+                return;
+            }
+
+            // Gelen isteklerin gönderen kullanıcıların user_id değerlerini bir diziye aktarın
+            const receivedRequestUserIds = receivedRequestsData.map(request => request.user_id);
+
+            // Gelen istekleri gönderen kullanıcıların bilgilerini çekerek state'i güncelleyin
+            const { data: receivedRequestsUsersData, error: receivedRequestsUsersError } = await supabase
+                .from("users")
+                .select("*")
+                .in("userID", receivedRequestUserIds);
+
+            if (receivedRequestsUsersError) {
+                console.error("Gelen isteklerin gönderen kullanıcı bilgileri alınırken hata:", receivedRequestsUsersError);
+                return;
+            }
+
+            // State'i güncelleyin
+            setReceivedRequests(receivedRequestsUsersData);
+        } catch (error) {
+            console.error("Gelen istekler ve gönderen kullanıcı bilgileri alınırken hata:", error);
+        }
+    };
+
+    const fetchFriends = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+    
+            // Mevcut kullanıcının arkadaşlarını çekin
+            const { data: friendsData, error: friendsError } = await supabase
+                .from("friends")
+                .select("friend_id")
+                .eq("user_id", currentUserId);
+    
+            if (friendsError) {
+                console.error("Arkadaşları alınırken hata:", friendsError);
+                return;
+            }
+    
+            const friendIds = friendsData.map(friend => friend.friend_id);
+    
+            // Arkadaşlarımın detaylarını çekin
+            const { data: friendsDetailsData, error: friendsDetailsError } = await supabase
+                .from("users")
+                .select("*")
+                .in("userID", friendIds);
+    
+            if (friendsDetailsError) {
+                console.error("Arkadaş detayları alınırken hata:", friendsDetailsError);
+                return;
+            }
+    
+            setFriends(friendsDetailsData);
+        } catch (error) {
+            console.error("Arkadaşları alınırken hata:", error);
+        }
+    };
+    
+
     const handleFabPress = () => {
         setModalVisible(true);
     };
@@ -101,6 +183,75 @@ function Friends({ navigation }) {
         setSentRequist(!sentRequist);
     };
 
+    const handleIncomingRequistPress = () => {
+        setIncomingRequist(!incomingRequist);
+    };
+
+    const handleFriendPress = () => {
+        setFriendsList(!friendsList);
+    };
+
+    const handleAcceptRequest = async (user) => {
+        const currentUserId = await AsyncStorage.getItem("userId");
+        const friendId = user.userID;
+
+        // İstek durumunu "accepted" olarak güncelle
+        try {
+            const { data, error } = await supabase
+                .from("friendship_requests")
+                .update({ status: "accepted" })
+                .eq("user_id", friendId)
+                .eq("friend_id", currentUserId);
+
+            if (error) {
+                console.error("İstek kabul hatası:", error);
+                return;
+            }
+
+            // Daha sonra friends tablosuna arkadaşlığı ekleyebilirsiniz
+            const { data: friendsData, error: friendsError } = await supabase
+                .from("friends")
+                .insert([{ user_id: currentUserId, friend_id: friendId }, { user_id: friendId, friend_id: currentUserId }]);
+
+            if (friendsError) {
+                console.error("Friends tablosuna ekleme hatası:", friendsError);
+                return;
+            }
+
+            // Durumu güncelle ve friends listesini yeniden çekin
+            fetchSentRequests();
+            fetchInComingRequests();
+            fetchFriends();
+        } catch (error) {
+            console.error("İstek kabul ve friends ekleme hatası:", error);
+        }
+    };
+
+    const handleRejectRequest = async (user) => {
+        const currentUserId = await AsyncStorage.getItem("userId");
+        const friendId = user.userID;
+
+        // İstek durumunu "rejected" olarak güncelle
+        try {
+            const { data, error } = await supabase
+                .from("friendship_requests")
+                .update({ status: "rejected" })
+                .eq("user_id", friendId)
+                .eq("friend_id", currentUserId);
+
+            if (error) {
+                console.error("İstek reddetme hatası:", error);
+                return;
+            }
+
+            // Durumu güncelle ve incoming requests listesini yeniden çekin
+            fetchInComingRequests();
+        } catch (error) {
+            console.error("İstek reddetme hatası:", error);
+        }
+    };
+
+
     const searchUsers = async () => {
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
@@ -109,40 +260,40 @@ function Friends({ navigation }) {
                 .select("*")
                 .not('userID', 'eq', currentUserId)
                 .ilike("userName", `%${searchUser}%`);
-    
+
             if (error) {
                 console.error("Arama hatası:", error);
                 return;
             }
-    
+
             // Kullanıcıların istek durumunu kontrol etmek için friendship_requests tablosundan istekleri çekin
             const { data: sentRequestsData, error: sentRequestsError } = await supabase
                 .from("friendship_requests")
                 .select("friend_id, status")
                 .eq("user_id", currentUserId)
                 .eq("status", "pending");
-    
+
             if (sentRequestsError) {
                 console.error("İstekler alınırken hata:", sentRequestsError);
                 return;
             }
-    
+
             // İstek gönderilen kullanıcıların friend_id değerlerini bir diziye aktarın
             const sentRequestFriendIds = sentRequestsData.map(request => request.friend_id);
-    
+
             // Kullanıcılar listesini döngüye alarak her bir kullanıcının istek durumunu kontrol edin
             const updatedSearchResults = data.map(user => ({
                 ...user,
                 isAlreadySent: sentRequestFriendIds.includes(user.userID)
             }));
-    
+
             setSearchResults(updatedSearchResults);
         } catch (error) {
             console.error("Arama hatası:", error);
         }
     };
-    
 
+    /*
     const updateSentRequests = async () => {
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
@@ -161,6 +312,7 @@ function Friends({ navigation }) {
             console.error("Arkadaşlık istekleri alınırken hata:", error);
         }
     };
+    */
 
     async function sendFriendRequest(currentUserId, selectedUserId) {
         try {
@@ -188,7 +340,7 @@ function Friends({ navigation }) {
             console.log("Arkadaşlık isteği başarıyla gönderildi:", data);
             setSentRequests([...sentRequests, { friend_id: selectedUserId, status: "pending" }]);
             setIsSendingRequest(false); // İstek gönderme işlemi bitti
-            updateSentRequests();
+            //updateSentRequests();
         } catch (error) {
             console.error("Arkadaşlık isteği gönderme hatası:", error);
             setIsSendingRequest(false); // İstek gönderme işlemi bitti veya hata aldı
@@ -238,7 +390,22 @@ function Friends({ navigation }) {
         );
     };
 
-    const renderSelectedFriends = () => {
+    const renderReceivedRequests = () => {
+        return receivedRequests.map(requestSender => (
+            <FriendBox
+                key={requestSender.userID}
+                profilePhoto={requestSender.profile_photo_url}
+                userName={requestSender.userName}
+                fullName={requestSender.fullName}
+                pressAccept={() => handleAcceptRequest(requestSender)}
+                pressReject={() => handleRejectRequest(requestSender)}
+                iconName1={"like1"}
+                iconName2={"dislike1"}
+            />
+        ));
+    };
+
+    const renderSentRequest = () => {
         return selectedFriends.map(friend => (
             <FriendBox
                 key={friend.userID}
@@ -248,6 +415,18 @@ function Friends({ navigation }) {
             />
         ));
     };
+
+    const renderFriends = () => {
+        return friends.map(friend => (
+            <FriendBox
+                key={friend.userID}
+                profilePhoto={friend.profile_photo_url}
+                userName={friend.userName}
+                fullName={friend.fullName}
+            />
+        ));
+    };
+
 
     return (
         <SafeAreaProvider >
@@ -260,16 +439,18 @@ function Friends({ navigation }) {
                                 onChangeText={null} />
                         </View>
                     </View>
-                    <TouchableOpacity>
-                        <Text style={styles.status}>- Gelen İstekler</Text>
+                    <TouchableOpacity onPress={handleIncomingRequistPress}>
+                        <Text style={styles.status}>- Gelen İstekler ({receivedRequests.length})</Text>
                     </TouchableOpacity>
+                    {incomingRequist && renderReceivedRequests()}
                     <TouchableOpacity onPress={handleSentRequistPress} >
-                        <Text style={styles.status}>- Gönderilen İstekler ( {selectedFriends.length} ) </Text>
+                        <Text style={styles.status}>- Gönderilen İstekler ({selectedFriends.length}) </Text>
                     </TouchableOpacity>
-                    {sentRequist && renderSelectedFriends()}
-                    <TouchableOpacity>
-                        <Text style={styles.status}>- Arkadaşlar</Text>
+                    {sentRequist && renderSentRequest()}
+                    <TouchableOpacity onPress={handleFriendPress}>
+                        <Text style={styles.status}>- Arkadaşlar ({friends.length})</Text>
                     </TouchableOpacity>
+                    {friendsList && renderFriends()}
 
                     <FAB
                         style={styles.fab}
