@@ -12,8 +12,9 @@ const Translations = {
         seriesTitle2: "Watching Now",
         seriesTitle3: "Series To Watch",
 
-        listTitle1: "Movies List",
-        listTitle2: "Series List",
+        listTitle1: "Movie Lists",
+        listTitle2: "Serie Lists",
+        listTitle3: "Friend Lists",
 
         profileTitle1: "Profile Information",
         profileTitle2: "Friends",
@@ -30,7 +31,7 @@ const Translations = {
 
         searchMovie: "Search Movie Name..",
         searchSerie: "Search Serie Name..",
-        searchFriend: "Search Friend Username..",
+        searchFriend: "Search Username..",
 
         selectedMovie: "Selected Movie",
         releaseDate: "Release Date",
@@ -117,6 +118,7 @@ const Translations = {
 
         listTitle1: "Film Listeleri",
         listTitle2: "Dizi Listeleri",
+        listTitle3: "Arkadaş Listeleri",
 
         profileTitle1: "Profil Bilgileri",
         profileTitle2: "Arkadaşlar",
@@ -133,7 +135,7 @@ const Translations = {
 
         searchMovie: "Film Adını Ara..",
         searchSerie: "Dizi Adını Ara..",
-        searchFriend: "Arkadaş Kullanıcı Adını Ara..",
+        searchFriend: "Kullanıcı Adını Ara..",
 
         selectedMovie: "Seçilen Film",
         releaseDate: "Yayın Tarihi",

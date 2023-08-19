@@ -3,6 +3,7 @@ import { useStats } from "../Context/StatContext";
 import Translations from "../languages/Translation";
 import MyMoviesList from "../pages/MyLists/MyMoviesList/MyMovieList";
 import MySeriesList from "../pages/MyLists/MySeriesList/MySeriesList";
+import MyFriendsList from '../pages/MyLists/MyFriendsList/MyFriendsList';
 
 function TopNavigator3() {
 
@@ -16,7 +17,7 @@ function TopNavigator3() {
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           textTransform: "capitalize",
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: "bold",
         },
         tabBarIndicatorStyle: {
@@ -35,6 +36,12 @@ function TopNavigator3() {
         options={
           {
             title: Translations[language].listTitle2,
+          }
+        } />
+        <Tab.Screen name="MyFriendsList" component={MyFriendsList}
+        options={
+          {
+            title: Translations[language].listTitle3,
           }
         } />
     </Tab.Navigator>

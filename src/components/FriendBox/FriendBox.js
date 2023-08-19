@@ -5,15 +5,15 @@ import styles from "./FriendBoxStyles";
 
 import Icon from "react-native-vector-icons/Ionicons";
 
-function FriendBox() {
+function FriendBox({profilePhoto, userName, fullName}) {
 
     return (
         <View>
             <View style={styles.container} >
-                <Image source={require("../../images/pp.jpeg")} style={styles.image} />
+                <Image source={{uri: profilePhoto}} style={styles.image} />
                 <View style={styles.textBody}>
-                    <Text style={styles.userName}>berkee.turk </Text>
-                    <Text style={styles.fullName}>Berke Türk</Text>
+                    <Text style={styles.userName}>{userName}</Text>
+                    <Text style={styles.fullName}>{fullName}</Text>
                 </View>
             </View>
             <View style={styles.seperator} />
