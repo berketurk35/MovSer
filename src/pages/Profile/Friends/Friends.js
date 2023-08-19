@@ -38,7 +38,6 @@ function Friends({ navigation }) {
     const [sentRequests, setSentRequests] = useState([]);
     const [isSendingRequest, setIsSendingRequest] = useState(false);
     const [isAlreadySent, setIsAlreadySent] = useState(false);
-    const [initialLoading, setInitialLoading] = useState(true);
 
     const { language, setLanguage } = useStats();
 
@@ -63,7 +62,6 @@ function Friends({ navigation }) {
                     return;
                 }
                 setSentRequests(data);
-                setInitialLoading(false);
             } catch (error) {
                 console.error("Arkadaşlık istekleri alınırken hata:", error);
             }
@@ -71,63 +69,6 @@ function Friends({ navigation }) {
         fetchSentRequests();
 
     }, [searchUser]);
-
-    useEffect(() => {
-        async function loadSentRequestsFromStorage() {
-            try {
-                const savedSentRequests = await AsyncStorage.getItem("sentRequests");
-                if (savedSentRequests) {
-                    setSentRequests(JSON.parse(savedSentRequests));
-                }
-                setInitialLoading(false);
-            } catch (error) {
-                console.error("Gönderilen istekleri yükleme hatası:", error);
-                setInitialLoading(false);
-            }
-        }
-
-        const unsubscribe = navigation.addListener("beforeRemove", () => {
-            saveSentRequestsToStorage();
-        });
-
-        loadSentRequestsFromStorage();
-
-        return () => {
-            unsubscribe();
-        };
-    }, []);
-
-    useEffect(() => {
-        async function loadInitialData() {
-            try {
-                const currentUserId = await AsyncStorage.getItem("userId");
-                const { data, error } = await supabase
-                    .from("friendship_requests")
-                    .select("*")
-                    .eq("user_id", currentUserId)
-                    .eq("status", "pending"); // Sadece pending olan istekleri al
-                if (error) {
-                    console.error("Arkadaşlık istekleri alınırken hata:", error);
-                    return;
-                }
-                setSentRequests(data);
-            } catch (error) {
-                console.error("Arkadaşlık istekleri alınırken hata:", error);
-            }
-        }
-
-        if (!initialLoading) {
-            loadInitialData();
-        }
-    }, [initialLoading]);
-
-    async function saveSentRequestsToStorage() {
-        try {
-            await AsyncStorage.setItem("sentRequests", JSON.stringify(sentRequests));
-        } catch (error) {
-            console.error("Gönderilen istekleri kaydetme hatası:", error);
-        }
-    }
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -145,9 +86,11 @@ function Friends({ navigation }) {
 
     const searchUsers = async () => {
         try {
+            const currentUserId = await AsyncStorage.getItem("userId");
             const { data, error } = await supabase
                 .from("users")
                 .select("*")
+                .not('userID', 'eq', currentUserId)
                 .ilike("userName", `%${searchUser}%`);
 
             if (error) {
@@ -195,11 +138,6 @@ function Friends({ navigation }) {
     const handleUserSelect = async (user) => {
         const currentUserId = await AsyncStorage.getItem("userId");
         const selectedUserId = user.userID;
-
-        if (currentUserId === selectedUserId) {
-            console.log("Kendinize istek gönderemezsiniz.");
-            return;
-        }
 
         if (isSendingRequest) {
             console.log("Bu kullanıcıya zaten istek gönderilmiş.");
