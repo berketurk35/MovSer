@@ -60,14 +60,18 @@ function MySerieList({ navigation }) {
             }
         };
         fetchAndSetMovies();
-    }, []);
+    }, [serieListAsync]);
 
     const handleFabPress = () => {
         setModalVisible(true);
     };
 
     const handleRemovePress = () => {
-        setModalRemoveVisible(true);
+        if(draggedSerieList.length > 0) { 
+            setModalRemoveVisible(true);
+        } else {
+            setModalRemoveVisible(false);
+        }
     };
 
     const closeModal = () => {

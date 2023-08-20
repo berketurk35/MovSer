@@ -41,7 +41,7 @@ function SeriesList({ navigation, route }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "savedSeries");
+                const asyncKey = (userID + "savedSeries");
                 setSavedSeriesAsync(asyncKey);
 
                 const series = await AsyncStorage.getItem(savedSeriesAsync);
@@ -54,6 +54,9 @@ function SeriesList({ navigation, route }) {
             }
         };
         fetchAndSetMovies();
+    }, [savedSeriesAsync]);
+
+    useEffect(() => {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
             // Eğer bir dizi aktarıldıysa, savedSeries dizisine ekleyin
@@ -206,7 +209,7 @@ function SeriesList({ navigation, route }) {
     };
 
     const handleSerieSelect = async (serie) => {
-        
+
         setSelectedSerie(serie);
         setSearchText(serie.name);
         getSerieDetails(serie.id);

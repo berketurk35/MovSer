@@ -41,7 +41,7 @@ function ActiveSeriesList({ navigation, route }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "savedActiveSeries");
+                const asyncKey = (userID + "savedActiveSeries");
                 setSavedActiveSeriesAsync(asyncKey);
 
                 const series = await AsyncStorage.getItem(savedActiveSeriesAsync);
@@ -54,6 +54,9 @@ function ActiveSeriesList({ navigation, route }) {
             }
         };
         fetchAndSetMovies();
+    }, [savedActiveSeriesAsync]);
+
+    useEffect(() => {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin

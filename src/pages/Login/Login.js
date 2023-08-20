@@ -86,8 +86,9 @@ function Login({ navigation }) {
         navigation.navigate("Register");
     }
 
-    function gir() {
+    const sneakEnter = async () => {
         navigation.navigate("TabNavigator");
+        await AsyncStorage.setItem("userId", "guest");
     }
 
     return (
@@ -114,7 +115,7 @@ function Login({ navigation }) {
 
             <Text style={{marginBottom:10, fontSize: 12}} >{Translations[language].or}</Text>
 
-            <TouchableOpacity onPress={gir} style={styles.box}>
+            <TouchableOpacity onPress={sneakEnter} style={styles.box}>
                 <Icon name={"mask"} size={18} color={"black"} style={styles.icon} />
                 <View style={styles.seperator} />
                 <View style={{ flex: 1, justifyContent: "center" }} >

@@ -54,7 +54,7 @@ function ReqSeriesList({ navigation, route }) {
             }
         };
         fetchAndSetMovies();
-    }, []);
+    }, [savedReqSeriesAsync]);
 
     const handleFabPress = () => {
         setModalVisible(true);

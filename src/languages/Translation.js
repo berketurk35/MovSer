@@ -91,7 +91,7 @@ const Translations = {
 
         signUpGoogle: "Sign up with Google",
         or: "____________ Or ____________",
-        sneak: "Sneak Peek",
+        sneak: "Continue without login",
         noSocial: "(Social parts are not available)",
 
         email: "Email",
@@ -195,7 +195,7 @@ const Translations = {
 
         signUpGoogle: "Google ile kayıt ol",
         or: "____________ Ya Da ____________",
-        sneak: "Gizlice Göz At",
+        sneak: "Giriş yapmadan devam et",
         noSocial: "(Sosyal kısımlar kullanılamaz)",
 
         email: "Email",

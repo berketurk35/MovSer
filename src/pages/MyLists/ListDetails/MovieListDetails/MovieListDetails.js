@@ -47,25 +47,23 @@ function MovieListDetails({ navigation, route }) {
     const ref = useRef(null);
 
     useEffect(() => {
-        // Kaydedilmiş filmleri AsyncStorage'den al
-        fetchSavedMovies();
-    }, []);
-
-    const fetchSavedMovies = async () => {
-        try {
-            const userID = await AsyncStorage.getItem('userId');
-            const asyncKey = (userID + listName);
-            setListNameAsync(asyncKey);
-
-            const movies = await AsyncStorage.getItem(listNameAsync);
-            if (movies) {
-                setSavedMovies(JSON.parse(movies));
-                setDraggedMovies(JSON.parse(movies));
+        const fetchSavedMovies = async () => {
+            try {
+                const userID = await AsyncStorage.getItem('userId');
+                const asyncKey = (userID + listName);
+                setListNameAsync(asyncKey);
+    
+                const movies = await AsyncStorage.getItem(listNameAsync);
+                if (movies) {
+                    setSavedMovies(JSON.parse(movies));
+                    setDraggedMovies(JSON.parse(movies));
+                }
+            } catch (error) {
+                console.log('Hata: ', error);
             }
-        } catch (error) {
-            console.log('Hata: ', error);
-        }
-    };
+        };
+        fetchSavedMovies();
+    }, [listNameAsync]);
 
     const handleFabPress = () => {
         setModalVisible(true);

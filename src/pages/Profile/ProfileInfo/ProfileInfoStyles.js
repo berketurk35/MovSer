@@ -20,16 +20,16 @@ export default StyleSheet.create({
     },
     seperator: {
         borderWidth: 1,
-        width: Dimensions.get("window").width / 2,
+        width: Dimensions.get("window").width / 2.,
     },
     userName: {
-        fontSize: 22,
+        fontSize: 20,
         paddingBottom: 10,
         color: "black",
         fontWeight: "bold",
     },
     fullName: {
-        fontSize: 18,
+        fontSize: 16,
         paddingTop: 10,
         color: "black",
     },
@@ -58,6 +58,61 @@ export default StyleSheet.create({
     },
     box: {
         padding: 10,
-        borderTopWidth: 1,
+        borderBottomWidth: 1,
     },
+    box2: {
+        padding: 10,
+    },
+    langImg: {
+        height: 25,
+        width: 25,
+    },
+    languageText: {
+        paddingBottom: 6,
+        fontSize: 12,
+        color: "black",
+    },
+    languageBox: {
+        position: "absolute",
+        top: 15,
+        right: 20,
+        alignItems: "center"
+    },
+    editBox: {
+        flex: 1,
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderRadius: 12,
+        borderColor: "black",
+        marginTop: 10,
+        marginRight: 10,
+    },
+    logoutBox: {
+        flex: 1,
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderRadius: 12,
+        borderColor: "black",
+        marginTop: 10,
+        marginRight: 35,
+    },
+    editTitle: {
+        paddingVertical: 6,
+        color: "black",
+        fontSize: 10,
+        textAlign: "center",
+    },
+    removeDataBox: {
+        borderWidth: 1,
+        borderRadius: 16,
+        backgroundColor: "#1565C0",
+        alignSelf: "center",
+        width: Dimensions.get("window").width / 3,
+        marginTop: 20,
+    },
+    removeDataText: {
+        padding: 10,
+        textAlign: "center",
+        color: "white",
+    }
 });

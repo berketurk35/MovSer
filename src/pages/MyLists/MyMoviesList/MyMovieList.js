@@ -49,6 +49,7 @@ function MyMovieList({ navigation }) {
                 setMovieListAsync(asyncKey);
 
                 const updatedMovieLists = await AsyncStorage.getItem(movieListAsync);
+                console.log(updatedMovieLists);
                 if (updatedMovieLists) {
                     setSavedMovieList(JSON.parse(updatedMovieLists));
                     setDraggedMovieList(JSON.parse(updatedMovieLists));
@@ -58,16 +59,19 @@ function MyMovieList({ navigation }) {
                 console.log('Hata: ', error);
             }
         };
-
         fetchAndSetMovies();
-    }, []);
+    }, [movieListAsync]);
 
     const handleFabPress = () => {
         setModalVisible(true);
     };
 
     const handleRemovePress = () => {
-        setModalRemoveVisible(true);
+        if(draggedMovieList.length > 0) { 
+            setModalRemoveVisible(true);
+        } else {
+            setModalRemoveVisible(false);
+        }
     };
 
     const closeModal = () => {

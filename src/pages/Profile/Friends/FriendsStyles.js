@@ -16,7 +16,7 @@ export default StyleSheet.create({
         bottom: 0,
         backgroundColor: "#1565C0",
         borderWidth: 1,
-        borderColor: "white"
+        borderColor: "black"
     },
     modalBackground: {
         flex: 1,
@@ -95,5 +95,25 @@ export default StyleSheet.create({
         marginLeft: 30,
         marginTop: 20,
         fontSize: 16,
+        color: "black"
+    },
+    guestInfoBox: {
+        alignItems: "center",
+    },
+    guestInfoTitle: {
+        fontSize: 16,
+        paddingBottom: 10,
+        color: "black"
+    },
+    guestInfoButton: {
+        backgroundColor: "#1565C0",
+        borderWidth: 1,
+        borderRadius: 18,
+        borderColor: "white",
+        marginTop: 20,
+    },
+    guestInfoButtonText: {
+        color: "white",
+        padding: 14,
     }
 });

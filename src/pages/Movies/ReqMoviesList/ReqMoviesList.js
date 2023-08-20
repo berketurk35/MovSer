@@ -53,7 +53,7 @@ function ReqMoviesList({ navigation }) {
             }
         };
         fetchAndSetMovies();
-    }, []);
+    }, [reqSavedMoviesAsync]);
 
     const handleFabPress = () => {
         setModalVisible(true);

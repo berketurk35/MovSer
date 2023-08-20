@@ -38,10 +38,13 @@ function MoviesList({ navigation, route }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "savedMovies");
+                console.log("userID: ", userID);
+                const asyncKey = (userID + "savedMovies");
+                console.log("asyncKey: ", asyncKey);
                 setSavedMoviesAsync(asyncKey);
-
+    
                 const movies = await AsyncStorage.getItem(savedMoviesAsync);
+                console.log("movies: ", movies);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
                     setMovieCounter(JSON.parse(movies).length);
@@ -50,7 +53,11 @@ function MoviesList({ navigation, route }) {
                 console.log('Hata: ', error);
             }
         };
+
         fetchAndSetMovies();
+    }, [savedMoviesAsync]);
+
+    useEffect(() => {
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
             // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin

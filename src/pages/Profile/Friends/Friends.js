@@ -31,6 +31,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 function Friends({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [guestVisible, setGuestVisible] = useState(false);
     const [searchUser, setSearchUser] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [sentRequist, setSentRequist] = useState(false);
@@ -169,12 +170,19 @@ function Friends({ navigation }) {
     };
 
 
-    const handleFabPress = () => {
-        setModalVisible(true);
+    const handleFabPress = async () => {
+        const userId = await AsyncStorage.getItem("userId");
+        if (userId === "guest") {
+            setModalVisible(false);
+            setGuestVisible(true);
+        } else {
+            setModalVisible(true);
+        }
     };
 
     const closeModal = () => {
         setModalVisible(false);
+        setGuestVisible(false);
         setSearchUser('');
         setSearchResults([]);
     };
@@ -408,6 +416,9 @@ function Friends({ navigation }) {
         ));
     };
 
+    function goToRegisterPage(){
+        navigation.navigate("Register");
+    }
 
     return (
         <SafeAreaProvider >
@@ -476,6 +487,35 @@ function Friends({ navigation }) {
                                     keyExtractor={(item) => item.id.toString()}
                                     renderItem={renderUserItem}
                                 />
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+                <Modal
+                    visible={guestVisible}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View style={styles.guestInfoBox} >
+                                    <Text style={styles.guestInfoTitle} >Merhaba Kullanıcı</Text>
+                                    <Text>Arkadaş ekleyebilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.</Text>
+                                    <TouchableOpacity onPress={goToRegisterPage} style={styles.guestInfoButton}>
+                                        <Text style={styles.guestInfoButtonText}>Hemen Kayıt Ol</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>

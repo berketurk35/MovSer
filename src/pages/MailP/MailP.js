@@ -54,8 +54,6 @@ function MailP({ navigation }) {
         }
     };
 
-
-
     const signInWithEmail = async () => {
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,

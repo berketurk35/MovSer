@@ -57,10 +57,14 @@ function MyFriendsList({ navigation }) {
         };
 
         fetchAndSetMovies();
-    }, []);
+    }, [movieListAsync]);
 
     const handleRemovePress = () => {
-        setModalRemoveVisible(true);
+        if(draggedMovieList.length > 0) { 
+            setModalRemoveVisible(true);
+        } else {
+            setModalRemoveVisible(false);
+        }
     };
 
     const closeModal = () => {
