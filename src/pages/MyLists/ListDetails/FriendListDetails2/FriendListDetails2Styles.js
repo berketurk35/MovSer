@@ -55,13 +55,6 @@ export default StyleSheet.create({
         color: "white",
         padding: 10,
     },
-    buttonText2: {
-        textAlign: "center",
-        fontSize: 14,
-        fontWeight: "bold",
-        color: "white",
-        padding: 10,
-    },
     savedMoviesContainer: {
         marginTop: 20,
         paddingHorizontal: 16,
@@ -261,14 +254,5 @@ export default StyleSheet.create({
     guestInfoButtonText: {
         color: "white",
         padding: 14,
-    },
-    input: {
-        marginTop: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 22,
-        padding: 10,
-        fontSize: 14,
-        textAlignVertical: 'top',
-    },
+    }
 });

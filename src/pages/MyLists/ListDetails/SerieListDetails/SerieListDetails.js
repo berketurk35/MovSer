@@ -60,8 +60,10 @@ function SerieListDetails({ navigation, route }) {
     const [episodes, setEpisodes] = useState("");
     const [listNameAsync, setListNameAsync] = useState("");
     const [shareModal, setShareModal] = useState("");
+    const [messageModal, setMessageModal] = useState(false);
     const [friends, setFriends] = useState([]);
-
+    const [friendId, setFriendId] = useState("");
+    const [message, setMessage] = useState("");
     const [draggedSeries, setDraggedSeries] = useState([]);
 
     const { language, setLanguage } = useStats();
@@ -122,7 +124,9 @@ function SerieListDetails({ navigation, route }) {
         }
     };
 
-    const shareMovieList = async (friend_id) => {
+    const shareMovieList = async () => {
+        setMessageModal(false);
+        setShareModal(false);
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
 
@@ -130,7 +134,7 @@ function SerieListDetails({ navigation, route }) {
                 .from("shared_lists")
                 .select("id")
                 .eq("user_id", currentUserId)
-                .eq("friend_id", friend_id)
+                .eq("friend_id", friendId)
                 .eq("listType", "Serie")
                 .eq("listName", listName)
 
@@ -143,16 +147,26 @@ function SerieListDetails({ navigation, route }) {
                 console.log("Bu liste daha önce paylaşıldı.");
                 return;
             }
-
+            
+            const { data: userDetailsData, error: userDetailsError } = await supabase
+                .from("users")
+                .select("*")
+                .eq("userID", currentUserId);
+                
+                console.log("userDetailsData", userDetailsData);
+                console.log("userDetailsError", userDetailsError);
+    
             const { data, error } = await supabase
                 .from("shared_lists")
                 .insert([
                     {
                         user_id: currentUserId,
-                        friend_id: friend_id,
+                        friend_id: friendId,
                         listType: "Serie",
                         listName: listName,
-                        content_ids: draggedSeries.map(item => item.serieId)
+                        content_ids: draggedSeries.map(item => item.serieId),
+                        user_message: message,
+                        fullName: userDetailsData.fullName
                     }
                 ])
             if (!error) {
@@ -322,6 +336,16 @@ function SerieListDetails({ navigation, route }) {
         } else {
             setShareModal(true);
         }
+    };
+
+    const handlePressMessageBox = async (friend_id) => {
+        setMessageModal(true);
+        setFriendId(friend_id);
+    };
+
+    const closeMessageModal = () => {
+        setMessage("");
+        setMessageModal(false);
     };
 
     const closeShareModal = () => {
@@ -577,11 +601,51 @@ function SerieListDetails({ navigation, route }) {
                                                     userName={friend.userName}
                                                     fullName={friend.fullName}
                                                     iconShare={"share-square-o"}
-                                                    pressShare={() => shareMovieList(friend.userID)}
+                                                    pressShare={() => handlePressMessageBox(friend.userID)}
                                                 />
                                             ))
                                             }
                                         </ScrollView>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+                <Modal
+                    visible={messageModal}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeMessageModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeMessageModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View>
+                                    <View>
+                                        <Text style={styles.friendList} > Mesaj Yaz </Text>
+                                        <View style={styles.seperator2} />
+                                        <TextInput
+                                            style={styles.input}
+                                            multiline
+                                            numberOfLines={4}
+                                            maxLength={160}
+                                            value={message}
+                                            onChangeText={setMessage}
+                                            placeholder="Mesajınızı buraya yazın (max 160) "
+                                        />
+                                        <TouchableOpacity onPress={shareMovieList} style={styles.button}>
+                                            <Text style={styles.buttonText2} >Listeyi Paylaş</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </TouchableOpacity>

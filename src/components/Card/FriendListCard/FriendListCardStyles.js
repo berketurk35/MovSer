@@ -15,18 +15,38 @@ export default StyleSheet.create({
         shadowColor: "black",
     },
     cardName: {
-        width: Dimensions.get("screen").width / 2.5,
-        borderRadius: 12,
         color: "black",
-        paddingLeft: 16,
         fontWeight: "bold",
-        fontSize: 16,
-        alignSelf: "center",
+        fontSize: 12,
+        textAlign: "center"
     },
-    image: {
+    cardMessage: {
+        paddingLeft: 4,
+        fontSize: 12,
+    },
+    cardMessageTitle: {
+        paddingLeft: 4,
+        color: "black",
+        fontSize: 12,
+    },
+    card: {
         width: Dimensions.get("screen").width / 2,
         height: 149,
         borderRadius: 12,
         backgroundColor: "#e2e5dc",
+        justifyContent:"center"
     },
+    cardInfo: {
+        textAlign: "center",
+        fontSize: 18,
+    },
+    infoBox: {
+        width: Dimensions.get("screen").width / 2.4,
+    },
+    separator: {
+        height: 1,
+        backgroundColor: 'gray',
+        marginTop: 10,
+        
+    }
 });

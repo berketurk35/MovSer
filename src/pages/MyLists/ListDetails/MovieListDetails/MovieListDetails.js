@@ -57,7 +57,10 @@ function MovieListDetails({ navigation, route }) {
     const [duration, setDuration] = useState("");
     const [listNameAsync, setListNameAsync] = useState("");
     const [shareModal, setShareModal] = useState("");
+    const [messageModal, setMessageModal] = useState(false);
     const [friends, setFriends] = useState([]);
+    const [friendId, setFriendId] = useState("");
+    const [message, setMessage] = useState("");
 
     const [draggedMovies, setDraggedMovies] = useState([]);
 
@@ -119,7 +122,9 @@ function MovieListDetails({ navigation, route }) {
         }
     };
 
-    const shareMovieList = async (friend_id) => {
+    const shareMovieList = async () => {
+        setMessageModal(false);
+        setShareModal(false);
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
 
@@ -127,7 +132,7 @@ function MovieListDetails({ navigation, route }) {
                 .from("shared_lists")
                 .select("id")
                 .eq("user_id", currentUserId)
-                .eq("friend_id", friend_id)
+                .eq("friend_id", friendId)
                 .eq("listType", "Movie")
                 .eq("listName", listName)
 
@@ -141,15 +146,22 @@ function MovieListDetails({ navigation, route }) {
                 return;
             }
 
+            const { data: userDetailsData, error: userDetailsError } = await supabase
+                .from("users")
+                .select("*")
+                .in("userID", currentUserId);
+
             const { data, error } = await supabase
                 .from("shared_lists")
                 .insert([
                     {
                         user_id: currentUserId,
-                        friend_id: friend_id,
+                        friend_id: friendId,
                         listType: "Movie",
                         listName: listName,
-                        content_ids: draggedMovies.map(item => item.movieId)
+                        content_ids: draggedMovies.map(item => item.movieId),
+                        user_message: message,
+                        fullName: userDetailsData.fullName
                     }
                 ])
             if (!error) {
@@ -316,12 +328,22 @@ function MovieListDetails({ navigation, route }) {
 
     const handlePressShare = async () => {
         const currentUserId = await AsyncStorage.getItem("userId");
-        if(currentUserId === "guest") {
+        if (currentUserId === "guest") {
             setShareModal(false);
             setGuestVisible(true);
         } else {
             setShareModal(true);
         }
+    };
+
+    const handlePressMessageBox = async (friend_id) => {
+        setMessageModal(true);
+        setFriendId(friend_id);
+    };
+
+    const closeMessageModal = () => {
+        setMessage("");
+        setMessageModal(false);
     };
 
     const closeShareModal = () => {
@@ -461,7 +483,7 @@ function MovieListDetails({ navigation, route }) {
         );
     };
 
-    function goToRegisterPage(){
+    function goToRegisterPage() {
         navigation.navigate("Register");
     };
 
@@ -569,11 +591,51 @@ function MovieListDetails({ navigation, route }) {
                                                     userName={friend.userName}
                                                     fullName={friend.fullName}
                                                     iconShare={"share-square-o"}
-                                                    pressShare={() => shareMovieList(friend.userID)}
+                                                    pressShare={() => handlePressMessageBox(friend.userID)}
                                                 />
                                             ))
                                             }
                                         </ScrollView>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+                <Modal
+                    visible={messageModal}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeMessageModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeMessageModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View>
+                                    <View>
+                                        <Text style={styles.friendList} > Mesaj Yaz </Text>
+                                        <View style={styles.seperator2} />
+                                        <TextInput
+                                            style={styles.input}
+                                            multiline
+                                            numberOfLines={4}
+                                            maxLength={160} 
+                                            value={message}
+                                            onChangeText={setMessage}
+                                            placeholder="Mesajınızı buraya yazın (max 160) "
+                                        />
+                                        <TouchableOpacity onPress={shareMovieList} style={styles.button}>
+                                            <Text style={styles.buttonText2} >Listeyi Paylaş</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </TouchableOpacity>
