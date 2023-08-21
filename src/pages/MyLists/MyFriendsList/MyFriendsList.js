@@ -69,7 +69,6 @@ function MyFriendsList({ navigation }) {
                 .select("*")
                 .eq("friend_id", currentUserId)
 
-            console.log("data", data);
             setSavedMovieList(data);
 
         } catch (error) {
@@ -106,8 +105,8 @@ function MyFriendsList({ navigation }) {
             });
     };
 
-    function goToListDetails(listName) {
-        navigation.navigate("MovieListDetails", { listName });
+    function goToListDetails(listName, listType, uId, contentIds) {
+        navigation.navigate("FriendListDetails", { listName, listType, uId, contentIds });
     }
 
     return (
@@ -129,7 +128,7 @@ function MyFriendsList({ navigation }) {
                         <View style={{ flex: 1 }} >
                             <ScrollView>
                                 {savedMovieList.map((item) => (
-                                    <FriendListCard key={item.id} cardName={item.listName} listType={item.listType} />
+                                    <FriendListCard key={item.id} cardName={item.listName} listType={item.listType} onPressDetail={() => goToListDetails(item.listName, item.listType, item.user_id, item.content_ids)} />
                                 ))}
                             </ScrollView>
                         </View>

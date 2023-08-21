@@ -22,6 +22,7 @@ import MyFriendsList from "./pages/MyLists/MyFriendsList/MyFriendsList";
 
 import MovieListDetails from "./pages/MyLists/ListDetails/MovieListDetails/MovieListDetails";
 import SerieListDetails from "./pages/MyLists/ListDetails/SerieListDetails/SerieListDetails";
+import FriendListDetails from "./pages/MyLists/ListDetails/FriendListDetails/FriendListDetails";
 
 import ProfileInfo from "./pages/Profile/ProfileInfo/ProfileInfo";
 import Friends from "./pages/Profile/Friends/Friends";
@@ -74,6 +75,7 @@ function Router() {
 
                     <Stack.Screen name="MovieListDetails" component={MovieListDetails} />
                     <Stack.Screen name="SerieListDetails" component={SerieListDetails} />
+                    <Stack.Screen name="FriendListDetails" component={FriendListDetails} />
 
                     <Stack.Screen name="TopNavigator4" component={TopNavigator4} />
                     <Stack.Screen name="ProfileInfo" component={ProfileInfo} />
