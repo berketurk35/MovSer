@@ -200,5 +200,65 @@ export default StyleSheet.create({
         color: "white",
         fontSize: 12,
         paddingBottom: 5,
+    },
+    shareBox: {
+        flexDirection: "row",
+        margin: 10,
+        alignItems: "center",
+        backgroundColor: "white",
+        paddingHorizontal: 10,
+        borderRadius: 32,
+        borderWidth: 2,
+        borderColor: "green"
+    },
+    shareText: {
+        fontSize: 10,
+        color: "green",
+        fontWeight: "bold",
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        margin: 20,
+
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 16,
+        borderRadius: 16,
+    },
+    seperator2: {
+        height: 1,
+        backgroundColor: "black",
+        marginTop: 10,
+    },
+    friendList: {
+        textAlign: 'center',
+        fontSize: 16,
+        paddingBottom: 8,
+        fontWeight: 'bold',
+    },
+    guestInfoBox: {
+        alignItems: "center",
+    },
+    guestInfoTitle: {
+        fontSize: 16,
+        paddingBottom: 10,
+        color: "black"
+    },
+    guestInfoButton: {
+        backgroundColor: "#1565C0",
+        borderWidth: 1,
+        borderRadius: 18,
+        borderColor: "white",
+        marginTop: 20,
+    },
+    guestInfoButtonText: {
+        color: "white",
+        padding: 14,
     }
 });

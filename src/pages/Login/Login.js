@@ -14,52 +14,60 @@ import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-si
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+GoogleSignin.configure({
+    androidClientId: '214952846412-hl3vdaqtc3eqgnp4jo7637688qkt9rpf.apps.googleusercontent.com',
+    webClientId: '214952846412-t8qkpquhomi9oef31it3grabm65uhdd5.apps.googleusercontent.com',
+});
+
+const supabaseUrl = "https://ukdilyiayiqrwhbveugn.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZGlseWlheWlxcndoYnZldWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE2NjAxMTMsImV4cCI6MjAwNzIzNjExM30.gFHaGvPtHMPp3sm8hHPG7MtV6TEQ4cve6ob9WNhvz2c";
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
+        storage: AsyncStorage,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+    },
+});
+
 function Login({ navigation }) {
 
     const { language, setLanguage } = useStats();
-
-    GoogleSignin.configure({
-        androidClientId: '214952846412-hl3vdaqtc3eqgnp4jo7637688qkt9rpf.apps.googleusercontent.com',
-        webClientId: '214952846412-t8qkpquhomi9oef31it3grabm65uhdd5.apps.googleusercontent.com',
-    });
-
-    const supabaseUrl = "https://ukdilyiayiqrwhbveugn.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZGlseWlheWlxcndoYnZldWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE2NjAxMTMsImV4cCI6MjAwNzIzNjExM30.gFHaGvPtHMPp3sm8hHPG7MtV6TEQ4cve6ob9WNhvz2c";
-
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-        auth: {
-            storage: AsyncStorage,
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: true,
-        },
-    });
 
     const signInWithGoogle = async () => {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
 
-        console.log("userInfo", userInfo);
+        const username = userInfo.user.email.split('@')[0];
 
-        /*
-        const { user, error } = await supabase.auth.signUp({
-            email: userInfo.user.email, // email'i doğrudan userInfo'dan al
-            password: userInfo.user.email, // şifreyi de email olarak ayarla (geçici olarak)
+        const { data, error } = await supabase.auth.signUp({
+            email: userInfo.user.email,
+            password: userInfo.user.email,
+            options: {
+                data: {
+                    username: username,
+                },
+            }
         });
+        
+        if (data) {
+            const { error } = await supabase
+                .from('users')
+                .insert({ email: userInfo.user.email, userID: data.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
 
-        console.log("user", user);
-        console.log("error", error);
-
-
-        const { errorr } = await supabase
-            .from('users')
-            .insert({ username: userInfo.user.name, email: userInfo.user.email })
-            */
+                console.log("error", error);
+        }
+        if (error) {
+            console.log("error", error);
+        }
+        
     };
 
     const signOut = async () => {
         try {
             await GoogleSignin.signOut();
+            console.log("Çıkış Yapıldı");
 
         } catch (error) {
             console.error(error);
@@ -105,7 +113,7 @@ function Login({ navigation }) {
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
 
             <CustomButton name={"google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
-            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={signOut} disabled={true} />
+            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={signOut} disabled={false} />
             <CustomButton name={"mail"} text={Translations[language].signInMail} color="black" onPress={goToMailPage} />
 
             <TouchableOpacity onPress={goToRegisterPage} style={styles.underText} >
@@ -113,7 +121,7 @@ function Login({ navigation }) {
                 <Text style={{ color: "black", fontWeight: "bold" }} > {Translations[language].register} </Text>
             </TouchableOpacity>
 
-            <Text style={{marginBottom:10, fontSize: 12}} >{Translations[language].or}</Text>
+            <Text style={{ marginBottom: 10, fontSize: 12 }} >{Translations[language].or}</Text>
 
             <TouchableOpacity onPress={sneakEnter} style={styles.box}>
                 <Icon name={"mask"} size={18} color={"black"} style={styles.icon} />

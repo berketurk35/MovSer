@@ -13,8 +13,8 @@ export default StyleSheet.create({
     image: {
         flex: 1,
         height: Dimensions.get("window").height / 6,
-        borderRadius: 200,
-        borderWidth: 2,
+        borderRadius: 40,
+        borderWidth: 1,
         borderColor: "black",
         margin: 20,
     },

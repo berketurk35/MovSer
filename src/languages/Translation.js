@@ -97,6 +97,7 @@ const Translations = {
         email: "Email",
         password: "Password",
         username: "Username",
+        fullname: "Fullname",
         login: "Login",
         returnLogin: "Return to main login page",
 
@@ -201,6 +202,7 @@ const Translations = {
         email: "Email",
         password: "Şifre",
         username: "Kullanıcı Adı",
+        fullname: "Ad-Soyad",
         login: "Giriş Yap",
         returnLogin: "Ana giriş sayfasına dön",
 

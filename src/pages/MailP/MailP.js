@@ -95,7 +95,7 @@ function MailP({ navigation }) {
             <View style={styles.touchbox}>
                 <TouchableOpacity onPress={remember} style={styles.check} >
                     {rememberMe ? (
-                        <Icon name={"check-box"} size={16} style={styles.checkIcon} color={"blue"} />
+                        <Icon name={"check-box"} size={16} style={styles.checkIcon} color={"#1565C0"} />
                     ) : (
                         <Icon name={"check-box-outline-blank"} size={16} style={styles.checkIcon} />
                     )}

@@ -8,18 +8,34 @@ import styles from "./MovieListDetailsStyles";
 import { Dimensions } from "react-native";
 
 import Input from "../../../../components/Input/Input";
+import FriendBox from "../../../../components/FriendBox/FriendBox";
 
 import { FAB } from "react-native-paper";
 
 import Icon from "react-native-vector-icons/Ionicons";
+import IconFont from "react-native-vector-icons/FontAwesome5";
 import IconMaterial from "react-native-vector-icons/MaterialIcons";
 
 import Translations from "../../../../languages/Translation";
 import { useStats } from "../../../../Context/StatContext";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient } from "@supabase/supabase-js";
+import 'react-native-url-polyfill/auto';
 
 import axios from "react-native-axios";
+
+const supabaseUrl = "https://ukdilyiayiqrwhbveugn.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZGlseWlheWlxcndoYnZldWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE2NjAxMTMsImV4cCI6MjAwNzIzNjExM30.gFHaGvPtHMPp3sm8hHPG7MtV6TEQ4cve6ob9WNhvz2c";
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
+        storage: AsyncStorage,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+    },
+});
 
 const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -30,6 +46,7 @@ function MovieListDetails({ navigation, route }) {
     const { listName } = route.params;
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [guestVisible, setGuestVisible] = useState(false);
     const [savedMovies, setSavedMovies] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
     const [searchText, setSearchText] = useState('');
@@ -39,6 +56,8 @@ function MovieListDetails({ navigation, route }) {
     const [categoryText, setCategoryText] = useState("");
     const [duration, setDuration] = useState("");
     const [listNameAsync, setListNameAsync] = useState("");
+    const [shareModal, setShareModal] = useState("");
+    const [friends, setFriends] = useState([]);
 
     const [draggedMovies, setDraggedMovies] = useState([]);
 
@@ -52,7 +71,7 @@ function MovieListDetails({ navigation, route }) {
                 const userID = await AsyncStorage.getItem('userId');
                 const asyncKey = (userID + listName);
                 setListNameAsync(asyncKey);
-    
+
                 const movies = await AsyncStorage.getItem(listNameAsync);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
@@ -63,7 +82,90 @@ function MovieListDetails({ navigation, route }) {
             }
         };
         fetchSavedMovies();
+        fetchFriends();
     }, [listNameAsync]);
+
+    const fetchFriends = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+
+            // Mevcut kullanıcının arkadaşlarını çekin
+            const { data: friendsData, error: friendsError } = await supabase
+                .from("friends")
+                .select("friend_id")
+                .eq("user_id", currentUserId);
+
+            if (friendsError) {
+                console.error("Arkadaşları alınırken hata:", friendsError);
+                return;
+            }
+
+            const friendIds = friendsData.map(friend => friend.friend_id);
+
+            // Arkadaşlarımın detaylarını çekin
+            const { data: friendsDetailsData, error: friendsDetailsError } = await supabase
+                .from("users")
+                .select("*")
+                .in("userID", friendIds);
+
+            if (friendsDetailsError) {
+                console.error("Arkadaş detayları alınırken hata:", friendsDetailsError);
+                return;
+            }
+
+            setFriends(friendsDetailsData);
+        } catch (error) {
+            console.error("Arkadaşları alınırken hata:", error);
+        }
+    };
+
+    const shareMovieList = async (friend_id) => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+
+            const { data: existingShare, error: existingShareError } = await supabase
+                .from("shared_lists")
+                .select("id")
+                .eq("user_id", currentUserId)
+                .eq("friend_id", friend_id)
+                .eq("listType", "Movie")
+                .eq("listName", listName)
+
+            if (existingShareError) {
+                console.error("Paylaşım var mı kontrol edilirken hata:", existingShareError);
+                return;
+            }
+
+            if (existingShare && existingShare.length > 0) {
+                console.log("Bu liste daha önce paylaşıldı.");
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from("shared_lists")
+                .insert([
+                    {
+                        user_id: currentUserId,
+                        friend_id: friend_id,
+                        listType: "Movie",
+                        listName: listName,
+                        content_ids: draggedMovies.map(item => item.movieId)
+                    }
+                ])
+            if (!error) {
+                console.log("Veri başarılı gitti:");
+            }
+
+            if (error) {
+                console.error("Film listesi paylaşılırken hata oldu", error);
+                return;
+            }
+
+        } catch (error) {
+            console.error("Film listesi alınırken hata:", error);
+        }
+
+    };
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -71,6 +173,7 @@ function MovieListDetails({ navigation, route }) {
 
     const closeModal = () => {
         setModalVisible(false);
+        setGuestVisible(false);
         setSearchResults("");
         setSelectedMovie("");
         setSearchText("");
@@ -211,6 +314,20 @@ function MovieListDetails({ navigation, route }) {
         setGenreNames([]);
     };
 
+    const handlePressShare = async () => {
+        const currentUserId = await AsyncStorage.getItem("userId");
+        if(currentUserId === "guest") {
+            setShareModal(false);
+            setGuestVisible(true);
+        } else {
+            setShareModal(true);
+        }
+    };
+
+    const closeShareModal = () => {
+        setShareModal(false);
+    };
+
     const handleMovieDelete = (item) => {
         Alert.alert(
             'Film Silme',
@@ -344,6 +461,10 @@ function MovieListDetails({ navigation, route }) {
         );
     };
 
+    function goToRegisterPage(){
+        navigation.navigate("Register");
+    };
+
     return (
         <GestureHandlerRootView style={styles.container} >
             <SafeAreaView style={styles.container}>
@@ -361,6 +482,12 @@ function MovieListDetails({ navigation, route }) {
                             <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                                 onChangeText={setSearchMovie} />
                         </View>
+                        <TouchableOpacity onPress={handlePressShare} style={styles.shareBox}>
+                            <IconFont name="share-square" size={20} color={"green"} />
+                            <View>
+                                <Text style={styles.shareText}> Paylaş </Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.seperator} />
                     <Text style={styles.info}>
@@ -383,6 +510,76 @@ function MovieListDetails({ navigation, route }) {
                     />
 
                 </KeyboardAvoidingView>
+
+                <Modal
+                    visible={guestVisible}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View style={styles.guestInfoBox} >
+                                    <Text style={styles.guestInfoTitle} >Merhaba Kullanıcı</Text>
+                                    <Text>Liste paylaşabilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.</Text>
+                                    <TouchableOpacity onPress={goToRegisterPage} style={styles.guestInfoButton}>
+                                        <Text style={styles.guestInfoButtonText}>Hemen Kayıt Ol</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+                <Modal
+                    visible={shareModal}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={closeShareModal}
+                >
+                    <TouchableOpacity
+                        style={styles.modalBackground}
+                        activeOpacity={1}
+                        onPress={closeShareModal}
+                    >
+                        <View style={styles.modalContainer}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                style={styles.modalContent}
+                                onPress={() => { }}
+                            >
+                                <View>
+                                    <View>
+                                        <Text style={styles.friendList} > Arkadaş Listesi </Text>
+                                        <View style={styles.seperator2} />
+                                        <ScrollView>
+                                            {friends.map(friend => (
+                                                <FriendBox
+                                                    key={friend.userID}
+                                                    profilePhoto={friend.profile_photo_url}
+                                                    userName={friend.userName}
+                                                    fullName={friend.fullName}
+                                                    iconShare={"share-square-o"}
+                                                    pressShare={() => shareMovieList(friend.userID)}
+                                                />
+                                            ))
+                                            }
+                                        </ScrollView>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
 
                 <Modal
                     visible={modalVisible}

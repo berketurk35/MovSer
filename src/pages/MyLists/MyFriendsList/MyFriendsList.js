@@ -3,53 +3,53 @@ import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, Keyb
 import { useStats } from "../../../Context/StatContext";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import styles from "./MyFriendsListStyles";
 
-import ListCard from "../../../components/Card/ListCard/ListCard";
+import FriendListCard from "../../../components/Card/FriendListCard/FriendListCard";
 import RemoveCard from "../../../components/Card/RemoveCard/RemoveCard";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
+import { createClient } from "@supabase/supabase-js";
+import 'react-native-url-polyfill/auto';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const supabaseUrl = "https://ukdilyiayiqrwhbveugn.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZGlseWlheWlxcndoYnZldWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE2NjAxMTMsImV4cCI6MjAwNzIzNjExM30.gFHaGvPtHMPp3sm8hHPG7MtV6TEQ4cve6ob9WNhvz2c";
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: {
+        storage: AsyncStorage,
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+    },
+});
 
 function MyFriendsList({ navigation }) {
 
-    const [modalVisible, setModalVisible] = useState(false);
     const [modalRemoveVisible, setModalRemoveVisible] = useState(false);
     const [savedMovieList, setSavedMovieList] = useState([]);
     const [searchMovie, setSearchMovie] = useState('');
-    const [cardName, setCardName] = useState("");
 
-    const [platformVisible, setPlatformVisible] = useState(false);
-    const [picturesVisible, setPicturesVisible] = useState(false);
-    const [swiperVisible, setSwiperVisible] = useState(false);
-    const [swiperVisible2, setSwiperVisible2] = useState(false);
-    const [selectedPlatform, setSelectedPlatform] = useState(null);
-    const [selectedImage, setSelectedImage] = useState("");
-    const [movieListAsync, setMovieListAsync] = useState("");
+    const [friendListAsync, setFriendListAsync] = useState("");
 
-    const [draggedMovieList, setDraggedMovieList] = useState([]);
-
-    const { movieListCounter, setMovieListCounter } = useStats();
     const { language, setLanguage } = useStats();
 
-    const ref = useRef(null);
 
     useEffect(() => {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "movieList");
-                setMovieListAsync(asyncKey);
+                const asyncKey = (userID + "friendLists");
+                setFriendListAsync(asyncKey);
 
-                const updatedMovieLists = await AsyncStorage.getItem(movieListAsync);
-                if (updatedMovieLists) {
-                    setSavedMovieList(JSON.parse(updatedMovieLists));
-                    setDraggedMovieList(JSON.parse(updatedMovieLists));
-                    setMovieListCounter(JSON.parse(updatedMovieLists).length);
+                const updatedFriendLists = await AsyncStorage.getItem(friendListAsync);
+                if (updatedFriendLists) {
+                    setSavedMovieList(JSON.parse(updatedFriendLists));
                 }
             } catch (error) {
                 console.log('Hata: ', error);
@@ -57,66 +57,36 @@ function MyFriendsList({ navigation }) {
         };
 
         fetchAndSetMovies();
-    }, [movieListAsync]);
+        fetchFriendList();
+    }, [friendListAsync]);
+
+    const fetchFriendList = async () => {
+        try {
+            const currentUserId = await AsyncStorage.getItem("userId");
+
+            const { data, error } = await supabase
+                .from("shared_lists")
+                .select("*")
+                .eq("friend_id", currentUserId)
+
+            console.log("data", data);
+            setSavedMovieList(data);
+
+        } catch (error) {
+            console.error("hata:", error);
+        }
+    };
 
     const handleRemovePress = () => {
-        if(draggedMovieList.length > 0) { 
+        if (savedMovieList.length > 0) {
             setModalRemoveVisible(true);
         } else {
             setModalRemoveVisible(false);
         }
     };
 
-    const closeModal = () => {
-        setModalVisible(false);
-        setCardName("");
-        setPlatformVisible(false);
-        setPicturesVisible(false);
-        setSwiperVisible2(false);
-        setSwiperVisible(false);
-    };
-
     const closeRemoveModal = () => {
         setModalRemoveVisible(false);
-    };
-
-    const saveList = async () => {
-        // Verileri bir obje olarak hazırla
-        const listData = {
-            id: cardName,
-            listName: cardName,
-            cardImage: selectedImage,
-        };
-
-        try {
-            // Daha önce kaydedilen filmleri al
-            const existingMovies = await AsyncStorage.getItem(movieListAsync);
-            let updatedMovieLists = [];
-
-            if (existingMovies) {
-                // Eğer daha önce kaydedilen filmler varsa, onları güncelle
-                updatedMovieLists = JSON.parse(existingMovies);
-            }
-
-            // Yeni filmi ekle
-            updatedMovieLists.unshift(listData);
-
-            // Filmleri AsyncStorage'e kaydet
-            await AsyncStorage.setItem(movieListAsync, JSON.stringify(updatedMovieLists));
-
-            // Kaydedilen filmleri güncelle
-            setSavedMovieList(updatedMovieLists);
-            setDraggedMovieList(updatedMovieLists);
-
-            // Modalı kapat
-            setPicturesVisible(false);
-            setPlatformVisible(false);
-            setSwiperVisible2(false);
-            setSwiperVisible(false);
-            closeModal();
-        } catch (error) {
-            console.log('Hata: ', error);
-        }
     };
 
     const filterMovieListByName = (list, searchMovie) => {
@@ -124,10 +94,10 @@ function MyFriendsList({ navigation }) {
     };
 
     const deleteCard = async (index) => {
-        const updatedMovieLists = [...draggedMovieList];
-        updatedMovieLists.splice(index, 1);
-        setDraggedMovieList(updatedMovieLists);
-        AsyncStorage.setItem(movieListAsync, JSON.stringify(updatedMovieLists))
+
+        updatedFriendLists.splice(index, 1);
+
+        AsyncStorage.setItem(friendListAsync, JSON.stringify(updatedFriendLists))
             .then(() => {
                 console.log('Kart başarıyla silindi.');
             })
@@ -135,16 +105,6 @@ function MyFriendsList({ navigation }) {
                 console.log('Kart silinirken bir hata oluştu:', error);
             });
     };
-
-    function handleDragEnd({ data }) {
-        try {
-            AsyncStorage.setItem(movieListAsync, JSON.stringify(data));
-            setSavedMovieList(data);
-            setDraggedMovieList(data);
-        } catch (error) {
-            console.log('Hata:', error);
-        }
-    }
 
     function goToListDetails(listName) {
         navigation.navigate("MovieListDetails", { listName });
@@ -166,24 +126,12 @@ function MyFriendsList({ navigation }) {
                                 <Text style={styles.removeText}>{Translations[language].remove}</Text>
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.info}>
-                            {Translations[language].info1} </Text>
                         <View style={{ flex: 1 }} >
-                            <DraggableFlatList
-                                ref={ref}
-                                data={filterMovieListByName(draggedMovieList, searchMovie)}
-                                keyExtractor={(item) => item.id}
-                                onDragEnd={handleDragEnd}
-                                renderItem={({ item, drag }) => (
-                                    <ListCard
-                                        id={item.id}
-                                        cardName={item.listName}
-                                        imageName={item.cardImage}
-                                        onPressDetail={() => goToListDetails(item.listName)}
-                                        onDrag={drag}
-                                    />
-                                )}
-                            />
+                            <ScrollView>
+                                {savedMovieList.map((item) => (
+                                    <FriendListCard key={item.id} cardName={item.listName} listType={item.listType} />
+                                ))}
+                            </ScrollView>
                         </View>
                     </KeyboardAvoidingView>
                     <Modal
@@ -209,9 +157,9 @@ function MyFriendsList({ navigation }) {
                                             <View style={styles.seperator2} />
                                             <ScrollView>
                                                 <View style={styles.content}>
-                                                    {draggedMovieList
+                                                    {savedMovieList
                                                         .map((card, index) => (
-                                                           <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                            <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
                                                         ))}
                                                 </View>
                                             </ScrollView>

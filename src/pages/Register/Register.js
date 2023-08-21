@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, Modal } from "react-native";
 import styles from "./RegisterStyles";
 import FormInput from "../../components/FormInput/FormInput";
 import CustomButton from "../../components/Button/Button";
@@ -29,7 +29,9 @@ function Register({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
 
+    const [modalVisible, setModalVisible] = useState(false);
     const [err, setEr] = useState("");
 
     const { language, setLanguage } = useStats();
@@ -50,10 +52,19 @@ function Register({ navigation }) {
             if (data) {
                 const { error } = await supabase
                     .from('users')
-                    .insert({ email: email, userID: data.user.id, userName: username, fullName: "",profile_photo_url: "" })
+                    .insert({ email: email, userID: data.user.id, userName: username, fullName: fullName, profile_photo_url: "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg" })
+
+                setModalVisible(true);
+                setEmail("");
+                setPassword("");
+                setFullName("");
+                setUsername("");
+
+                setTimeout(() => {
+                    setModalVisible(false);
+                    navigation.navigate("MailP");
+                }, 3000);
             }
-            console.log("data", data);
-            console.log("error", error);
 
             if (error) {
                 if (error.message.includes('Password should be at least 6 characters')) {
@@ -79,7 +90,6 @@ function Register({ navigation }) {
 
     return (
         <View style={styles.container} >
-            <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
             <CustomButton name={"google"} text={Translations[language].signUpGoogle} color="black" onPress={null} />
 
             <Text style={styles.or} >{Translations[language].or}</Text>
@@ -87,6 +97,7 @@ function Register({ navigation }) {
             <FormInput name={"email"} placeholder={Translations[language].email} value={email} onChangeText={setEmail} />
             <FormInput name={"vpn-key"} placeholder={Translations[language].password} value={password} onChangeText={setPassword} />
             <FormInput name={"person"} placeholder={Translations[language].username} value={username} onChangeText={setUsername} />
+            <FormInput name={"chrome-reader-mode"} placeholder={Translations[language].fullname} value={fullName} onChangeText={setFullName} />
 
             <Text> {err} </Text>
             <TouchableOpacity style={styles.button} onPress={signUpwithEmail} >
@@ -96,6 +107,20 @@ function Register({ navigation }) {
                 <Icon name="arrow-back" size={18} color={"black"} style={styles.icon2} />
                 <Text style={{ color: "black" }} > {Translations[language].returnLogin} </Text>
             </TouchableOpacity>
+
+            <Modal
+                visible={modalVisible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+                    <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+                        <Text style={{textAlign: "center", paddingBottom: 10, color: "black", fontSize: 18}} >Kayıt başarılı</Text>
+                        <Text style={{textAlign: "center", paddingBottom: 10, color: "black"}}>Giriş yaparak uygulamayı kullanmaya başlayabilirsiniz.</Text>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 };
