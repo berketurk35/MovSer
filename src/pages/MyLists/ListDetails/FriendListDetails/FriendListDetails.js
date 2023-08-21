@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, TextInput, Keyb
 
 import styles from "./FriendListDetailsStyles";
 
-import MovSerCard from "../../../../components/Card/MoviesCard/MoviesCard";
+import FriendMoviesCard from "../../../../components/Card/FriendMoviesCard/FriendMoviesCard";
 
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -16,14 +16,12 @@ import axios from "react-native-axios";
 
 const API_KEY = '6d0b2bd6b37b82532732bc7f0db0df55';
 const BASE_URL = 'https://api.themoviedb.org/3';
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w200';
 
 function FriendListDetails({ navigation, route }) {
 
     const { listName, listType, uId, contentIds } = route.params;
 
     const [savedMovies, setSavedMovies] = useState([]);
-    const [categoryText, setCategoryText] = useState("");
     const [searchMovie, setSearchMovie] = useState('');
     const [listNameAsync, setListNameAsync] = useState("");
 
@@ -54,17 +52,9 @@ function FriendListDetails({ navigation, route }) {
                             api_key: API_KEY,
                         },
                     });
-                    
-                    // Kategori adlarını al
-                    const genreNames = await fetchGenreNames(response.data.genres);
-                    console.log("ne var?", response.data.genres);
-                    // Gelen filmin özelliklerini genişleterek genreNames eklemesi yap
-                    const movieWithGenres = {
-                        ...response.data,
-                        genre_names: genreNames,
-                    };
 
-                    return movieWithGenres;
+                    return response.data;
+
                 } catch (error) {
                     console.error(error);
                     return null;
@@ -77,25 +67,18 @@ function FriendListDetails({ navigation, route }) {
         fetchSavedLists();
     }, [listNameAsync, contentIds]);
 
-    const fetchGenreNames = async (genreIds) => {
-        try {
-            const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
-                params: {
-                    api_key: API_KEY,
-                },
-            });
+    const formatDuration = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
 
-            const genres = response.data.genres;
-            const names = genreIds.map((genreId) => {
-                const genre = genres.find((g) => g.id === genreId);
-                return genre ? genre.name : '';
-            });
+        return `${hours} h ${remainingMinutes} m`;
+    };
 
-            return names;
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString('tr-TR');
+
+        return formattedDate;
     };
 
     function back() {
@@ -123,15 +106,14 @@ function FriendListDetails({ navigation, route }) {
                 <ScrollView>
                     <View style={styles.content}>
                         {moviesDetails.map((movie, index) => (
-                            <MovSerCard
+                            <FriendMoviesCard
                                 key={movie.id}
                                 movieName={movie.title}
-                                date={movie.release_date}
-                                vote={movie.vote_average}
-                                category={categoryText}
+                                date={formatDate(movie.release_date)}
+                                vote={movie.vote_average.toFixed(1)}
+                                category={movie.genres.map(genre => genre.name).join(', ')}
                                 poster={movie.poster_path}
-                                time={movie.runtime}
-                                onPressDelete={null}
+                                time={formatDuration(movie.runtime)}
                             />
                         ))}
                     </View>
