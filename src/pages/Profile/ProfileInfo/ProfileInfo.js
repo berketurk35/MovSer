@@ -7,8 +7,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
+import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 
 import styles from "./ProfileInfoStyles";
+
+GoogleSignin.configure({
+    androidClientId: '214952846412-hl3vdaqtc3eqgnp4jo7637688qkt9rpf.apps.googleusercontent.com',
+    webClientId: '214952846412-t8qkpquhomi9oef31it3grabm65uhdd5.apps.googleusercontent.com',
+});
 
 const supabaseUrl = "https://ukdilyiayiqrwhbveugn.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZGlseWlheWlxcndoYnZldWduIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE2NjAxMTMsImV4cCI6MjAwNzIzNjExM30.gFHaGvPtHMPp3sm8hHPG7MtV6TEQ4cve6ob9WNhvz2c";
@@ -78,6 +84,13 @@ function ProfileInfo({navigation}) {
 
     const logOut = async () => {
         await AsyncStorage.setItem('rememberMe', 'false');
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('userId');
+        await GoogleSignin.signOut();
+        navigation.navigate("Intro");
+    };
+
+    const logOutGuest =  () => {
         navigation.navigate("Login");
     };
 
@@ -89,13 +102,13 @@ function ProfileInfo({navigation}) {
                     <View style={{ flex: 2 }} >
                         <Text style={styles.userName} >@GuestUser</Text>
                         <View style={styles.seperator} />
-                        <Text style={styles.fullName}> Misafir </Text>
+                        <Text style={styles.fullName}> {Translations[language].guest} </Text>
                         <View style={{ flexDirection: "row" }} >
                             <TouchableOpacity style={styles.editBox}>
-                                <Text style={styles.editTitle} >Profili Düzenle</Text>
+                                <Text style={styles.editTitle} >{Translations[language].editprofile}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.logoutBox}>
-                                <Text style={styles.editTitle} >Çıkış Yap</Text>
+                            <TouchableOpacity onPress={logOutGuest} style={styles.logoutBox}>
+                                <Text style={styles.editTitle} >{Translations[language].logOut}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -117,10 +130,10 @@ function ProfileInfo({navigation}) {
                         <Text style={styles.fullName}> {userFullName} </Text>
                         <View style={{ flexDirection: "row" }} >
                             <TouchableOpacity style={styles.editBox}>
-                                <Text style={styles.editTitle} >Profili Düzenle</Text>
+                                <Text style={styles.editTitle} >{Translations[language].editprofile}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={logOut} style={styles.logoutBox}>
-                                <Text style={styles.editTitle} >Çıkış Yap</Text>
+                                <Text style={styles.editTitle} >{Translations[language].logOut}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -152,9 +165,6 @@ function ProfileInfo({navigation}) {
                     <Text style={styles.text}>{Translations[language].listTitle1} : {movieListCounter}</Text>
                     <Text style={styles.text}>{Translations[language].listTitle2} : {serieListCounter}</Text>
                 </View>
-                <TouchableOpacity onPress={null} style={styles.removeDataBox} >
-                    <Text style={styles.removeDataText} >Veriyi Sil</Text>
-                </TouchableOpacity>
             </View>
         </View>
     )

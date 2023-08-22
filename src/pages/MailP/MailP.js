@@ -100,7 +100,7 @@ function MailP({ navigation }) {
                         <Icon name={"check-box-outline-blank"} size={16} style={styles.checkIcon} />
                     )}
 
-                    <Text style={{ fontSize: 14 }} >Beni Hatırla</Text>
+                    <Text style={{ fontSize: 14 }} >{Translations[language].rememberMe}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -110,7 +110,7 @@ function MailP({ navigation }) {
                 <Text style={styles.buttonText}> {Translations[language].login} </Text>
             </TouchableOpacity>
             <TouchableOpacity >
-                <Text style={styles.forget} >Şifremi Unuttum</Text>
+                <Text style={styles.forget} >{Translations[language].forgot}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToLoginPage} style={styles.underText} >
                 <Icon name="arrow-back" size={18} color={"black"} style={styles.icon2} />

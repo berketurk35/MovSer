@@ -13,17 +13,18 @@ export default StyleSheet.create({
     image: {
         flex: 1,
         height: Dimensions.get("window").height / 6,
-        borderRadius: 40,
+        borderRadius: 100,
         borderWidth: 1,
         borderColor: "black",
         margin: 20,
     },
     seperator: {
-        borderWidth: 1,
+        height: 2,
+        backgroundColor: "black",
         width: Dimensions.get("window").width / 2.,
     },
     userName: {
-        fontSize: 20,
+        fontSize: 18,
         paddingBottom: 10,
         color: "black",
         fontWeight: "bold",

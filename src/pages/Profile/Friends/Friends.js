@@ -370,7 +370,7 @@ function Friends({ navigation }) {
                         disabled={item.isAlreadySent}
                     >
                         <Text style={styles.add}>
-                            {item.isAlreadySent ? "İstek Gönderildi" : "Arkadaş Ekle"}
+                            {item.isAlreadySent ? Translations[language].requestSent : Translations[language].addFriend}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -432,15 +432,15 @@ function Friends({ navigation }) {
                         </View>
                     </View>
                     <TouchableOpacity onPress={handleIncomingRequistPress}>
-                        <Text style={styles.status}>- Gelen İstekler ({receivedRequests.length})</Text>
+                        <Text style={styles.status}>- {Translations[language].requestSent} ({receivedRequests.length})</Text>
                     </TouchableOpacity>
                     {incomingRequist && renderReceivedRequests()}
                     <TouchableOpacity onPress={handleSentRequistPress} >
-                        <Text style={styles.status}>- Gönderilen İstekler ({selectedFriends.length}) </Text>
+                        <Text style={styles.status}>- {Translations[language].incomingRequest} ({selectedFriends.length}) </Text>
                     </TouchableOpacity>
                     {sentRequist && renderSentRequest()}
                     <TouchableOpacity onPress={handleFriendPress}>
-                        <Text style={styles.status}>- Arkadaşlar ({friends.length})</Text>
+                        <Text style={styles.status}>- {Translations[language].profileTitle2} ({friends.length})</Text>
                     </TouchableOpacity>
                     {friendsList && renderFriends()}
 
@@ -510,10 +510,10 @@ function Friends({ navigation }) {
                                 onPress={() => { }}
                             >
                                 <View style={styles.guestInfoBox} >
-                                    <Text style={styles.guestInfoTitle} >Merhaba Kullanıcı</Text>
-                                    <Text>Arkadaş ekleyebilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.</Text>
+                                    <Text style={styles.guestInfoTitle} >{Translations[language].hiUser}</Text>
+                                    <Text>{Translations[language].guestInfo2}</Text>
                                     <TouchableOpacity onPress={goToRegisterPage} style={styles.guestInfoButton}>
-                                        <Text style={styles.guestInfoButtonText}>Hemen Kayıt Ol</Text>
+                                        <Text style={styles.guestInfoButtonText}>{Translations[language].registerNow}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </TouchableOpacity>

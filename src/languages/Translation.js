@@ -103,6 +103,29 @@ const Translations = {
 
         notFoundUser : "User not found or incorrect password.",
 
+        ten: "' s",
+        list: "List",
+        cardMessage: "Card Message :",
+
+        rememberMe: "Remember Me",
+        forgot: "Forgot Password",
+
+        share: "Share",
+        hiUser: "Hello User",
+        guestInfo1: "In order to share the list and use the social parts, you need to register and log in to the application.",
+        guestInfo2: "In order to add friends and use the social parts, you need to register and log in to the application.",
+        registerNow: "Register Now",
+        friendList: "Friend List",
+        writeMessage: "Write Message",
+        shareList: "Share List",
+
+        requestSent: "Request Sent",
+        incomingRequest: "Incoming Request",
+
+        guest: "Guest",
+        editprofile: "Edit Profile",
+        logOut: "Log Out",
+        removeData: "Remove Data",
     },
     tr: {
         movies: "Filmler",
@@ -208,6 +231,29 @@ const Translations = {
 
         notFoundUser : "Kullanıcı bulunamadı veya şifre hatalı.",
 
+        ten: "'ten",
+        list: "Listesi",
+        cardMessage: "Kart Mesajı :",
+
+        rememberMe: "Beni Hatırla",
+        forgot: "Şifremi Unuttum",
+
+        share: "Paylaş",
+        hiUser: "Merhaba Kullanıcı",
+        guestInfo1: "Liste paylaşabilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.",
+        guestInfo2: "Arkadaş ekleyebilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.",
+        registerNow: "Hemen Kayıt Ol",
+        friendList: "Arkadaş Listesi",
+        writeMessage: "Mesaj Yaz",
+        shareList: "Listeyi Paylaş",
+
+        requestSent: "İstek Gönderildi",
+        incomingRequest: "Gönderilen İstekler",
+
+        guest: "Misafir",
+        editprofile: "Profili Düzenle",
+        logOut: "Çıkış Yap",
+        removeData: "Veriyi Sil",
     },
 };
 

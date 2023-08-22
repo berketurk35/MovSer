@@ -517,7 +517,7 @@ function SerieListDetails({ navigation, route }) {
                         <TouchableOpacity onPress={handlePressShare} style={styles.shareBox}>
                             <IconFont name="share-square" size={20} color={"green"} />
                             <View>
-                                <Text style={styles.shareText}> Paylaş </Text>
+                                <Text style={styles.shareText}>{Translations[language].share}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -561,10 +561,10 @@ function SerieListDetails({ navigation, route }) {
                                 onPress={() => { }}
                             >
                                 <View style={styles.guestInfoBox} >
-                                    <Text style={styles.guestInfoTitle} >Merhaba Kullanıcı</Text>
-                                    <Text>Liste paylaşabilmek ve sosyal kısımları kullanabilmeniz için uygulamaya kayıt olup giriş yapmanız gerekmektedir.</Text>
+                                    <Text style={styles.guestInfoTitle} >{Translations[language].hiUser}</Text>
+                                    <Text>{Translations[language].guestInfo1}</Text>
                                     <TouchableOpacity onPress={goToRegisterPage} style={styles.guestInfoButton}>
-                                        <Text style={styles.guestInfoButtonText}>Hemen Kayıt Ol</Text>
+                                        <Text style={styles.guestInfoButtonText}>{Translations[language].registerNow}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </TouchableOpacity>
@@ -591,7 +591,7 @@ function SerieListDetails({ navigation, route }) {
                             >
                                 <View>
                                     <View>
-                                        <Text style={styles.friendList} > Arkadaş Listesi </Text>
+                                        <Text style={styles.friendList} > {Translations[language].friendList}</Text>
                                         <View style={styles.seperator2} />
                                         <ScrollView>
                                             {friends.map(friend => (
@@ -632,7 +632,7 @@ function SerieListDetails({ navigation, route }) {
                             >
                                 <View>
                                     <View>
-                                        <Text style={styles.friendList} > Mesaj Yaz </Text>
+                                        <Text style={styles.friendList} > {Translations[language].writeMessage}</Text>
                                         <View style={styles.seperator2} />
                                         <TextInput
                                             style={styles.input}
@@ -644,7 +644,7 @@ function SerieListDetails({ navigation, route }) {
                                             placeholder="Mesajınızı buraya yazın (max 160) "
                                         />
                                         <TouchableOpacity onPress={shareMovieList} style={styles.button}>
-                                            <Text style={styles.buttonText2} >Listeyi Paylaş</Text>
+                                            <Text style={styles.buttonText2} >{Translations[language].shareList}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>

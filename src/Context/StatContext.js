@@ -16,7 +16,7 @@ export function StatProvider({ children }) {
     const [language, setLanguage] = useState("");
 
     useEffect(() => {
-        getLanguage(); 
+        getLanguage();
     }, []);
     
     const getLanguage = async () => {

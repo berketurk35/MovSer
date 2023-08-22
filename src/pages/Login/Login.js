@@ -38,31 +38,52 @@ function Login({ navigation }) {
     const signInWithGoogle = async () => {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
-
+    
         const username = userInfo.user.email.split('@')[0];
-
-        const { data, error } = await supabase.auth.signUp({
+    
+        // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol edin
+        const { data, error } = await supabase.auth.signInWithPassword({
             email: userInfo.user.email,
             password: userInfo.user.email,
-            options: {
-                data: {
-                    username: username,
-                },
-            }
         });
-        
+    
         if (data) {
-            const { error } = await supabase
-                .from('users')
-                .insert({ email: userInfo.user.email, userID: data.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
-
-                console.log("error", error);
+            // Kayıtlı kullanıcıysa giriş yapın
+            await AsyncStorage.setItem('token', data.session.refresh_token);
+            await AsyncStorage.setItem("userId", data.user.id);
+            await AsyncStorage.setItem('rememberMe', 'true');
+            navigation.navigate("TabNavigator");
+        } else {
+            // Kayıtlı değilse yeni bir kayıt oluşturun
+            const signUpResponse = await supabase.auth.signUp({
+                email: userInfo.user.email,
+                password: userInfo.user.email,
+                options: {
+                    data: {
+                        username: username,
+                    },
+                }
+            });
+    
+            if (signUpResponse.data) {
+                const { error: signUpError } = await supabase
+                    .from('users')
+                    .insert({ email: userInfo.user.email, userID: signUpResponse.data.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
+    
+                if (!signUpError) {
+                    await AsyncStorage.setItem('token', signUpResponse.data.session.refresh_token);
+                    await AsyncStorage.setItem("userId", signUpResponse.data.user.id);
+                    await AsyncStorage.setItem('rememberMe', 'true');
+                    navigation.navigate("TabNavigator");
+                }
+            }
+    
+            if (signUpResponse.error) {
+                console.log("Hata oluştu:", signUpResponse.error);
+            }
         }
-        if (error) {
-            console.log("error", error);
-        }
-        
     };
+    
 
     const signOut = async () => {
         try {
