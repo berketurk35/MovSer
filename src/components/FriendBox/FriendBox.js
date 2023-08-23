@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
 import styles from "./FriendBoxStyles";
 
@@ -24,7 +24,7 @@ function FriendBox({ profilePhoto, userName, fullName, pressAccept, pressReject,
                         <Icon name={iconName1} size={16} color={"green"} style={styles.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={pressReject}>
-                        <Icon name={iconName2} size={16} color={"red"} style={styles.icon} />
+                        <Icon name={iconName2} size={16} color={"red"} style={styles.icon2} />
                     </TouchableOpacity>
                 </View>
 

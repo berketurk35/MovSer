@@ -119,8 +119,9 @@ const Translations = {
         writeMessage: "Write Message",
         shareList: "Share List",
 
+        incomingRequest: "Incoming Requests",
         requestSent: "Request Sent",
-        incomingRequest: "Incoming Request",
+        submittedRequest: "Submitted Request",
 
         guest: "Guest",
         editprofile: "Edit Profile",
@@ -246,9 +247,10 @@ const Translations = {
         friendList: "Arkadaş Listesi",
         writeMessage: "Mesaj Yaz",
         shareList: "Listeyi Paylaş",
-
+        
+        incomingRequest: "Gelen İstekler",
         requestSent: "İstek Gönderildi",
-        incomingRequest: "Gönderilen İstekler",
+        submittedRequest: "Gönderilen İstekler",
 
         guest: "Misafir",
         editprofile: "Profili Düzenle",

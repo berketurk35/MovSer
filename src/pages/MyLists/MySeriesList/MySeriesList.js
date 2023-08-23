@@ -246,7 +246,7 @@ function MySerieList({ navigation }) {
                         <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
+                                <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
                             <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>

@@ -16,7 +16,8 @@ export default StyleSheet.create({
         bottom: 0,
         backgroundColor: "#1565C0",
         borderWidth: 1,
-        borderColor: "black"
+        borderColor: "black",
+        opacity: 0.8
     },
     modalBackground: {
         flex: 1,
@@ -64,9 +65,12 @@ export default StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 22,
     },
+    searchText: {
+        flex: 1,
+    },
     itemName: {
         flex: 1,
-        padding: 10,
+        padding: 0,
         marginTop: 15,
         alignSelf: "center",
         
@@ -84,9 +88,9 @@ export default StyleSheet.create({
         alignSelf: "center",
     },
     pp: {
-        height: 60,
-        width: 60,
-        borderRadius: 30,
+        height: 50,
+        width: 50,
+        borderRadius: 100,
         alignSelf: "center",
         justifyContent: "center",
         marginTop: 10,
@@ -115,5 +119,15 @@ export default StyleSheet.create({
     guestInfoButtonText: {
         color: "white",
         padding: 14,
-    }
+    },
+    userName: {
+        fontSize: 14,
+        paddingLeft: 20,
+        color: "black",
+        fontWeight: "500",
+    },
+    fullName: {
+        fontSize: 12,
+        paddingLeft: 20
+    },
 });

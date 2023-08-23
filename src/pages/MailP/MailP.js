@@ -29,6 +29,7 @@ function MailP({ navigation }) {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
 
     const { language, setLanguage } = useStats();
 
@@ -59,7 +60,7 @@ function MailP({ navigation }) {
             email: email,
             password: password,
         });
-        
+
         if (!error) {
             await AsyncStorage.setItem('token', data.session.refresh_token);
             await AsyncStorage.setItem("userId", data.user.id);
@@ -70,10 +71,11 @@ function MailP({ navigation }) {
             }
             navigation.navigate("TabNavigator");
         } else {
+            setErrorModal(true);
             setErrorMessage(Translations[language].notFoundUser);
         }
     };
-    
+
 
     const remember = async () => {
         setRememberMe(!rememberMe);
@@ -89,8 +91,8 @@ function MailP({ navigation }) {
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
             <Text>{Translations[language].signInMail} </Text>
 
-            <FormInput name={"email"} placeholder={Translations[language].email} value={email} onChangeText={setEmail} />
-            <FormInput name={"vpn-key"} placeholder={Translations[language].password} value={password} onChangeText={setPassword} />
+            <FormInput name={"email"} placeholder={Translations[language].email} value={email} onChangeText={setEmail} secure={false} capital={"none"} />
+            <FormInput name={"vpn-key"} placeholder={Translations[language].password} value={password} onChangeText={setPassword} secure={true} capital={"none"} />
 
             <View style={styles.touchbox}>
                 <TouchableOpacity onPress={remember} style={styles.check} >
@@ -104,7 +106,9 @@ function MailP({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            <Text>  {errorMessage} </Text>
+            {errorModal &&
+                <Text style={{color: "red"}} >{errorMessage}</Text>
+                }
 
             <TouchableOpacity style={styles.button} onPress={signInWithEmail} >
                 <Text style={styles.buttonText}> {Translations[language].login} </Text>

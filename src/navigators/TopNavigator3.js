@@ -17,7 +17,7 @@ function TopNavigator3() {
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
           textTransform: "capitalize",
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: "bold",
         },
         tabBarIndicatorStyle: {

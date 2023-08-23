@@ -52,5 +52,8 @@ export default StyleSheet.create({
     },
     or: {
         margin: 5,
+    },
+    errorMessage: {
+        color: "red",
     }
 })

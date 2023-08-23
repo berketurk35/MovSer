@@ -7,8 +7,8 @@ export default StyleSheet.create({
         marginLeft: 30,
     },
     image: {
-        height: 60,
-        width: 60,
+        height: 50,
+        width: 50,
         borderWidth: 1,
         borderRadius: 100,
     },
@@ -17,13 +17,13 @@ export default StyleSheet.create({
         justifyContent: "center",
     },
     userName: {
-        fontSize: 18,
+        fontSize: 16,
         paddingLeft: 20,
         color: "black",
         fontWeight: "500",
     },
     fullName: {
-        fontSize: 14,
+        fontSize: 12,
         paddingLeft: 20
     },
     seperator: {
@@ -35,6 +35,9 @@ export default StyleSheet.create({
     },
     icon: {
         paddingRight: 20
+    },
+    icon2: {
+        paddingRight: 35
     },
     iconBox: {
         alignSelf: "center",

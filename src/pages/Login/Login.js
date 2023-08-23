@@ -41,22 +41,20 @@ function Login({ navigation }) {
     
         const username = userInfo.user.email.split('@')[0];
     
-        // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol edin
+        // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol et
         const { data, error } = await supabase.auth.signInWithPassword({
             email: userInfo.user.email,
             password: userInfo.user.email,
         });
-    
-        if (data) {
-            // Kayıtlı kullanıcıysa giriş yapın
-            console.log("Burada mıyım?");
+        if (data.user) {
+            // Kayıtlı kullanıcıysa giriş yap
             await AsyncStorage.setItem('token', data.session.refresh_token);
             await AsyncStorage.setItem("userId", data.user.id);
             await AsyncStorage.setItem('rememberMe', 'true');
             navigation.navigate("TabNavigator");
         } else {
-            // Kayıtlı değilse yeni bir kayıt oluşturun
-            const signUpResponse = await supabase.auth.signUp({
+            // Kayıtlı değilse yeni bir kayıt oluştur
+            const {data: signUpResponse} = await supabase.auth.signUp({
                 email: userInfo.user.email,
                 password: userInfo.user.email,
                 options: {
@@ -65,15 +63,14 @@ function Login({ navigation }) {
                     },
                 }
             });
-    
-            if (signUpResponse.data) {
+            if (signUpResponse) {
                 const { error: signUpError } = await supabase
                     .from('users')
-                    .insert({ email: userInfo.user.email, userID: signUpResponse.data.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
-    
+                    .insert({ email: userInfo.user.email, userID: signUpResponse.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
+
                 if (!signUpError) {
-                    await AsyncStorage.setItem('token', signUpResponse.data.session.refresh_token);
-                    await AsyncStorage.setItem("userId", signUpResponse.data.user.id);
+                    await AsyncStorage.setItem('token', signUpResponse.session.refresh_token);
+                    await AsyncStorage.setItem("userId", signUpResponse.user.id);
                     await AsyncStorage.setItem('rememberMe', 'true');
                     navigation.navigate("TabNavigator");
                 }

@@ -33,6 +33,7 @@ function MyMovieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
     const [movieListAsync, setMovieListAsync] = useState("");
+    const [err, setEr] = useState("");
 
     const [draggedMovieList, setDraggedMovieList] = useState([]);
 
@@ -77,6 +78,7 @@ function MyMovieList({ navigation }) {
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
+        setEr("");
         setPlatformVisible(false);
         setPicturesVisible(false);
         setSwiperVisible2(false);
@@ -88,6 +90,19 @@ function MyMovieList({ navigation }) {
     };
 
     const saveList = async () => {
+        if (!cardName) {
+            setEr("Kart ismi boş olamaz.");
+            return;
+        }
+
+        if (cardName.length < 4 || cardName.length > 26) {
+            setEr("Kart ismi 4 ila 18 harf arasında olmalıdır.");
+            return;
+        }
+        if (!selectedImage) {
+            setEr("Kart arka plan görseli seçmelisiniz.");
+            return;
+        }
         // Verileri bir obje olarak hazırla
         const listData = {
             id: cardName,
@@ -246,7 +261,7 @@ function MyMovieList({ navigation }) {
                         <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchMovie}
+                                <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchMovie}
                                     onChangeText={setSearchMovie} />
                             </View>
                             <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
@@ -692,6 +707,9 @@ function MyMovieList({ navigation }) {
                                                 </Swiper>
                                             </View>
                                         )}
+                                        {err.length > 0 &&
+                                        <Text style={{color: "red"}} > {err} </Text>
+                                        }
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
                                             <Text style={styles.buttonText} >{Translations[language].saveCard}</Text>
                                         </TouchableOpacity>

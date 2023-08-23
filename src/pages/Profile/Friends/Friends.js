@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Modal, TouchableOpacity, TextInput, KeyboardAvoidingView, Image, FlatList } from "react-native";
+import { View, Text, Modal, TouchableOpacity, TextInput, KeyboardAvoidingView, Image, FlatList, Keyboard, ScrollView } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import FriendBox from "../../../components/FriendBox/FriendBox";
@@ -346,6 +346,7 @@ function Friends({ navigation }) {
     }
 
     const handleUserSelect = async (user) => {
+        Keyboard.dismiss();
         const currentUserId = await AsyncStorage.getItem("userId");
         const selectedUserId = user.userID;
 
@@ -360,7 +361,8 @@ function Friends({ navigation }) {
                 <View style={{ flexDirection: "row" }} >
                     <Image source={{ uri: item.profile_photo_url }} resizeMode="contain" style={styles.pp} />
                     <View style={styles.itemName}>
-                        <Text>{item.userName}</Text>
+                        <Text style={styles.userName}>{item.userName}</Text>
+                        <Text style={styles.fullName} >{item.fullName}</Text>
                     </View>
                     <TouchableOpacity
                         style={styles.addBox}
@@ -378,7 +380,10 @@ function Friends({ navigation }) {
     };
 
     const renderReceivedRequests = () => {
-        return receivedRequests.map(requestSender => (
+        return receivedRequests.filter(
+            (requestSender) =>
+                requestSender.userName.toLowerCase().includes(searchFriend.toLowerCase())
+        ).map(requestSender => (
             <FriendBox
                 key={requestSender.userID}
                 profilePhoto={requestSender.profile_photo_url}
@@ -393,7 +398,10 @@ function Friends({ navigation }) {
     };
 
     const renderSentRequest = () => {
-        return selectedFriends.map(friend => (
+        return selectedFriends.filter(
+            (friend) =>
+                friend.userName.toLowerCase().includes(searchFriend.toLowerCase())
+        ).map(friend => (
             <FriendBox
                 key={friend.userID}
                 profilePhoto={friend.profile_photo_url}
@@ -428,22 +436,25 @@ function Friends({ navigation }) {
                     <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
+                            <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
                                 onChangeText={setSearchFriend} />
                         </View>
                     </View>
-                    <TouchableOpacity onPress={handleIncomingRequistPress}>
-                        <Text style={styles.status}>- {Translations[language].requestSent} ({receivedRequests.length})</Text>
-                    </TouchableOpacity>
-                    {incomingRequist && renderReceivedRequests()}
-                    <TouchableOpacity onPress={handleSentRequistPress} >
-                        <Text style={styles.status}>- {Translations[language].incomingRequest} ({selectedFriends.length}) </Text>
-                    </TouchableOpacity>
-                    {sentRequist && renderSentRequest()}
-                    <TouchableOpacity onPress={handleFriendPress}>
-                        <Text style={styles.status}>- {Translations[language].profileTitle2} ({friends.length})</Text>
-                    </TouchableOpacity>
-                    {friendsList && renderFriends()}
+                    <ScrollView>
+                        <TouchableOpacity onPress={handleIncomingRequistPress}>
+                            <Text style={styles.status}>- {Translations[language].incomingRequest} ({receivedRequests.length})</Text>
+                        </TouchableOpacity>
+                        {incomingRequist && renderReceivedRequests()}
+                        <TouchableOpacity onPress={handleSentRequistPress} >
+                            <Text style={styles.status}>- {Translations[language].submittedRequest} ({selectedFriends.length}) </Text>
+                        </TouchableOpacity>
+                        {sentRequist && renderSentRequest()}
+                        <TouchableOpacity onPress={handleFriendPress}>
+                            <Text style={styles.status}>- {Translations[language].profileTitle2} ({friends.length})</Text>
+                        </TouchableOpacity>
+                        {friendsList && renderFriends()}
+                    </ScrollView>
+
 
                     <FAB
                         style={styles.fab}

@@ -501,7 +501,7 @@ function MovieListDetails({ navigation, route }) {
                     <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
+                            <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                                 onChangeText={setSearchMovie} />
                         </View>
                         <TouchableOpacity onPress={handlePressShare} style={styles.shareBox}>
