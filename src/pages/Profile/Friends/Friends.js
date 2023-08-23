@@ -304,10 +304,12 @@ function Friends({ navigation }) {
             // Kullanıcılar listesini döngüye alarak her bir kullanıcının istek durumunu kontrol edin
             const updatedSearchResults = data.map(user => ({
                 ...user,
-                isAlreadySent: sentRequestFriendIds.includes(user.userID)
+                isAlreadySent: sentRequestFriendIds.includes(user.userID),
+                isFriend: friendIds.includes(user.userID)
             }));
+            const nonFriendResults = updatedSearchResults.filter(user => !user.isFriend);
 
-            setSearchResults(updatedSearchResults);
+            setSearchResults(nonFriendResults);
         } catch (error) {
             console.error("Arama hatası:", error);
         }

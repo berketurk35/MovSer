@@ -27,21 +27,6 @@ export default StyleSheet.create({
         borderColor: "white",
         opacity: 0.8
     },
-    modalBackground: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        margin: 20,
-
-    },
-    modalContent: {
-        backgroundColor: "white",
-        padding: 16,
-        borderRadius: 16,
-    },
     button: {
         backgroundColor: "#1565C0",
         borderRadius: 14,
@@ -91,11 +76,6 @@ export default StyleSheet.create({
     seperator: {
         height: 1,
         backgroundColor: "black",
-    },
-    seperator2: {
-        height: 1,
-        backgroundColor: "black",
-        marginTop: 20,
     },
     bottomText: {
         textAlign: "center",
@@ -169,7 +149,6 @@ export default StyleSheet.create({
     poster: {
         flex: 0.8,
     },
-
     image: {
         height: Dimensions.get("window").height / 5.5,
         margin: 6,
@@ -225,11 +204,10 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         margin: 20,
-
     },
     modalContent: {
         backgroundColor: "white",
-        padding: 16,
+        padding: 10,
         borderRadius: 16,
     },
     seperator2: {

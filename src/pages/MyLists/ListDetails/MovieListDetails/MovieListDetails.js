@@ -8,7 +8,7 @@ import styles from "./MovieListDetailsStyles";
 import { Dimensions } from "react-native";
 
 import Input from "../../../../components/Input/Input";
-import FriendBox from "../../../../components/FriendBox/FriendBox";
+import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
 
 import { FAB } from "react-native-paper";
 
@@ -61,6 +61,7 @@ function MovieListDetails({ navigation, route }) {
     const [friends, setFriends] = useState([]);
     const [friendId, setFriendId] = useState("");
     const [message, setMessage] = useState("");
+    const [searchFriend, setSearchFriend] = useState('');
 
     const [draggedMovies, setDraggedMovies] = useState([]);
 
@@ -579,25 +580,34 @@ function MovieListDetails({ navigation, route }) {
                                 style={styles.modalContent}
                                 onPress={() => { }}
                             >
-                                <View>
-                                    <View>
-                                        <Text style={styles.friendList} > {Translations[language].friendList} </Text>
-                                        <View style={styles.seperator2} />
-                                        <ScrollView>
-                                            {friends.map(friend => (
-                                                <FriendBox
-                                                    key={friend.userID}
-                                                    profilePhoto={friend.profile_photo_url}
-                                                    userName={friend.userName}
-                                                    fullName={friend.fullName}
-                                                    iconShare={"share-square-o"}
-                                                    pressShare={() => handlePressMessageBox(friend.userID)}
-                                                />
-                                            ))
-                                            }
-                                        </ScrollView>
+                                <Text style={styles.friendList} > {Translations[language].friendList} </Text>
+                                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                                    <View style={styles.search} >
+                                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
+                                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
+                                            onChangeText={setSearchFriend} />
                                     </View>
                                 </View>
+                                <View style={styles.seperator2} />
+                                <FlatList
+                                    data={friends.filter(
+                                        (friend) =>
+                                            friend.userName
+                                                .toLowerCase()
+                                                .includes(searchFriend.toLowerCase())
+                                    )}
+                                    keyExtractor={(friend) => friend.userID}
+                                    renderItem={({ item: friend }) => (
+                                        <FriendBoxShare
+                                            profilePhoto={friend.profile_photo_url}
+                                            userName={friend.userName}
+                                            fullName={friend.fullName}
+                                            iconShare={"share-square-o"}
+                                            pressShare={() => handlePressMessageBox(friend.userID)}
+                                        />
+                                    )}
+                                    style={{ height: "70%" }}
+                                />
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>
@@ -628,7 +638,7 @@ function MovieListDetails({ navigation, route }) {
                                             style={styles.input}
                                             multiline
                                             numberOfLines={4}
-                                            maxLength={160} 
+                                            maxLength={160}
                                             value={message}
                                             onChangeText={setMessage}
                                             placeholder="Mesajınızı buraya yazın (max 160) "
