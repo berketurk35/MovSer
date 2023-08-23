@@ -40,11 +40,9 @@ function MoviesList({ navigation, route }) {
                 const userID = await AsyncStorage.getItem('userId');
                 console.log("userID: ", userID);
                 const asyncKey = (userID + "savedMovies");
-                console.log("asyncKey: ", asyncKey);
                 setSavedMoviesAsync(asyncKey);
     
                 const movies = await AsyncStorage.getItem(savedMoviesAsync);
-                console.log("movies: ", movies);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
                     setMovieCounter(JSON.parse(movies).length);

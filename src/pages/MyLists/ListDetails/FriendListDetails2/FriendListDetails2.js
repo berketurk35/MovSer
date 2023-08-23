@@ -98,7 +98,10 @@ function FriendListDetails2({ navigation, route }) {
                 <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
-                        {seriesDetails.map((serie, index) => (
+                        {seriesDetails.filter(
+                            (serie) =>
+                                serie.name.toLowerCase().includes(searchSerie.toLowerCase())
+                        ).map((serie, index) => (
                             <FriendSeriesCard
                                 key={serie.id}
                                 serieName={serie.name}

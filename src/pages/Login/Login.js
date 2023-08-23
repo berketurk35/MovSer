@@ -49,6 +49,7 @@ function Login({ navigation }) {
     
         if (data) {
             // Kayıtlı kullanıcıysa giriş yapın
+            console.log("Burada mıyım?");
             await AsyncStorage.setItem('token', data.session.refresh_token);
             await AsyncStorage.setItem("userId", data.user.id);
             await AsyncStorage.setItem('rememberMe', 'true');

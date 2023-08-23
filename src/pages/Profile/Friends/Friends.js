@@ -45,6 +45,8 @@ function Friends({ navigation }) {
 
     const [receivedRequests, setReceivedRequests] = useState([]);
 
+    const [searchFriend, setSearchFriend] = useState('');
+
     const [friends, setFriends] = useState([]);
 
     const { language, setLanguage } = useStats();
@@ -54,10 +56,6 @@ function Friends({ navigation }) {
         if (searchUser) {
             searchUsers();
         }
-        else {
-            console.log("No users found");
-        }
-
     }, [searchUser]);
 
     useEffect(() => {
@@ -406,7 +404,10 @@ function Friends({ navigation }) {
     };
 
     const renderFriends = () => {
-        return friends.map(friend => (
+        return friends.filter(
+            (friend) =>
+                friend.userName.toLowerCase().includes(searchFriend.toLowerCase())
+        ).map(friend => (
             <FriendBox
                 key={friend.userID}
                 profilePhoto={friend.profile_photo_url}
@@ -416,7 +417,7 @@ function Friends({ navigation }) {
         ));
     };
 
-    function goToRegisterPage(){
+    function goToRegisterPage() {
         navigation.navigate("Register");
     }
 
@@ -427,8 +428,8 @@ function Friends({ navigation }) {
                     <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
                         <View style={styles.search} >
                             <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={null}
-                                onChangeText={null} />
+                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
+                                onChangeText={setSearchFriend} />
                         </View>
                     </View>
                     <TouchableOpacity onPress={handleIncomingRequistPress}>

@@ -106,7 +106,7 @@ function MyFriendsList({ navigation }) {
     };
 
     function goToListDetails(listName, listType, uId, contentIds) {
-        if(listType === "Movie") {
+        if (listType === "Movie") {
             navigation.navigate("FriendListDetails", { listName, listType, uId, contentIds });
         } else {
             navigation.navigate("FriendListDetails2", { listName, listType, uId, contentIds });
@@ -131,7 +131,10 @@ function MyFriendsList({ navigation }) {
                         </View>
                         <View style={{ flex: 1 }} >
                             <ScrollView>
-                                {savedMovieList.map((item) => (
+                                {savedMovieList.filter(
+                                    (item) =>
+                                        item.listName.toLowerCase().includes(searchMovie.toLowerCase())
+                                ).map((item) => (
                                     <FriendListCard key={item.id} cardName={item.listName} listType={item.listType} cardMessage={item.user_message} fullName={item.fullName} onPressDetail={() => goToListDetails(item.listName, item.listType, item.user_id, item.content_ids)} />
                                 ))}
                             </ScrollView>

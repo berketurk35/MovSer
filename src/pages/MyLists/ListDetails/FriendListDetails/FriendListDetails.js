@@ -105,7 +105,10 @@ function FriendListDetails({ navigation, route }) {
                 <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
-                        {moviesDetails.map((movie, index) => (
+                        {moviesDetails.filter(
+                            (movie) =>
+                                movie.title.toLowerCase().includes(searchMovie.toLowerCase())
+                        ).map((movie, index) => (
                             <FriendMoviesCard
                                 key={movie.id}
                                 movieName={movie.title}

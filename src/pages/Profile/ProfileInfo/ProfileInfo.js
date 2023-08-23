@@ -4,6 +4,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import Translations from "../../../languages/Translation";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RNRestart from 'react-native-restart';
 
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
@@ -87,7 +88,8 @@ function ProfileInfo({navigation}) {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('userId');
         await GoogleSignin.signOut();
-        navigation.navigate("Intro");
+        RNRestart.Restart();
+        console.log("Çıkış Yapıldı.");
     };
 
     const logOutGuest =  () => {

@@ -39,6 +39,7 @@ export default StyleSheet.create({
     cardInfo: {
         textAlign: "center",
         fontSize: 18,
+        fontWeight: "bold"
     },
     infoBox: {
         width: Dimensions.get("screen").width / 2.4,
@@ -46,7 +47,8 @@ export default StyleSheet.create({
     separator: {
         height: 1,
         backgroundColor: 'gray',
-        marginTop: 10,
+        marginLeft: 4,
+        marginTop: 6,
         
     }
 });

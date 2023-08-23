@@ -49,7 +49,7 @@ function MyMovieList({ navigation }) {
                 setMovieListAsync(asyncKey);
 
                 const updatedMovieLists = await AsyncStorage.getItem(movieListAsync);
-                console.log(updatedMovieLists);
+                
                 if (updatedMovieLists) {
                     setSavedMovieList(JSON.parse(updatedMovieLists));
                     setDraggedMovieList(JSON.parse(updatedMovieLists));

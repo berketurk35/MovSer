@@ -68,7 +68,7 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         backgroundColor: "white", //#FF95AB
-        marginHorizontal: 10,
+        marginHorizontal: 30,
         marginVertical: 10,
         height: 38,
         borderRadius: 16,
