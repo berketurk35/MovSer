@@ -185,9 +185,9 @@ const Translations = {
 
         stats: "İstatistikler",
 
-        info1: "Kartları sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
-        info2: "Filmleri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
-        info3: "Dizileri sürükleyerek yerlerini yeniden düzenleyebilirsiniz.",
+        info1: "Kartlara basılı tutarak yerlerini yeniden düzenleyebilirsiniz.",
+        info2: "Filmlere basılı tutarak yerlerini yeniden düzenleyebilirsiniz.",
+        info3: "Dizilere basılı tutarak yerlerini yeniden düzenleyebilirsiniz.",
 
         movieDeleteTitle: "Film Silme",
         movieDeleteText: "Filmini silmek istediğinize emin misiniz?",

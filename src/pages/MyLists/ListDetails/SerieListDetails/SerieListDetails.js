@@ -66,6 +66,7 @@ function SerieListDetails({ navigation, route }) {
     const [message, setMessage] = useState("");
     const [draggedSeries, setDraggedSeries] = useState([]);
     const [searchFriend, setSearchFriend] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
 
     const { language, setLanguage } = useStats();
 
@@ -90,6 +91,17 @@ function SerieListDetails({ navigation, route }) {
         fetchSavedSeries();
         fetchFriends();
     }, [listNameAsync]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsVisible(true);
+            setTimeout(() => {
+                setIsVisible(false);
+            }, 6000);
+        }, 20000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const fetchFriends = async () => {
         try {
@@ -530,8 +542,9 @@ function SerieListDetails({ navigation, route }) {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.seperator} />
-                    <Text style={styles.info}>
-                        {Translations[language].info3}</Text>
+                    {isVisible &&
+                            <Text style={styles.info}>{Translations[language].info3} </Text>
+                        }
                     <View style={{ flex: 1 }} >
                         <DraggableFlatList
                             ref={ref}

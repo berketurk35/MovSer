@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,6 +9,7 @@ import { Dimensions } from "react-native";
 
 import Input from "../../../../components/Input/Input";
 import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
+import Toast from 'react-native-toast-message';
 
 import { FAB } from "react-native-paper";
 
@@ -64,6 +65,7 @@ function MovieListDetails({ navigation, route }) {
     const [searchFriend, setSearchFriend] = useState('');
 
     const [draggedMovies, setDraggedMovies] = useState([]);
+    const [isVisible, setIsVisible] = useState(false);
 
     const { language, setLanguage } = useStats();
 
@@ -88,6 +90,41 @@ function MovieListDetails({ navigation, route }) {
         fetchSavedMovies();
         fetchFriends();
     }, [listNameAsync]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+          setIsVisible(true);
+          setTimeout(() => {
+            setIsVisible(false);
+          }, 6000);
+        }, 20000);
+    
+        return () => clearInterval(interval);
+      }, []);
+
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'success',
+            text1: 'Liste başarılı bir şekilde paylaşıldı.',
+            visibilityTime: 4000,
+            autoHide: true,
+            topOffset: 10
+        });
+    };
+
+    const showErrorMessage = () => {
+        Toast.show({
+            type: 'error',
+            text1: 'Bu liste daha önce paylaşıldı.',
+            visibilityTime: 4000,
+            autoHide: true,
+            topOffset: 10
+        });
+    };
 
     const fetchFriends = async () => {
         try {
@@ -145,6 +182,7 @@ function MovieListDetails({ navigation, route }) {
 
             if (existingShare && existingShare.length > 0) {
                 console.log("Bu liste daha önce paylaşıldı.");
+                showErrorMessage();
                 return;
             }
             const { data: sentFriendsData, error: sentFriendsError } = await supabase
@@ -152,7 +190,7 @@ function MovieListDetails({ navigation, route }) {
                 .select("*")
                 .eq("userID", currentUserId);
 
-                console.log("FriendsData", sentFriendsData);
+            console.log("FriendsData", sentFriendsData);
 
             if (sentFriendsError) {
                 console.error("Arkadaş detayları alınırken hata:", sentFriendsError);
@@ -174,6 +212,7 @@ function MovieListDetails({ navigation, route }) {
                 )
             if (!error) {
                 console.log("Veri başarılı gitti:");
+                showToastMessage();
             }
 
             if (error) {
@@ -530,8 +569,10 @@ function MovieListDetails({ navigation, route }) {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.seperator} />
-                    <Text style={styles.info}>
-                        {Translations[language].info2}</Text>
+                    {isVisible && 
+                    <Text style={styles.info}>{Translations[language].info2}</Text> 
+                    }
+                    <ForwardedToast />
                     <View style={{ flex: 1 }} >
                         <DraggableFlatList
                             ref={ref}

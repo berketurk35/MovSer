@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { useStats } from "../../../Context/StatContext";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import styles from "./MovieListStyles";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../../components/Input/Input";
+import Toast from 'react-native-toast-message';
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -93,6 +94,28 @@ function MoviesList({ navigation, route }) {
         } catch (error) {
             console.log('Veriler sıfırlanırken bir hata oluştu:', error);
         }
+    };
+
+    const toastConfig = {
+        test: internalState => (
+            <View style={{height: 80, width: '90%', backgroundColor: "yellow" }} >
+                <Text>{internalState.text1} </Text>
+            </View>
+        )
+    }
+
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast config={toastConfig} ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'success',
+            text1: 'Başarılı',
+            visibilityTime: 3000, 
+            autoHide: true,
+            topOffset: 0
+        });
     };
 
     const handleFabPress = () => {
@@ -301,7 +324,8 @@ function MoviesList({ navigation, route }) {
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
                         <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
-                        <Text onPress={clearData} > Datayı Sil </Text>
+                        <Text onPress={showToastMessage} > Datayı Sil </Text>
+                        <ForwardedToast />
                     </View>
                 </View>
                 <View style={styles.seperator} />

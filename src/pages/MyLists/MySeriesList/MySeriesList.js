@@ -37,6 +37,7 @@ function MySerieList({ navigation }) {
     const [err, setEr] = useState("");
 
     const [draggedSerieList, setDraggedSerieList] = useState([]);
+    const [isVisible, setIsVisible] = useState(false);
 
     const { serieListCounter, setSerieListCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -62,6 +63,17 @@ function MySerieList({ navigation }) {
         };
         fetchAndSetMovies();
     }, [serieListAsync]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsVisible(true);
+            setTimeout(() => {
+                setIsVisible(false);
+            }, 6000);
+        }, 20000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const handleFabPress = () => {
         setModalVisible(true);
@@ -269,8 +281,9 @@ function MySerieList({ navigation }) {
                                 <Text style={styles.removeText}>{Translations[language].remove}</Text>
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.info}>
-                            {Translations[language].info1}</Text>
+                        {isVisible &&
+                            <Text style={styles.info}>{Translations[language].info1} </Text>
+                        }
                         <View style={{ flex: 1 }}>
                             <DraggableFlatList
                                 ref={ref}

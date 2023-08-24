@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Modal } from "react-native";
 import styles from "./RegisterStyles";
 import FormInput from "../../components/FormInput/FormInput";
 import CustomButton from "../../components/Button/Button";
 import Translations from "../../languages/Translation";
+import Toast from 'react-native-toast-message';
 import { useStats } from "../../Context/StatContext";
 
 import { createClient } from "@supabase/supabase-js";
@@ -37,7 +38,6 @@ function Register({ navigation }) {
     const [username, setUsername] = useState("");
     const [fullName, setFullName] = useState("");
 
-    const [modalVisible, setModalVisible] = useState(false);
     const [err, setEr] = useState("");
 
     const { language, setLanguage } = useStats();
@@ -89,6 +89,28 @@ function Register({ navigation }) {
         }
     };
 
+    const toastConfig = {
+        test: internalState => (
+            <View style={{height: 80, width: '90%', backgroundColor: "yellow" }} >
+                <Text>{internalState.text1} </Text>
+            </View>
+        )
+    }
+
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast config={toastConfig} ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'success',
+            text1: 'Kayıt başarılı, Giriş yapabilirsiniz.',
+            visibilityTime: 2000, 
+            autoHide: true,
+            topOffset: 10
+        });
+    };
+
     const signUpwithEmail = async () => {
         try {
             if (!email || !password || !username || !fullName) {
@@ -133,17 +155,17 @@ function Register({ navigation }) {
                             profile_photo_url: "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg",
                         },
                     ]);
-                setModalVisible(true);
+                
                 setEmail("");
                 setPassword("");
                 setFullName("");
                 setUsername("");
 
+                showToastMessage();
                 setTimeout(() => {
-                    setModalVisible(false);
                     navigation.navigate("MailP");
-                }, 3000);
-
+                  }, 2000);
+                
             } else if (error) {
                 if (error.message.includes('Unable to validate email address: invalid format')) {
                     setEr('E-posta adresi geçerli formatta değil.');
@@ -161,7 +183,6 @@ function Register({ navigation }) {
             console.error('Hata:', error);
         }
     };
-
 
     function goToLoginPage() {
         navigation.navigate("Login");
@@ -182,24 +203,11 @@ function Register({ navigation }) {
             <TouchableOpacity style={styles.button} onPress={signUpwithEmail} >
                 <Text style={styles.buttonText}> {Translations[language].register} </Text>
             </TouchableOpacity>
+            <ForwardedToast />
             <TouchableOpacity onPress={goToLoginPage} style={styles.underText} >
                 <Icon name="arrow-back" size={18} color={"black"} style={styles.icon2} />
                 <Text style={{ color: "black" }} > {Translations[language].returnLogin} </Text>
             </TouchableOpacity>
-
-            <Modal
-                visible={modalVisible}
-                animationType="fade"
-                transparent={true}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
-                    <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-                        <Text style={{ textAlign: "center", paddingBottom: 10, color: "black", fontSize: 18 }} >Kayıt başarılı</Text>
-                        <Text style={{ textAlign: "center", paddingBottom: 10, color: "black" }}>Giriş yaparak uygulamayı kullanmaya başlayabilirsiniz.</Text>
-                    </View>
-                </View>
-            </Modal>
         </View>
     )
 };

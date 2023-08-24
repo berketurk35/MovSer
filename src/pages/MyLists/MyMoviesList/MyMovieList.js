@@ -36,6 +36,7 @@ function MyMovieList({ navigation }) {
     const [err, setEr] = useState("");
 
     const [draggedMovieList, setDraggedMovieList] = useState([]);
+    const [isVisible, setIsVisible] = useState(false);
 
     const { movieListCounter, setMovieListCounter } = useStats();
     const { language, setLanguage } = useStats();
@@ -46,11 +47,11 @@ function MyMovieList({ navigation }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "movieList");
+                const asyncKey = (userID + "movieList");
                 setMovieListAsync(asyncKey);
 
                 const updatedMovieLists = await AsyncStorage.getItem(movieListAsync);
-                
+
                 if (updatedMovieLists) {
                     setSavedMovieList(JSON.parse(updatedMovieLists));
                     setDraggedMovieList(JSON.parse(updatedMovieLists));
@@ -63,12 +64,23 @@ function MyMovieList({ navigation }) {
         fetchAndSetMovies();
     }, [movieListAsync]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsVisible(true);
+            setTimeout(() => {
+                setIsVisible(false);
+            }, 6000);
+        }, 20000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     const handleFabPress = () => {
         setModalVisible(true);
     };
 
     const handleRemovePress = () => {
-        if(draggedMovieList.length > 0) { 
+        if (draggedMovieList.length > 0) {
             setModalRemoveVisible(true);
         } else {
             setModalRemoveVisible(false);
@@ -269,8 +281,9 @@ function MyMovieList({ navigation }) {
                                 <Text style={styles.removeText}>{Translations[language].remove}</Text>
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.info}>
-                            {Translations[language].info1} </Text>
+                        {isVisible &&
+                            <Text style={styles.info}>{Translations[language].info1} </Text>
+                        }
                         <View style={{ flex: 1 }} >
                             <DraggableFlatList
                                 ref={ref}
@@ -321,7 +334,7 @@ function MyMovieList({ navigation }) {
                                                 <View style={styles.content}>
                                                     {draggedMovieList
                                                         .map((card, index) => (
-                                                           <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                            <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
                                                         ))}
                                                 </View>
                                             </ScrollView>
@@ -709,7 +722,7 @@ function MyMovieList({ navigation }) {
                                             </View>
                                         )}
                                         {err.length > 0 &&
-                                        <Text style={{color: "red", paddingTop: 8, textAlign: "center"}} > {err} </Text>
+                                            <Text style={{ color: "red", paddingTop: 8, textAlign: "center" }} > {err} </Text>
                                         }
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
                                             <Text style={styles.buttonText} >{Translations[language].saveCard}</Text>
