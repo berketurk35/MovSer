@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black"
+        backgroundColor: "#e5e5e5"
     },
     background: {
         flex: 1,
@@ -80,10 +80,6 @@ export default StyleSheet.create({
     icon: {
         alignSelf: "center",
         paddingHorizontal: 10,
-    },
-    seperator: {
-        height: 1,
-        backgroundColor: "black",
     },
     seperator2: {
         height: 1,

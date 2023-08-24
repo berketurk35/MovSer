@@ -70,7 +70,6 @@ export default StyleSheet.create({
         marginRight: 14,
     },
     movieNameCard: {
-        backgroundColor: "#1f1f1f",
         elevation: 50,
         marginRight: 6,
     },

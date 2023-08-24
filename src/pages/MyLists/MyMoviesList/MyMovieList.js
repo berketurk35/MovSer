@@ -270,7 +270,7 @@ function MyMovieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "#8c8c8c", opacity: 0.7 }} >
+                        <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                             <View style={styles.search} >
                                 <Icon name="search" size={18} color={"black"} style={styles.icon} />
                                 <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchMovie}

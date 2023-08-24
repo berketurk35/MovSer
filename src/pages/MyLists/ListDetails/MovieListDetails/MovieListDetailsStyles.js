@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black"
+        backgroundColor: "#e5e5e5"
     },
     background: {
         flex: 1,
@@ -21,10 +21,10 @@ export default StyleSheet.create({
         position: "absolute",
         margin: 12,
         right: 0,
-        bottom: 0,
+        bottom: 20,
         backgroundColor: "#1565C0",
-        borderWidth: 1,
-        borderColor: "white",
+        borderWidth: 2,
+        borderColor: "black",
         opacity: 0.8
     },
     button: {
@@ -60,22 +60,18 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         backgroundColor: "white", //#FF95AB
-        marginHorizontal: 10,
+        marginHorizontal: 30,
         marginVertical: 10,
         height: 38,
         borderRadius: 16,
         borderWidth: 0.6,
-        elevation: 24,
+        elevation: 44,
         shadowColor: "black",
         opacity: 1,
     },
     icon: {
         alignSelf: "center",
         paddingHorizontal: 10,
-    },
-    seperator: {
-        height: 1,
-        backgroundColor: "black",
     },
     bottomText: {
         textAlign: "center",
@@ -177,7 +173,7 @@ export default StyleSheet.create({
     },
     info: {
         textAlign: "center",
-        color: "white",
+        color: "black",
         fontSize: 12,
         paddingBottom: 5,
     },

@@ -288,7 +288,7 @@ function SeriesList({ navigation, route }) {
                 <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
                     <View style={styles.search} >
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
+                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>

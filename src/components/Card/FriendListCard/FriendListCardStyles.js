@@ -34,7 +34,7 @@ export default StyleSheet.create({
         height: 149,
         borderRadius: 12,
         backgroundColor: "#e2e5dc",
-        justifyContent:"center"
+        justifyContent: "center"
     },
     cardInfo: {
         textAlign: "center",
@@ -49,6 +49,5 @@ export default StyleSheet.create({
         backgroundColor: 'gray',
         marginLeft: 4,
         marginTop: 6,
-        
-    }
+    },
 });

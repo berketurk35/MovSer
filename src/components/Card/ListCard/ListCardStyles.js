@@ -11,7 +11,7 @@ export default StyleSheet.create({
         borderColor: "white",
         backgroundColor: "black",
         borderRadius: 12,
-        elevation: 40,
+        elevation: 20,
         shadowColor: "black",
     },
     cardName: {

@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black"
+        backgroundColor: "#e5e5e5"
     },
     background: {
         flex: 1,
@@ -23,8 +23,8 @@ export default StyleSheet.create({
         right: 0,
         bottom: 0,
         backgroundColor: "#1565C0",
-        borderWidth: 1,
-        borderColor: "white",
+        borderWidth: 2,
+        borderColor: "black",
         opacity: 0.8
     },
     modalBackground: {
@@ -73,7 +73,7 @@ export default StyleSheet.create({
         height: 38,
         borderRadius: 16,
         borderWidth: 0.6,
-        elevation: 24,
+        elevation: 44,
         shadowColor: "black",
         opacity: 1,
     },
@@ -83,7 +83,7 @@ export default StyleSheet.create({
     },
     seperator: {
         height: 1,
-        backgroundColor: "black",
+        //backgroundColor: "black",
     },
     seperator2: {
         height: 1,

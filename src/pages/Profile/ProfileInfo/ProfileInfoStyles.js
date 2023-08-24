@@ -3,12 +3,13 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "white"
     },
     row: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#979797"
+        backgroundColor: "#d8d8d8"
     },
     image: {
         flex: 1,
