@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Modal, TextInput } from "react-native";
 import Translations from "../../../languages/Translation";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Toast from 'react-native-toast-message';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RNRestart from 'react-native-restart';
@@ -29,18 +31,44 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
     },
 });
 
-function ProfileInfo({navigation}) {
+function ProfileInfo({ navigation }) {
 
     const [currentUserGuest, setCurrentUserGuest] = useState(false);
     const [userProfilePhoto, setUserProfilePhoto] = useState("https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg");
     const [userName, setUserName] = useState("");
     const [userFullName, setUserFullName] = useState("");
+    const [userNameEdit, setUserNameEdit] = useState("");
+    const [userFullNameEdit, setUserFullNameEdit] = useState("");
+    const [editProfileModal, setEditProfileModal] = useState(false);
+    const [err, setEr] = useState("");
 
     const { movieCounter, reqMovieCounter, serieCounter, activeSerieCounter, reqSerieCounter, movieListCounter, serieListCounter, language, setLanguage } = useStats();
 
     useEffect(() => {
         whichUser();
     }, []);
+
+    const toastConfig = {
+        test: internalState => (
+            <View style={{ height: 40, width: '90%', backgroundColor: "gray" }} >
+                <Text style={{ color: "white" }} >{internalState.text1} </Text>
+            </View>
+        )
+    }
+
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast config={toastConfig} ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'error',
+            text1: 'Fotoğraf ekleme güncelleme ile gelecektir.',
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 0
+        });
+    };
 
     const changeLanguage = async () => {
         const newLanguage = language === "en" ? "tr" : "en";
@@ -83,6 +111,49 @@ function ProfileInfo({navigation}) {
         }
     };
 
+    const editUserInfo = async () => {
+
+        if (!userNameEdit || !userFullNameEdit) {
+            setEr("Lütfen tüm bilgileri eksiksiz girin.");
+            return;
+        }
+
+        if (userNameEdit.length < 4 || userNameEdit.length > 18) {
+            setEr("Kullanıcı adı 4 ila 18 karakter arasında olmalıdır.");
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9]+$/.test(userNameEdit)) {
+            setEr("Kullanıcı adı sadece harf ve rakam içermelidir.");
+            return;
+        }
+
+        if (userFullNameEdit.length < 3 || userFullNameEdit.length > 26) {
+            setEr("Ad ve soyad 3 ila 26 karakter arasında olmalıdır.");
+            return;
+        }
+
+
+        const currentUserId = await AsyncStorage.getItem("userId");
+
+        const { data, error } = await supabase
+            .from("users")
+            .update({
+                userName: userNameEdit,
+                fullName: userFullNameEdit
+            })
+            .eq("userID", currentUserId);
+
+        if (error) {
+            console.error("Veri güncellenirken hata:", error);
+            return;
+        }
+
+        closeModal();
+        console.log("Veri başarıyla güncellendi.");
+
+    };
+
     const logOut = async () => {
         await AsyncStorage.setItem('rememberMe', 'false');
         await AsyncStorage.removeItem('token');
@@ -92,7 +163,18 @@ function ProfileInfo({navigation}) {
         console.log("Çıkış Yapıldı.");
     };
 
-    const logOutGuest =  () => {
+    const handlePressEditModal = () => {
+        setEditProfileModal(true);
+    }
+
+    const closeModal = () => {
+        setEditProfileModal(false);
+        setUserFullNameEdit("");
+        setUserNameEdit("");
+        setEr("");
+    };
+
+    const logOutGuest = () => {
         navigation.navigate("Login");
     };
 
@@ -131,7 +213,7 @@ function ProfileInfo({navigation}) {
                         <View style={styles.seperator} />
                         <Text style={styles.fullName}> {userFullName} </Text>
                         <View style={{ flexDirection: "row" }} >
-                            <TouchableOpacity style={styles.editBox}>
+                            <TouchableOpacity onPress={handlePressEditModal} style={styles.editBox}>
                                 <Text style={styles.editTitle} >{Translations[language].editprofile}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={logOut} style={styles.logoutBox}>
@@ -168,6 +250,49 @@ function ProfileInfo({navigation}) {
                     <Text style={styles.text}>{Translations[language].listTitle2} : {serieListCounter}</Text>
                 </View>
             </View>
+
+            <Modal
+                visible={editProfileModal}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={closeModal}
+            >
+                <TouchableOpacity
+                    style={styles.modalBackground}
+                    activeOpacity={1}
+                    onPress={closeModal}
+                >
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            style={styles.modalContent}
+                            onPress={() => { }}
+                        >
+                            <View>
+                                <Image source={{ uri: userProfilePhoto }} resizeMode="contain" style={styles.editPhoto} />
+                                <ForwardedToast />
+                                <TouchableOpacity onPress={showToastMessage} style={styles.editIcon}>
+                                    <Icon name={"camera-alt"} size={22} color={"black"} />
+                                </TouchableOpacity>
+                                <View style={styles.editBody} >
+                                    <Text style={styles.editBodyTitle}>UserName : </Text>
+                                    <TextInput style={styles.editBodyInput} placeholder={userName} value={userNameEdit} onChangeText={setUserNameEdit} autoCapitalize="none" />
+                                </View>
+                                <View style={styles.editBody} >
+                                    <Text style={styles.editBodyTitle}>FullName : </Text>
+                                    <TextInput style={styles.editBodyInput} placeholder={userFullName} value={userFullNameEdit} onChangeText={setUserFullNameEdit} />
+                                </View>
+                                {err.length > 0 &&
+                                    <Text style={styles.errorMessage} > {err} </Text>
+                                }
+                                <TouchableOpacity onPress={editUserInfo} style={styles.editButton}>
+                                    <Text style={styles.editButtonText}>Bilgileri Güncelle</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </View>
     )
 };

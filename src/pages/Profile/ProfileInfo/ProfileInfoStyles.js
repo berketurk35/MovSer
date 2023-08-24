@@ -115,5 +115,68 @@ export default StyleSheet.create({
         padding: 10,
         textAlign: "center",
         color: "white",
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.9)",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        margin: 20,
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 16,
+        borderRadius: 16,
+    },
+    editPhoto: {
+        alignSelf: "center",
+        height: Dimensions.get("window").height / 6,
+        width: Dimensions.get("window").width / 3,
+        borderRadius: 100,
+        marginBottom: 10,
+    },
+    editBody: {
+        flexDirection: "row",
+        marginTop: 20,
+        marginLeft: 20,
+    },
+    editBodyTitle: {
+        flex: 1,
+        alignSelf: "center",
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "black",
+    },
+    editBodyInput: {
+        flex: 2,
+        borderWidth: 0.5,
+        borderRadius: 16,
+        paddingHorizontal: 15,
+    },
+    editIcon: {
+        position: "absolute",
+        top: Dimensions.get("window").height / 7,
+        right: Dimensions.get("window").width / 4,
+    },
+    editButton: {
+        backgroundColor: "#1565C0",
+        borderWidth: 1,
+        borderRadius: 18,
+        borderColor: "white",
+        marginTop: 20,
+        alignSelf: "center",
+        paddingHorizontal: 20
+    },
+    editButtonText: {
+        color: "white",
+        padding: 14,
+    },
+    errorMessage: {
+        color: "red",
+        fontSize: 12,
+        alignSelf: "center",
+        paddingTop: 10,
     }
 });
