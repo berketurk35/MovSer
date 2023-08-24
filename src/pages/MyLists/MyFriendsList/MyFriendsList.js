@@ -88,21 +88,26 @@ function MyFriendsList({ navigation }) {
         setModalRemoveVisible(false);
     };
 
-    const filterMovieListByName = (list, searchMovie) => {
-        return list.filter((item) => item.listName.toLowerCase().includes(searchMovie.toLowerCase()));
-    };
+    const deleteCard = async ( listName, message) => {
+        const currentUserId = await AsyncStorage.getItem("userId");
 
-    const deleteCard = async (index) => {
-
-        updatedFriendLists.splice(index, 1);
-
-        AsyncStorage.setItem(friendListAsync, JSON.stringify(updatedFriendLists))
-            .then(() => {
-                console.log('Kart başarıyla silindi.');
-            })
-            .catch((error) => {
-                console.log('Kart silinirken bir hata oluştu:', error);
-            });
+        try {
+            const { data, error } = await supabase
+                .from("shared_lists")
+                .delete()
+                .eq("friend_id", currentUserId)
+                .eq("listName", listName)
+                .eq("user_message", message);
+        
+            if (error) {
+                console.error("Satır silinirken hata:", error);
+                return;
+            }
+            console.log("Satır başarıyla silindi.");
+            setModalRemoveVisible(false);
+        } catch (error) {
+            console.error("İşlem sırasında bir hata oluştu:", error);
+        }
     };
 
     function goToListDetails(listName, listType, uId, contentIds) {
@@ -165,7 +170,7 @@ function MyFriendsList({ navigation }) {
                                                 <View style={styles.content}>
                                                     {savedMovieList
                                                         .map((card, index) => (
-                                                            <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                            <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(card.listName, card.user_message)} />
                                                         ))}
                                                 </View>
                                             </ScrollView>

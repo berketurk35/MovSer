@@ -95,8 +95,8 @@ function MyMovieList({ navigation }) {
             return;
         }
 
-        if (cardName.length < 4 || cardName.length > 26) {
-            setEr("Kart ismi 4 ila 18 harf arasında olmalıdır.");
+        if (cardName.length < 4 || cardName.length > 24) {
+            setEr("Kart ismi 4 ila 24 harf arasında olmalıdır.");
             return;
         }
         if (!selectedImage) {
@@ -356,6 +356,7 @@ function MyMovieList({ navigation }) {
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
+                                                    maxLength={24}
                                                     placeholder={Translations[language].writeCardName}
                                                     style={styles.searchText}
                                                 />
@@ -708,7 +709,7 @@ function MyMovieList({ navigation }) {
                                             </View>
                                         )}
                                         {err.length > 0 &&
-                                        <Text style={{color: "red"}} > {err} </Text>
+                                        <Text style={{color: "red", paddingTop: 8, textAlign: "center"}} > {err} </Text>
                                         }
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
                                             <Text style={styles.buttonText} >{Translations[language].saveCard}</Text>

@@ -126,6 +126,7 @@ function MovieListDetails({ navigation, route }) {
     const shareMovieList = async () => {
         setMessageModal(false);
         setShareModal(false);
+
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
 
@@ -146,15 +147,21 @@ function MovieListDetails({ navigation, route }) {
                 console.log("Bu liste daha önce paylaşıldı.");
                 return;
             }
-
-            const { data: userDetailsData, error: userDetailsError } = await supabase
+            const { data: sentFriendsData, error: sentFriendsError } = await supabase
                 .from("users")
                 .select("*")
-                .in("userID", currentUserId);
+                .eq("userID", currentUserId);
+
+                console.log("FriendsData", sentFriendsData);
+
+            if (sentFriendsError) {
+                console.error("Arkadaş detayları alınırken hata:", sentFriendsError);
+                return;
+            }
 
             const { data, error } = await supabase
                 .from("shared_lists")
-                .insert([
+                .insert(
                     {
                         user_id: currentUserId,
                         friend_id: friendId,
@@ -162,9 +169,9 @@ function MovieListDetails({ navigation, route }) {
                         listName: listName,
                         content_ids: draggedMovies.map(item => item.movieId),
                         user_message: message,
-                        fullName: userDetailsData.fullName
+                        fullName: sentFriendsData[0].fullName
                     }
-                ])
+                )
             if (!error) {
                 console.log("Veri başarılı gitti:");
             }
@@ -212,6 +219,16 @@ function MovieListDetails({ navigation, route }) {
             if (existingMovies) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
                 updatedListDetails = JSON.parse(existingMovies);
+
+                const isAlreadyAdded = updatedListDetails.some(
+                    (movie) => movie.movieId === movieData.movieId
+                );
+
+                if (isAlreadyAdded) {
+                    console.log("Bu film zaten eklenmiş.");
+                    closeModal();
+                    return;
+                }
             }
 
             // Yeni filmi ekle

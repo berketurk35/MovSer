@@ -90,6 +90,16 @@ function ReqSeriesList({ navigation, route }) {
             if (existingSeries) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
                 updatedSeries = JSON.parse(existingSeries);
+
+                const isAlreadyAdded = updatedSeries.some(
+                    (serie) => serie.serieId === serieData.serieId
+                );
+
+                if (isAlreadyAdded) {
+                    console.log("Bu film zaten eklenmiş.");
+                    closeModal(); 
+                    return;
+                }
             }
 
             // Yeni filmi ekle

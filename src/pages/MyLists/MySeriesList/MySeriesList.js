@@ -34,6 +34,7 @@ function MySerieList({ navigation }) {
     const [selectedPlatform, setSelectedPlatform] = useState(null);
     const [selectedImage, setSelectedImage] = useState("");
     const [serieListAsync, setSerieListAsync] = useState("");
+    const [err, setEr] = useState("");
 
     const [draggedSerieList, setDraggedSerieList] = useState([]);
 
@@ -46,7 +47,7 @@ function MySerieList({ navigation }) {
         const fetchAndSetMovies = async () => {
             try {
                 const userID = await AsyncStorage.getItem('userId');
-                const asyncKey  = (userID + "serieList");
+                const asyncKey = (userID + "serieList");
                 setSerieListAsync(asyncKey);
 
                 const updatedSerieLists = await AsyncStorage.getItem(serieListAsync);
@@ -67,7 +68,7 @@ function MySerieList({ navigation }) {
     };
 
     const handleRemovePress = () => {
-        if(draggedSerieList.length > 0) { 
+        if (draggedSerieList.length > 0) {
             setModalRemoveVisible(true);
         } else {
             setModalRemoveVisible(false);
@@ -77,6 +78,7 @@ function MySerieList({ navigation }) {
     const closeModal = () => {
         setModalVisible(false);
         setCardName("");
+        setEr("");
         setPlatformVisible(false);
         setPicturesVisible(false);
         setSwiperVisible2(false);
@@ -88,6 +90,19 @@ function MySerieList({ navigation }) {
     };
 
     const saveList = async () => {
+        if (!cardName) {
+            setEr("Kart ismi boş olamaz.");
+            return;
+        }
+
+        if (cardName.length < 4 || cardName.length > 24) {
+            setEr("Kart ismi 4 ila 24 harf arasında olmalıdır.");
+            return;
+        }
+        if (!selectedImage) {
+            setEr("Kart arka plan görseli seçmelisiniz.");
+            return;
+        }
         // Verileri bir obje olarak hazırla
         const listData = {
             id: cardName,
@@ -307,7 +322,7 @@ function MySerieList({ navigation }) {
                                                 <View style={styles.content}>
                                                     {draggedSerieList
                                                         .map((card, index) => (
-                                                           <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
+                                                            <RemoveCard key={card.id} name={card.listName} onPressDelete={() => deleteCard(index)} />
                                                         ))}
                                                 </View>
                                             </ScrollView>
@@ -343,6 +358,7 @@ function MySerieList({ navigation }) {
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
+                                                    maxLength={24}
                                                     placeholder={Translations[language].writeCardName}
                                                     style={styles.searchText}
                                                 />
@@ -694,6 +710,9 @@ function MySerieList({ navigation }) {
                                                 </Swiper>
                                             </View>
                                         )}
+                                        {err.length > 0 &&
+                                            <Text style={{ color: "red", paddingTop: 8, textAlign: "center" }} > {err} </Text>
+                                        }
                                         <TouchableOpacity style={styles.button} onPress={saveList} >
                                             <Text style={styles.buttonText} >{Translations[language].saveCard}</Text>
                                         </TouchableOpacity>

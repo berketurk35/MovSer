@@ -88,6 +88,16 @@ function ReqMoviesList({ navigation }) {
             if (existingMovies) {
                 // Eğer daha önce kaydedilen filmler varsa, onları güncelle
                 updatedMovies = JSON.parse(existingMovies);
+
+                const isAlreadyAdded = updatedMovies.some(
+                    (movie) => movie.movieId === movieData.movieId
+                );
+
+                if (isAlreadyAdded) {
+                    console.log("Bu film zaten eklenmiş.");
+                    closeModal(); // İsteğe bağlı olarak modalı kapat
+                    return;
+                }
             }
 
             // Yeni filmi ekle
