@@ -219,26 +219,6 @@ export default StyleSheet.create({
         color: "green",
         fontWeight: "bold",
     },
-    modalBackground: {
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: "center",
-        margin: 20,
-
-    },
-    modalContent: {
-        backgroundColor: "white",
-        padding: 16,
-        borderRadius: 16,
-    },
-    seperator2: {
-        height: 1,
-        backgroundColor: "black",
-        marginTop: 10,
-    },
     friendList: {
         textAlign: 'center',
         fontSize: 16,
