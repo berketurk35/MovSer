@@ -46,7 +46,7 @@ function Intro({ navigation }) {
 
   return (
     <View style={styles.container} >
-      <FastImage source={require("../../images/logo.gif")} resizeMode={FastImage.resizeMode.contain} style={styles.logo} />
+      <FastImage source={require("../../images/logoo.gif")} resizeMode={FastImage.resizeMode.contain} style={styles.logo} />
     </View>
   )
 };
