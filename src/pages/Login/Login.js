@@ -133,7 +133,7 @@ function Login({ navigation }) {
                 const { data, error } = await supabase
                     .from("sneakEnterCounts")
                     .select("*")
-                    .eq("entry_date", new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "));
+                    .eq("entry_date", new Date().toISOString().split("T")[0]);
     
                 if (error) {
                     console.error("Sneak Enter Sayısı Alınırken Hata:", error);
@@ -146,7 +146,7 @@ function Login({ navigation }) {
                         .from("sneakEnterCounts")
                         .insert([
                             {
-                                entry_date: new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "),
+                                entry_date: new Date().toISOString().split("T")[0],
                                 count: 1,
                             },
                         ]);
@@ -157,7 +157,7 @@ function Login({ navigation }) {
                         .from("sneakEnterCounts")
                         .upsert([
                             {
-                                entry_date: new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "),
+                                entry_date: new Date().toISOString().split("T")[0],
                                 count: currentCount + 1,
                             },
                         ]);
