@@ -109,7 +109,7 @@ function Login({ navigation }) {
     const showToastMessage = () => {
         Toast.show({
             type: 'error',
-            text1: 'Apple ile giriş güncelleme ile gelecektir.',
+            text1: Translations[language].toastApple,
             visibilityTime: 3000,
             autoHide: true,
             topOffset: 10

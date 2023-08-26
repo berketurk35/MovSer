@@ -22,6 +22,7 @@ export default StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
         alignSelf: "center",
+        textAlign: "center",
     },
     image: {
         width: Dimensions.get("screen").width / 2,

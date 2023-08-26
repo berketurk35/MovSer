@@ -264,15 +264,15 @@ function ReqSeriesList({ navigation, route }) {
 
     const onPressAdd = (serie) => {
         Alert.alert(
-            'Dizi Taşıma',
-            `"${serie.serieName}" Dizisini aktif izlediğim diziler listesine taşımak ve buradan silmek istediğinize emin misiniz ? `,
+            Translations[language].serieMoveTitle,
+            `"${serie.serieName}", ${Translations[language].serieMoveText1}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Taşı ve Sil',
+                    text: Translations[language].moveDelete,
                     style: 'destructive',
                     onPress: () => moveDeleteSerie(serie),
                 },

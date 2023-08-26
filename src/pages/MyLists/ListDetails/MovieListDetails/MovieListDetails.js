@@ -109,7 +109,7 @@ function MovieListDetails({ navigation, route }) {
     const showToastMessage = () => {
         Toast.show({
             type: 'success',
-            text1: 'Liste başarılı bir şekilde paylaşıldı.',
+            text1: Translations[language].toastListSharedSuccess,
             visibilityTime: 4000,
             autoHide: true,
             topOffset: 10
@@ -119,7 +119,7 @@ function MovieListDetails({ navigation, route }) {
     const showErrorMessage = () => {
         Toast.show({
             type: 'error',
-            text1: 'Bu liste daha önce paylaşıldı.',
+            text1: Translations[language].toastListAlreadyShared,
             visibilityTime: 4000,
             autoHide: true,
             topOffset: 10
@@ -699,7 +699,7 @@ function MovieListDetails({ navigation, route }) {
                                             maxLength={160}
                                             value={message}
                                             onChangeText={setMessage}
-                                            placeholder="Mesajınızı buraya yazın (max 160) "
+                                            placeholder={Translations[language].writeYourMessage}
                                         />
                                         <TouchableOpacity onPress={shareMovieList} style={styles.button}>
                                             <Text style={styles.buttonText2} >{Translations[language].shareList}</Text>

@@ -103,16 +103,16 @@ function MyMovieList({ navigation }) {
 
     const saveList = async () => {
         if (!cardName) {
-            setEr("Kart ismi boş olamaz.");
+            setEr(Translations[language].cardNameNotEmpty);
             return;
         }
 
-        if (cardName.length < 4 || cardName.length > 24) {
-            setEr("Kart ismi 4 ila 24 harf arasında olmalıdır.");
+        if (cardName.length < 4 || cardName.length > 40) {
+            setEr(Translations[language].cardNameLength);
             return;
         }
         if (!selectedImage) {
-            setEr("Kart arka plan görseli seçmelisiniz.");
+            setEr(Translations[language].selectCardBackground);
             return;
         }
         // Verileri bir obje olarak hazırla
@@ -361,7 +361,7 @@ function MyMovieList({ navigation }) {
                                                     value={cardName}
                                                     autoCapitalize="sentences"
                                                     onChangeText={setCardName}
-                                                    maxLength={24}
+                                                    maxLength={40}
                                                     placeholder={Translations[language].writeCardName}
                                                     style={styles.searchText}
                                                 />

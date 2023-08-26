@@ -250,7 +250,7 @@ function Friends({ navigation }) {
                 return;
             }
 
-            // Durumu güncelle ve incoming requests listesini yeniden çekin
+            // Durumu güncelle ve incoming requests listesini yeniden çek
             fetchInComingRequests();
         } catch (error) {
             console.error("İstek reddetme hatası:", error);
@@ -286,7 +286,7 @@ function Friends({ navigation }) {
                 return;
             }
 
-            // Kullanıcıların istek durumunu kontrol etmek için friendship_requests tablosundan istekleri çekin
+            // Kullanıcıların istek durumunu kontrol etmek için friendship_requests tablosundan istekleri çek
             const { data: sentRequestsData, error: sentRequestsError } = await supabase
                 .from("friendship_requests")
                 .select("friend_id, status")
@@ -298,10 +298,10 @@ function Friends({ navigation }) {
                 return;
             }
 
-            // İstek gönderilen kullanıcıların friend_id değerlerini bir diziye aktarın
+            // İstek gönderilen kullanıcıların friend_id değerlerini bir diziye aktar
             const sentRequestFriendIds = sentRequestsData.map(request => request.friend_id);
 
-            // Kullanıcılar listesini döngüye alarak her bir kullanıcının istek durumunu kontrol edin
+            // Kullanıcılar listesini döngüye alarak her bir kullanıcının istek durumunu kontrol ett
             const updatedSearchResults = data.map(user => ({
                 ...user,
                 isAlreadySent: sentRequestFriendIds.includes(user.userID),
@@ -401,7 +401,6 @@ function Friends({ navigation }) {
             />
         ));
     };
-
 
     const renderSentRequest = () => {
         const filteredSelectedFriends = selectedFriends.filter(

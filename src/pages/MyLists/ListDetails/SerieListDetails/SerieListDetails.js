@@ -111,7 +111,7 @@ function SerieListDetails({ navigation, route }) {
     const showToastMessage = () => {
         Toast.show({
             type: 'success',
-            text1: 'Liste başarılı bir şekilde paylaşıldı.',
+            text1: Translations[language].toastListSharedSuccess,
             visibilityTime: 4000,
             autoHide: true,
             topOffset: 10
@@ -121,7 +121,7 @@ function SerieListDetails({ navigation, route }) {
     const showErrorMessage = () => {
         Toast.show({
             type: 'error',
-            text1: 'Bu liste daha önce paylaşıldı.',
+            text1: Translations[language].toastListAlreadyShared,
             visibilityTime: 4000,
             autoHide: true,
             topOffset: 10
@@ -401,15 +401,15 @@ function SerieListDetails({ navigation, route }) {
 
     const handleSerieDelete = (item) => {
         Alert.alert(
-            'Dizi Silme',
-            `"${item.serieName}" Dizisini silmek istediğinize emin misiniz?`,
+            Translations[language].serieDeleteTitle,
+            `"${item.serieName}",${Translations[language].serieDeleteText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Sil',
+                    text: Translations[language].delete,
                     style: 'destructive',
                     onPress: () => deleteSerie(item),
                 },
@@ -698,7 +698,7 @@ function SerieListDetails({ navigation, route }) {
                                             maxLength={160}
                                             value={message}
                                             onChangeText={setMessage}
-                                            placeholder="Mesajınızı buraya yazın (max 160) "
+                                            placeholder={Translations[language].writeYourMessage}
                                         />
                                         <TouchableOpacity onPress={shareMovieList} style={styles.button}>
                                             <Text style={styles.buttonText2} >{Translations[language].shareList}</Text>

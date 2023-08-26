@@ -63,7 +63,7 @@ function ProfileInfo({ navigation }) {
     const showToastMessage = () => {
         Toast.show({
             type: 'error',
-            text1: 'Fotoğraf ekleme güncelleme ile gelecektir.',
+            text1: Translations[language].toastUpdatePhoto,
             visibilityTime: 3000,
             autoHide: true,
             topOffset: 0
@@ -114,22 +114,22 @@ function ProfileInfo({ navigation }) {
     const editUserInfo = async () => {
 
         if (!userNameEdit || !userFullNameEdit) {
-            setEr("Lütfen tüm bilgileri eksiksiz girin.");
+            setEr(Translations[language].errAllinfo);
             return;
         }
 
         if (userNameEdit.length < 4 || userNameEdit.length > 18) {
-            setEr("Kullanıcı adı 4 ila 18 karakter arasında olmalıdır.");
+            setEr(Translations[language].errUsernameLength);
             return;
         }
 
         if (!/^[a-zA-Z0-9]+$/.test(userNameEdit)) {
-            setEr("Kullanıcı adı sadece harf ve rakam içermelidir.");
+            setEr(Translations[language].errUsernameCharacters);
             return;
         }
 
         if (userFullNameEdit.length < 3 || userFullNameEdit.length > 26) {
-            setEr("Ad ve soyad 3 ila 26 karakter arasında olmalıdır.");
+            setEr(Translations[language].errFullNameLength);
             return;
         }
 
@@ -275,18 +275,18 @@ function ProfileInfo({ navigation }) {
                                     <Icon name={"camera-alt"} size={22} color={"black"} />
                                 </TouchableOpacity>
                                 <View style={styles.editBody} >
-                                    <Text style={styles.editBodyTitle}>UserName : </Text>
+                                    <Text style={styles.editBodyTitle}>{Translations[language].username}: </Text>
                                     <TextInput style={styles.editBodyInput} placeholder={userName} value={userNameEdit} onChangeText={setUserNameEdit} autoCapitalize="none" />
                                 </View>
                                 <View style={styles.editBody} >
-                                    <Text style={styles.editBodyTitle}>FullName : </Text>
+                                    <Text style={styles.editBodyTitle}>{Translations[language].fullname}: </Text>
                                     <TextInput style={styles.editBodyInput} placeholder={userFullName} value={userFullNameEdit} onChangeText={setUserFullNameEdit} />
                                 </View>
                                 {err.length > 0 &&
                                     <Text style={styles.errorMessage} > {err} </Text>
                                 }
                                 <TouchableOpacity onPress={editUserInfo} style={styles.editButton}>
-                                    <Text style={styles.editButtonText}>Bilgileri Güncelle</Text>
+                                    <Text style={styles.editButtonText}>{Translations[language].updateInfo}</Text>
                                 </TouchableOpacity>
                             </View>
                         </TouchableOpacity>

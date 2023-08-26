@@ -110,7 +110,7 @@ function Register({ navigation }) {
     const showToastMessage = () => {
         Toast.show({
             type: 'success',
-            text1: 'Kayıt başarılı, Giriş yapabilirsiniz.',
+            text1: Translations[language].toastsuccessRegistration,
             visibilityTime: 2000,
             autoHide: true,
             topOffset: 10
@@ -120,22 +120,22 @@ function Register({ navigation }) {
     const signUpwithEmail = async () => {
         try {
             if (!email || !password || !username || !fullName) {
-                setEr("Lütfen tüm bilgileri eksiksiz girin.");
+                setEr(Translations[language].errAllinfo);
                 return;
             }
 
             if (username.length < 4 || username.length > 18) {
-                setEr("Kullanıcı adı 4 ila 18 karakter arasında olmalıdır.");
+                setEr(Translations[language].errUsernameLength);
                 return;
             }
 
             if (!/^[a-zA-Z0-9]+$/.test(username)) {
-                setEr("Kullanıcı adı sadece harf ve rakam içermelidir.");
+                setEr(Translations[language].errUsernameCharacters);
                 return;
             }
 
             if (fullName.length < 3 || fullName.length > 26) {
-                setEr("Ad ve soyad 3 ila 26 karakter arasında olmalıdır.");
+                setEr(Translations[language].errFullNameLength);
                 return;
             }
 
@@ -174,13 +174,13 @@ function Register({ navigation }) {
 
             } else if (error) {
                 if (error.message.includes('Unable to validate email address: invalid format')) {
-                    setEr('E-posta adresi geçerli formatta değil.');
+                    setEr(Translations[language].errInvalidEmailFormat);
                 } else if (error.message.includes('Signup requires a valid password')) {
-                    setEr('Geçerli bir şifre girmeniz gerekmektedir.');
+                    setEr(Translations[language].errPasswordRequired);
                 } else if (error.message.includes('Password should be at least 6 characters')) {
-                    setEr('Şifre en az 6 karakter olmalıdır.');
+                    setEr(Translations[language].errPasswordLength);
                 } else if (error.message.includes('User already registered')) {
-                    setEr('Kullanıcı zaten kayıtlı');
+                    setEr(Translations[language].errUserAlreadyExists);
                 } else {
                     setEr(error.message);
                 }

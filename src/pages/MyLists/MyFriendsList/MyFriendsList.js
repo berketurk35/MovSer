@@ -136,7 +136,6 @@ function MyFriendsList({ navigation }) {
                         </View>
                         <View style={{ flex: 1 }}>
                             <FlatList
-                                inverted={true} 
                                 data={savedMovieList.filter(
                                     (item) =>
                                         item.listName.toLowerCase().includes(searchMovie.toLowerCase())

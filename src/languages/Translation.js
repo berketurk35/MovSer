@@ -127,6 +127,28 @@ const Translations = {
         editprofile: "Edit Profile",
         logOut: "Log Out",
         removeData: "Remove Data",
+
+        toastApple: "Sign in with Apple will come with an update.",
+        toastsuccessRegistration: "Registration successful, you can login.",
+        toastUpdatePhoto: "Photo upload will be available with an update.",
+        toastListSharedSuccess: "List shared successfully.",
+        toastListAlreadyShared: "This list has been shared before.",
+
+        errAllinfo: "Please enter all information completely.",
+        errUsernameLength: "Username must be between 4 and 18 characters.",
+        errUsernameCharacters: "Username can only contain letters and numbers.",
+        errFullNameLength: "Full name must be between 3 and 26 characters.",
+        errInvalidEmailFormat: "Invalid email format.",
+        errPasswordRequired: "You must enter a valid password.",
+        errPasswordLength: "Password must be at least 6 characters.",
+        errUserAlreadyExists: "User already exists.",
+
+        cardNameNotEmpty: "Card name cannot be empty.",
+        cardNameLength: "Card name must be between 4 and 40 characters.",
+        selectCardBackground: "You must choose a card background image.",
+        
+        writeYourMessage: "Write your message here (max 160)",
+        updateInfo: "Update Information",
     },
     tr: {
         movies: "Filmler",
@@ -256,6 +278,30 @@ const Translations = {
         editprofile: "Profili Düzenle",
         logOut: "Çıkış Yap",
         removeData: "Veriyi Sil",
+
+        toastApple: "Apple ile giriş güncelleme ile gelecektir.",
+        toastsuccessRegistration: "Kayıt başarılı, Giriş yapabilirsiniz.",
+        toastUpdatePhoto: "Fotoğraf ekleme güncelleme ile gelecektir.",
+        toastListSharedSuccess: "Liste başarılı bir şekilde paylaşıldı.",
+        toastListAlreadyShared: "Bu liste daha önce paylaşıldı.",
+
+
+        errAllinfo: "Lütfen tüm bilgileri eksiksiz girin.",
+        errUsernameLength: "Kullanıcı adı 4 ila 18 karakter arasında olmalıdır.",
+        errUsernameCharacters: "Kullanıcı adı sadece harf ve rakam içermelidir.",
+        errFullNameLength: "Ad ve soyad 3 ila 26 karakter arasında olmalıdır.",
+        errInvalidEmailFormat: "E-posta adresi geçerli formatta değil.",
+        errPasswordRequired: "Geçerli bir şifre girmeniz gerekmektedir.",
+        errPasswordLength: "Şifre en az 6 karakter olmalıdır.",
+        errUserAlreadyExists: "Kullanıcı zaten kayıtlı.",
+
+        cardNameNotEmpty: "Kart ismi boş olamaz.",
+        cardNameLength: "Kart ismi 4 ila 40 harf arasında olmalıdır.",
+        selectCardBackground: "Kart arka plan görseli seçmelisiniz.",
+
+        writeYourMessage: "Mesajınızı buraya yazın (max 160)",
+        updateInfo: "Bilgileri Güncelle",
+        
     },
 };
 

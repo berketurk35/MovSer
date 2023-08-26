@@ -239,15 +239,15 @@ function SeriesList({ navigation, route }) {
 
     const handleSerieDelete = (serie) => {
         Alert.alert(
-            'Dizi Silme',
-            `"${serie.serieName}" Dizisini silmek istediğinize emin misiniz?`,
+            Translations[language].serieDeleteTitle,
+            `"${serie.serieName}", ${Translations[language].serieDeleteText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Sil',
+                    text: Translations[language].delete,
                     style: 'destructive',
                     onPress: () => deleteSerie(serie),
                 },

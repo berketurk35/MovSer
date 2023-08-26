@@ -13,7 +13,7 @@ function FriendListCard({ id, cardName, listType, onPressDetail, cardMessage, fu
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={onPressDetail} activeOpacity={1}  >
-                <ImageBackground source={require("../../../images/11.png")} style={styles.card}>
+                <ImageBackground source={require("../../../images/1.png")} style={styles.card}>
                     <Text style={styles.cardMessageTitle}>{Translations[language].cardMessage}</Text>
                     <Text style={styles.cardMessage}>{cardMessage} </Text>
                 </ImageBackground>
