@@ -382,10 +382,13 @@ function Friends({ navigation }) {
     };
 
     const renderReceivedRequests = () => {
-        return receivedRequests.filter(
+        const filteredRequests = receivedRequests.filter(
             (requestSender) =>
-                requestSender.userName.toLowerCase().includes(searchFriend.toLowerCase())
-        ).map(requestSender => (
+                requestSender.userName.toLowerCase().includes(searchFriend.toLowerCase()) ||
+                requestSender.fullName.toLowerCase().includes(searchFriend.toLowerCase())
+        );
+
+        return filteredRequests.map(requestSender => (
             <FriendBox
                 key={requestSender.userID}
                 profilePhoto={requestSender.profile_photo_url}
@@ -399,11 +402,14 @@ function Friends({ navigation }) {
         ));
     };
 
+
     const renderSentRequest = () => {
-        return selectedFriends.filter(
+        const filteredSelectedFriends = selectedFriends.filter(
             (friend) =>
-                friend.userName.toLowerCase().includes(searchFriend.toLowerCase())
-        ).map(friend => (
+                friend.userName.toLowerCase().includes(searchFriend.toLowerCase()) ||
+                friend.fullName.toLowerCase().includes(searchFriend.toLowerCase())
+        );
+        return filteredSelectedFriends.map(friend => (
             <FriendBox
                 key={friend.userID}
                 profilePhoto={friend.profile_photo_url}
@@ -414,10 +420,12 @@ function Friends({ navigation }) {
     };
 
     const renderFriends = () => {
-        return friends.filter(
+        const filteredFriends = friends.filter(
             (friend) =>
-                friend.userName.toLowerCase().includes(searchFriend.toLowerCase())
-        ).map(friend => (
+                friend.userName.toLowerCase().includes(searchFriend.toLowerCase()) ||
+                friend.fullName.toLowerCase().includes(searchFriend.toLowerCase())
+        );
+        return filteredFriends.map(friend => (
             <FriendBox
                 key={friend.userID}
                 profilePhoto={friend.profile_photo_url}

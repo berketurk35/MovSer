@@ -115,10 +115,7 @@ function FriendListDetails2({ navigation, route }) {
                         ))}
                     </View>
                 </ScrollView>
-
-
             </KeyboardAvoidingView>
-
         </SafeAreaView>
     )
 };

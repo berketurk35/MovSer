@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { View, Button, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import styles from "./LoginStyles";
 import Translations from "../../languages/Translation";
+import Toast from 'react-native-toast-message';
 import { useStats } from "../../Context/StatContext";
 
 import Icon from "react-native-vector-icons/Entypo";
@@ -36,61 +37,57 @@ function Login({ navigation }) {
     const { language, setLanguage } = useStats();
 
     const signInWithGoogle = async () => {
-        await GoogleSignin.hasPlayServices();
-        const userInfo = await GoogleSignin.signIn();
-    
-        const username = userInfo.user.email.split('@')[0];
-    
-        // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol et
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: userInfo.user.email,
-            password: userInfo.user.email,
-        });
-        if (data.user) {
-            // Kayıtlı kullanıcıysa giriş yap
-            await AsyncStorage.setItem('token', data.session.refresh_token);
-            await AsyncStorage.setItem("userId", data.user.id);
-            await AsyncStorage.setItem('rememberMe', 'true');
-            navigation.navigate("TabNavigator");
-        } else {
-            // Kayıtlı değilse yeni bir kayıt oluştur
-            const {data: signUpResponse} = await supabase.auth.signUp({
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+
+            const username = userInfo.user.email.split('@')[0];
+
+            // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol et
+            const { data, error } = await supabase.auth.signInWithPassword({
                 email: userInfo.user.email,
                 password: userInfo.user.email,
-                options: {
-                    data: {
-                        username: username,
-                    },
-                }
             });
-            if (signUpResponse) {
-                const { error: signUpError } = await supabase
-                    .from('users')
-                    .insert({ email: userInfo.user.email, userID: signUpResponse.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
+            if (data.user) {
+                // Kayıtlı kullanıcıysa giriş yap
+                await AsyncStorage.setItem('token', data.session.refresh_token);
+                await AsyncStorage.setItem("userId", data.user.id);
+                await AsyncStorage.setItem('rememberMe', 'true');
+                navigation.navigate("TabNavigator");
+            } else {
+                // Kayıtlı değilse yeni bir kayıt oluştur
+                const { data: signUpResponse } = await supabase.auth.signUp({
+                    email: userInfo.user.email,
+                    password: userInfo.user.email,
+                    options: {
+                        data: {
+                            username: username,
+                        },
+                    }
+                });
+                if (signUpResponse) {
+                    const { error: signUpError } = await supabase
+                        .from('users')
+                        .insert({ email: userInfo.user.email, userID: signUpResponse.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
 
-                if (!signUpError) {
-                    await AsyncStorage.setItem('token', signUpResponse.session.refresh_token);
-                    await AsyncStorage.setItem("userId", signUpResponse.user.id);
-                    await AsyncStorage.setItem('rememberMe', 'true');
-                    navigation.navigate("TabNavigator");
+                    if (!signUpError) {
+                        await AsyncStorage.setItem('token', signUpResponse.session.refresh_token);
+                        await AsyncStorage.setItem("userId", signUpResponse.user.id);
+                        await AsyncStorage.setItem('rememberMe', 'true');
+                        navigation.navigate("TabNavigator");
+                    }
+                }
+
+                if (signUpResponse.error) {
+                    console.log("Hata oluştu:", signUpResponse.error);
                 }
             }
-    
-            if (signUpResponse.error) {
-                console.log("Hata oluştu:", signUpResponse.error);
+        } catch (error) {
+            if (error.code !== statusCodes.SIGN_IN_CANCELLED) {
+                console.log("Google Giriş Hatası:", error);
             }
         }
-    };
-    
 
-    const signOut = async () => {
-        try {
-            await GoogleSignin.signOut();
-            console.log("Çıkış Yapıldı");
-
-        } catch (error) {
-            console.error(error);
-        }
     };
 
     const changeLanguage = async () => {
@@ -105,6 +102,20 @@ function Login({ navigation }) {
         }
     };
 
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'error',
+            text1: 'Apple ile giriş güncelleme ile gelecektir.',
+            visibilityTime: 3000,
+            autoHide: true,
+            topOffset: 10
+        });
+    };
+
     function goToMailPage() {
         navigation.navigate("MailP");
     }
@@ -114,9 +125,56 @@ function Login({ navigation }) {
     }
 
     const sneakEnter = async () => {
-        navigation.navigate("TabNavigator");
-        await AsyncStorage.setItem("userId", "guest");
-    }
+        const userId = await AsyncStorage.getItem("userId");
+    
+        if (userId === "guest") {
+            // Burada Supabase'e istek göndererek sneak enter sayısını güncelle
+            try {
+                const { data, error } = await supabase
+                    .from("sneakEnterCounts")
+                    .select("*")
+                    .eq("entry_date", new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "));
+    
+                if (error) {
+                    console.error("Sneak Enter Sayısı Alınırken Hata:", error);
+                    return;
+                }
+    
+                if (data.length === 0) {
+                    // Bugün ilk defa sneak enter yapıldı, yeni bir kayıt oluştur
+                    await supabase
+                        .from("sneakEnterCounts")
+                        .insert([
+                            {
+                                entry_date: new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "),
+                                count: 1,
+                            },
+                        ]);
+                } else {
+                    // Bugün daha önce sneak enter yapıldı, sayıyı artır
+                    const currentCount = data[0].count;
+                    await supabase
+                        .from("sneakEnterCounts")
+                        .upsert([
+                            {
+                                entry_date: new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString().substring(0, 16).replace("T", " "),
+                                count: currentCount + 1,
+                            },
+                        ]);
+                }
+    
+                // Ana sayfaya yönlendir
+                navigation.navigate("TabNavigator");
+            } catch (error) {
+                console.error("Sneak Enter İşlemi Sırasında Hata:", error);
+            }
+        } else {
+            // Kayıtlı kullanıcı, normal giriş yap
+            navigation.navigate("TabNavigator");
+            await AsyncStorage.setItem("userId", "guest");
+        }
+    };
+    
 
     return (
         <View style={styles.container}>
@@ -129,10 +187,11 @@ function Login({ navigation }) {
                 )
                 }
             </TouchableOpacity>
+            <ForwardedToast />
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
 
             <CustomButton name={"google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
-            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={signOut} disabled={false} />
+            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={showToastMessage} disabled={false} />
             <CustomButton name={"mail"} text={Translations[language].signInMail} color="black" onPress={goToMailPage} />
 
             <TouchableOpacity onPress={goToRegisterPage} style={styles.underText} >

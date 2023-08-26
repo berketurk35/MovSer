@@ -43,55 +43,61 @@ function Register({ navigation }) {
     const { language, setLanguage } = useStats();
 
     const signInWithGoogle = async () => {
-        await GoogleSignin.hasPlayServices();
-        const userInfo = await GoogleSignin.signIn();
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
 
-        const username = userInfo.user.email.split('@')[0];
+            const username = userInfo.user.email.split('@')[0];
 
-        // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol et
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: userInfo.user.email,
-            password: userInfo.user.email,
-        });
-        if (data.user) {
-            // Kayıtlı kullanıcıysa giriş yap
-            await AsyncStorage.setItem('token', data.session.refresh_token);
-            await AsyncStorage.setItem("userId", data.user.id);
-            await AsyncStorage.setItem('rememberMe', 'true');
-            navigation.navigate("TabNavigator");
-        } else {
-            // Kayıtlı değilse yeni bir kayıt oluştur
-            const { data: signUpResponse } = await supabase.auth.signUp({
+            // Veritabanında kullanıcının kayıtlı olup olmadığını kontrol et
+            const { data, error } = await supabase.auth.signInWithPassword({
                 email: userInfo.user.email,
                 password: userInfo.user.email,
-                options: {
-                    data: {
-                        username: username,
-                    },
-                }
             });
-            if (signUpResponse) {
-                const { error: signUpError } = await supabase
-                    .from('users')
-                    .insert({ email: userInfo.user.email, userID: signUpResponse.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
+            if (data.user) {
+                // Kayıtlı kullanıcıysa giriş yap
+                await AsyncStorage.setItem('token', data.session.refresh_token);
+                await AsyncStorage.setItem("userId", data.user.id);
+                await AsyncStorage.setItem('rememberMe', 'true');
+                navigation.navigate("TabNavigator");
+            } else {
+                // Kayıtlı değilse yeni bir kayıt oluştur
+                const { data: signUpResponse } = await supabase.auth.signUp({
+                    email: userInfo.user.email,
+                    password: userInfo.user.email,
+                    options: {
+                        data: {
+                            username: username,
+                        },
+                    }
+                });
+                if (signUpResponse) {
+                    const { error: signUpError } = await supabase
+                        .from('users')
+                        .insert({ email: userInfo.user.email, userID: signUpResponse.user.id, userName: username, fullName: userInfo.user.name, profile_photo_url: userInfo.user.photo })
 
-                if (!signUpError) {
-                    await AsyncStorage.setItem('token', signUpResponse.session.refresh_token);
-                    await AsyncStorage.setItem("userId", signUpResponse.user.id);
-                    await AsyncStorage.setItem('rememberMe', 'true');
-                    navigation.navigate("TabNavigator");
+                    if (!signUpError) {
+                        await AsyncStorage.setItem('token', signUpResponse.session.refresh_token);
+                        await AsyncStorage.setItem("userId", signUpResponse.user.id);
+                        await AsyncStorage.setItem('rememberMe', 'true');
+                        navigation.navigate("TabNavigator");
+                    }
+                }
+
+                if (signUpResponse.error) {
+                    console.log("Hata oluştu:", signUpResponse.error);
                 }
             }
-
-            if (signUpResponse.error) {
-                console.log("Hata oluştu:", signUpResponse.error);
+        } catch (error) {
+            if (error.code !== statusCodes.SIGN_IN_CANCELLED) {
+                console.log("Google Giriş Hatası:", error);
             }
         }
     };
 
     const toastConfig = {
         test: internalState => (
-            <View style={{height: 80, width: '90%', backgroundColor: "yellow" }} >
+            <View style={{ height: 80, width: '90%', backgroundColor: "yellow" }} >
                 <Text>{internalState.text1} </Text>
             </View>
         )
@@ -105,7 +111,7 @@ function Register({ navigation }) {
         Toast.show({
             type: 'success',
             text1: 'Kayıt başarılı, Giriş yapabilirsiniz.',
-            visibilityTime: 2000, 
+            visibilityTime: 2000,
             autoHide: true,
             topOffset: 10
         });
@@ -155,7 +161,7 @@ function Register({ navigation }) {
                             profile_photo_url: "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg",
                         },
                     ]);
-                
+
                 setEmail("");
                 setPassword("");
                 setFullName("");
@@ -164,8 +170,8 @@ function Register({ navigation }) {
                 showToastMessage();
                 setTimeout(() => {
                     navigation.navigate("MailP");
-                  }, 2000);
-                
+                }, 2000);
+
             } else if (error) {
                 if (error.message.includes('Unable to validate email address: invalid format')) {
                     setEr('E-posta adresi geçerli formatta değil.');

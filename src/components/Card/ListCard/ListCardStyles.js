@@ -25,7 +25,7 @@ export default StyleSheet.create({
     },
     image: {
         width: Dimensions.get("screen").width / 2,
-        height: 149,
+        height: Dimensions.get("screen").height / 5.8,
         borderRadius: 12,
     },
     iconDel: {

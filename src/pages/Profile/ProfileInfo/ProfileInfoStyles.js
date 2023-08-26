@@ -127,7 +127,7 @@ export default StyleSheet.create({
         margin: 20,
     },
     modalContent: {
-        backgroundColor: "white",
+        backgroundColor: "#e5e5e5",
         padding: 16,
         borderRadius: 16,
     },

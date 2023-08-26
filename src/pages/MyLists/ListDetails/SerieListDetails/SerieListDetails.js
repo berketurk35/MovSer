@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef } from "react";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,6 +9,7 @@ import { Dimensions } from "react-native";
 
 import Input from "../../../../components/Input/Input";
 import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
+import Toast from 'react-native-toast-message';
 
 import { FAB } from "react-native-paper";
 
@@ -103,6 +104,30 @@ function SerieListDetails({ navigation, route }) {
         return () => clearInterval(interval);
     }, []);
 
+    const ForwardedToast = forwardRef((props, ref) => {
+        return <Toast ref={ref} {...props} />;
+    });
+
+    const showToastMessage = () => {
+        Toast.show({
+            type: 'success',
+            text1: 'Liste başarılı bir şekilde paylaşıldı.',
+            visibilityTime: 4000,
+            autoHide: true,
+            topOffset: 10
+        });
+    };
+
+    const showErrorMessage = () => {
+        Toast.show({
+            type: 'error',
+            text1: 'Bu liste daha önce paylaşıldı.',
+            visibilityTime: 4000,
+            autoHide: true,
+            topOffset: 10
+        });
+    };
+
     const fetchFriends = async () => {
         try {
             const currentUserId = await AsyncStorage.getItem("userId");
@@ -158,6 +183,7 @@ function SerieListDetails({ navigation, route }) {
 
             if (existingShare && existingShare.length > 0) {
                 console.log("Bu liste daha önce paylaşıldı.");
+                showErrorMessage();
                 return;
             }
             
@@ -181,6 +207,7 @@ function SerieListDetails({ navigation, route }) {
                 ])
             if (!error) {
                 console.log("Veri başarılı gitti:");
+                showToastMessage();
             }
 
             if (error) {
@@ -541,7 +568,6 @@ function SerieListDetails({ navigation, route }) {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.seperator} />
                     {isVisible &&
                             <Text style={styles.info}>{Translations[language].info3} </Text>
                         }
@@ -554,6 +580,7 @@ function SerieListDetails({ navigation, route }) {
                             renderItem={renderItem}
                         />
                     </View>
+                    <ForwardedToast />
                     <FAB
                         style={styles.fab}
                         icon="plus"

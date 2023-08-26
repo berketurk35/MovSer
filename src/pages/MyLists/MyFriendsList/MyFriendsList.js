@@ -88,7 +88,7 @@ function MyFriendsList({ navigation }) {
         setModalRemoveVisible(false);
     };
 
-    const deleteCard = async ( listName, message) => {
+    const deleteCard = async (listName, message) => {
         const currentUserId = await AsyncStorage.getItem("userId");
 
         try {
@@ -98,7 +98,7 @@ function MyFriendsList({ navigation }) {
                 .eq("friend_id", currentUserId)
                 .eq("listName", listName)
                 .eq("user_message", message);
-        
+
             if (error) {
                 console.error("Satır silinirken hata:", error);
                 return;
@@ -134,16 +134,34 @@ function MyFriendsList({ navigation }) {
                                 <Text style={styles.removeText}>{Translations[language].remove}</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{ flex: 1 }} >
-                            <ScrollView>
-                                {savedMovieList.filter(
+                        <View style={{ flex: 1 }}>
+                            <FlatList
+                                inverted={true} 
+                                data={savedMovieList.filter(
                                     (item) =>
                                         item.listName.toLowerCase().includes(searchMovie.toLowerCase())
-                                ).map((item) => (
-                                    <FriendListCard key={item.id} cardName={item.listName} listType={item.listType} cardMessage={item.user_message} fullName={item.fullName} onPressDetail={() => goToListDetails(item.listName, item.listType, item.user_id, item.content_ids)} />
-                                ))}
-                            </ScrollView>
+                                )}
+                                keyExtractor={(item) => item.id.toString()}
+                                renderItem={({ item }) => (
+                                    <FriendListCard
+                                        key={item.id}
+                                        cardName={item.listName}
+                                        listType={item.listType}
+                                        cardMessage={item.user_message}
+                                        fullName={item.fullName}
+                                        onPressDetail={() =>
+                                            goToListDetails(
+                                                item.listName,
+                                                item.listType,
+                                                item.user_id,
+                                                item.content_ids
+                                            )
+                                        }
+                                    />
+                                )}
+                            />
                         </View>
+
                     </KeyboardAvoidingView>
                     <Modal
                         visible={modalRemoveVisible}

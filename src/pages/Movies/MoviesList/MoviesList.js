@@ -58,22 +58,27 @@ function MoviesList({ navigation, route }) {
     useEffect(() => {
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedMovies = [Movie, ...savedMovies];
-            setSavedMovies(updatedMovies);
-            AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies))
-                .then(() => {
-                    console.log("Film başarıyla eklendi.");
-                    fetchSavedMovies();
-                })
-                .catch((error) => {
-                    console.log("Film eklenirken bir hata oluştu:", error);
-                });
-
+    
+            // Eğer bir film aktarıldıysa ve daha önce kaydedilmemişse, savedMovies dizisine ekleyin
+            const isAlreadyAdded = savedMovies.some(movie => movie.movieId === Movie.movieId);
+            if (!isAlreadyAdded) {
+                const updatedMovies = [Movie, ...savedMovies];
+                setSavedMovies(updatedMovies);
+                AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies))
+                    .then(() => {
+                        console.log("Film başarıyla eklendi.");
+                        fetchSavedMovies();
+                    })
+                    .catch((error) => {
+                        console.log("Film eklenirken bir hata oluştu:", error);
+                    });
+            }
+    
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
         }
     }, [route.params]);
+    
 
     const fetchSavedMovies = async () => {
         try {

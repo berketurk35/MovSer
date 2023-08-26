@@ -572,7 +572,6 @@ function MovieListDetails({ navigation, route }) {
                     {isVisible && 
                     <Text style={styles.info}>{Translations[language].info2}</Text> 
                     }
-                    <ForwardedToast />
                     <View style={{ flex: 1 }} >
                         <DraggableFlatList
                             ref={ref}
@@ -582,6 +581,7 @@ function MovieListDetails({ navigation, route }) {
                             renderItem={renderItem}
                         />
                     </View>
+                    <ForwardedToast />
                     <FAB
                         style={styles.fab}
                         icon="plus"

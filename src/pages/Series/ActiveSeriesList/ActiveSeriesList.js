@@ -59,18 +59,20 @@ function ActiveSeriesList({ navigation, route }) {
     useEffect(() => {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
-            // Eğer bir film aktarıldıysa, savedMovies dizisine ekleyin
-            const updatedSeries = [Serie, ...savedActiveSeries];
-            setSavedActiveSeries(updatedSeries);
-            AsyncStorage.setItem(savedActiveSeriesAsync, JSON.stringify(updatedSeries))
-                .then(() => {
-                    console.log("Dizi başarıyla eklendi.");
-                    fetchSavedSeries();
-                })
-                .catch((error) => {
-                    console.log("Dizi eklenirken bir hata oluştu:", error);
-                });
 
+            const isAlreadyAdded = savedActiveSeries.some(serie => serie.serieId === serie.serieId);
+            if (!isAlreadyAdded) {
+                const updatedSeries = [Serie, ...savedActiveSeries];
+                setSavedActiveSeries(updatedSeries);
+                AsyncStorage.setItem(savedActiveSeriesAsync, JSON.stringify(updatedSeries))
+                    .then(() => {
+                        console.log("Dizi başarıyla eklendi.");
+                        fetchSavedSeries();
+                    })
+                    .catch((error) => {
+                        console.log("Dizi eklenirken bir hata oluştu:", error);
+                    });
+            }
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Serie: null });
         }
@@ -127,7 +129,7 @@ function ActiveSeriesList({ navigation, route }) {
 
                 if (isAlreadyAdded) {
                     console.log("Bu film zaten eklenmiş.");
-                    closeModal(); 
+                    closeModal();
                     return;
                 }
             }
