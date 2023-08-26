@@ -228,16 +228,8 @@ function MyMovieList({ navigation }) {
                 return require("../../../images/2.png");
             case "3":
                 return require("../../../images/3.png");
-            case "4":
-                return require("../../../images/4.png");
-            case "5":
-                return require("../../../images/5.png");
             case "6":
                 return require("../../../images/6.png");
-            case "7":
-                return require("../../../images/7.png");
-            case "8":
-                return require("../../../images/8.png");
             case "9":
                 return require("../../../images/9.png");
             case "10":
@@ -471,41 +463,11 @@ function MyMovieList({ navigation }) {
                                                             source={require("../../../images/3.png")}
                                                         />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick2("4")}>
-                                                        <Image
-                                                            style={styles.miniImg}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/4.png")}
-                                                        />
-                                                    </TouchableOpacity>
-                                                </View>
-                                                <View style={styles.bodyRow}>
-                                                    <TouchableOpacity onPress={() => handleImageClick2("5")}>
-                                                        <Image
-                                                            style={styles.miniImg}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/5.png")}
-                                                        />
-                                                    </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick2("6")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
                                                             source={require("../../../images/6.png")}
-                                                        />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick2("7")}>
-                                                        <Image
-                                                            style={styles.miniImg}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/7.png")}
-                                                        />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick2("8")}>
-                                                        <Image
-                                                            style={styles.miniImg}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/8.png")}
                                                         />
                                                     </TouchableOpacity>
                                                 </View>
@@ -659,35 +621,7 @@ function MyMovieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/4.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/5.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
                                                             source={require("../../../images/6.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/7.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/8.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
