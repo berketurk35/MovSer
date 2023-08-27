@@ -212,9 +212,9 @@ function MySerieList({ navigation }) {
             case "exxen":
                 return require("../../../images/netflix.png");
             case "apptv":
-                return require("../../../images/netflix.png");
+                return require("../../../images/apptv.png");
             case "hbmax":
-                return require("../../../images/netflix.png");
+                return require("../../../images/hbmax.png");
             default:
                 return;
         }
@@ -425,14 +425,14 @@ function MySerieList({ navigation }) {
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/apptv.png")}
                                                         />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick("hbmax")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/hbmax.png")}
                                                         />
                                                     </TouchableOpacity>
                                                 </View>
@@ -568,14 +568,14 @@ function MySerieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/apptv.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/hbmax.png")}
                                                         />
                                                     </View>
                                                 </Swiper>
