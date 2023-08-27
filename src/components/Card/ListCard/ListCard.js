@@ -21,7 +21,7 @@ function ListCard({
         disney: require("../../../images/disney.png"),
         blutv: require("../../../images/blutv.png"),
         mubi: require("../../../images/mubi.png"),
-        exxen: require("../../../images/netflix.png"),
+        exxen: require("../../../images/exxen.png"),
         apptv: require("../../../images/apptv.png"),
         hbmax: require("../../../images/hbmax.png"),
         1: require("../../../images/1.png"),

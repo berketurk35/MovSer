@@ -210,7 +210,7 @@ function MySerieList({ navigation }) {
             case "mubi":
                 return require("../../../images/mubi.png");
             case "exxen":
-                return require("../../../images/netflix.png");
+                return require("../../../images/exxen.png");
             case "apptv":
                 return require("../../../images/apptv.png");
             case "hbmax":
@@ -418,7 +418,7 @@ function MySerieList({ navigation }) {
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/exxen.png")}
                                                         />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick("apptv")}>
@@ -561,7 +561,7 @@ function MySerieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
+                                                            source={require("../../../images/exxen.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
