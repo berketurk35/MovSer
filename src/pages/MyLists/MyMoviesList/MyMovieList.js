@@ -201,16 +201,16 @@ function MyMovieList({ navigation }) {
         switch (platform) {
             case "netflix":
                 return require("../../../images/netflix.png");
-            case "prx":
-                return require("../../../images/prx.png");
-            case "dis":
-                return require("../../../images/dis.png");
-            case "bltv":
-                return require("../../../images/bltv.png");
+            case "prime":
+                return require("../../../images/prime.png");
+            case "disney":
+                return require("../../../images/disney.png");
+            case "blutv":
+                return require("../../../images/blutv.png");
             case "mubi":
                 return require("../../../images/mubi.png");
-            case "ex":
-                return require("../../../images/ex.png");
+            case "exxen":
+                return require("../../../images/exxen.png");
             case "apptv":
                 return require("../../../images/apptv.png");
             case "hbmax":
@@ -382,25 +382,25 @@ function MyMovieList({ navigation }) {
                                                             source={require("../../../images/netflix.png")}
                                                         />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick("prx")}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("prime")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/prx.png")}
+                                                            source={require("../../../images/prime.png")}
                                                         />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick("dis")}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("disney")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/dis.png")}
+                                                            source={require("../../../images/disney.png")}
                                                         />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick("bltv")}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("blutv")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/bltv.png")}
+                                                            source={require("../../../images/blutv.png")}
                                                         />
                                                     </TouchableOpacity>
                                                 </View>
@@ -412,11 +412,11 @@ function MyMovieList({ navigation }) {
                                                             source={require("../../../images/mubi.png")}
                                                         />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleImageClick("ex")}>
+                                                    <TouchableOpacity onPress={() => handleImageClick("exxen")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/ex.png")}
+                                                            source={require("../../../images/exxen.png")}
                                                         />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick("apptv")}>
@@ -531,21 +531,21 @@ function MyMovieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/prx.png")}
+                                                            source={require("../../../images/prime.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/dis.png")}
+                                                            source={require("../../../images/disney.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/bltv.png")}
+                                                            source={require("../../../images/blutv.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
@@ -559,7 +559,7 @@ function MyMovieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/ex.png")}
+                                                            source={require("../../../images/exxen.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>

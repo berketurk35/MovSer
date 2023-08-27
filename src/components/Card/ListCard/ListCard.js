@@ -17,11 +17,11 @@ function ListCard({
 
     const Images = {
         netflix: require("../../../images/netflix.png"),
-        prx: require("../../../images/prx.png"),
-        dis: require("../../../images/dis.png"),
-        bltv: require("../../../images/bltv.png"),
+        prime: require("../../../images/prime.png"),
+        disney: require("../../../images/disney.png"),
+        blutv: require("../../../images/blutv.png"),
         mubi: require("../../../images/mubi.png"),
-        ex: require("../../../images/ex.png"),
+        exxen: require("../../../images/exxen.png"),
         apptv: require("../../../images/apptv.png"),
         hbmax: require("../../../images/hbmax.png"),
         1: require("../../../images/1.png"),
