@@ -60,11 +60,6 @@ export default StyleSheet.create({
         alignSelf: "center",
         paddingHorizontal: 10,
     },
-    seperator: {
-        height: 1,
-        backgroundColor: "black",
-    },
-    
     body: {
         height: 150,
     },
