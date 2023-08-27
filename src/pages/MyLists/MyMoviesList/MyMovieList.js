@@ -210,11 +210,11 @@ function MyMovieList({ navigation }) {
             case "mubi":
                 return require("../../../images/mubi.png");
             case "exxen":
-                return require("../../../images/exxen.png");
+                return require("../../../images/netflix.png");
             case "apptv":
-                return require("../../../images/apptv.png");
+                return require("../../../images/netflix.png");
             case "hbmax":
-                return require("../../../images/hbmax.png");
+                return require("../../../images/netflix.png");
             default:
                 return;
         }
@@ -416,21 +416,21 @@ function MyMovieList({ navigation }) {
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/exxen.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick("apptv")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/apptv.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleImageClick("hbmax")}>
                                                         <Image
                                                             style={styles.miniImg}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/hbmax.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </TouchableOpacity>
                                                 </View>
@@ -559,21 +559,21 @@ function MyMovieList({ navigation }) {
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/exxen.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/apptv.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </View>
                                                     <View style={styles.slide}>
                                                         <Image
                                                             style={styles.image}
                                                             resizeMode="contain"
-                                                            source={require("../../../images/hbmax.png")}
+                                                            source={require("../../../images/netflix.png")}
                                                         />
                                                     </View>
                                                 </Swiper>
