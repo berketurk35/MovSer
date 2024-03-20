@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStats } from "../Context/StatContext";
 import Translations from "../languages/Translation";
+import { colors } from "../colors/colors";
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -15,15 +16,19 @@ function TopNavigator() {
 
   return (
     <Tab.Navigator screenOptions={{
-      tabBarActiveTintColor: "black",
-      tabBarInactiveTintColor: "gray",
+      tabBarStyle: {
+        backgroundColor: colors.primary,
+      },
+      tabBarActiveTintColor: "white",
+      tabBarInactiveTintColor: "white",
       tabBarLabelStyle: {
         textTransform: "capitalize",
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: "bold",
       },
       tabBarIndicatorStyle : {
-        backgroundColor: "black"
+        backgroundColor: "black",
+        height: 3,
       }
 
     }}>

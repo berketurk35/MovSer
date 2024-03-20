@@ -1,9 +1,10 @@
 import React, { useState, forwardRef } from "react";
-import { View, Button, Text, TouchableOpacity, TextInput, Image } from "react-native";
+import { View, Button, Text, TouchableOpacity, TextInput, Image, StatusBar } from "react-native";
 import styles from "./LoginStyles";
 import Translations from "../../languages/Translation";
 import Toast from 'react-native-toast-message';
 import { useStats } from "../../Context/StatContext";
+import { colors } from "../../colors/colors";
 
 import Icon from "react-native-vector-icons/Entypo";
 
@@ -126,7 +127,7 @@ function Login({ navigation }) {
 
     const sneakEnter = async () => {
         const userId = await AsyncStorage.getItem("userId");
-    
+
         if (userId === "guest") {
             // Burada Supabase'e istek göndererek sneak enter sayısını güncelle
             try {
@@ -134,12 +135,12 @@ function Login({ navigation }) {
                     .from("sneakEnterCounts")
                     .select("*")
                     .eq("entry_date", new Date().toISOString().split("T")[0]);
-    
+
                 if (error) {
                     console.error("Sneak Enter Sayısı Alınırken Hata:", error);
                     return;
                 }
-    
+
                 if (data.length === 0) {
                     // Bugün ilk defa sneak enter yapıldı, yeni bir kayıt oluştur
                     await supabase
@@ -162,7 +163,7 @@ function Login({ navigation }) {
                             },
                         ]);
                 }
-    
+
                 // Ana sayfaya yönlendir
                 navigation.navigate("TabNavigator");
             } catch (error) {
@@ -174,10 +175,11 @@ function Login({ navigation }) {
             await AsyncStorage.setItem("userId", "guest");
         }
     };
-    
+
 
     return (
         <View style={styles.container}>
+            <StatusBar backgroundColor={colors.primary} />
             <TouchableOpacity onPress={changeLanguage} style={styles.languageBox}>
                 <Text style={styles.languageText} >{Translations[language].selectLang} </Text>
                 {language === "en" ? (
@@ -190,19 +192,19 @@ function Login({ navigation }) {
             <ForwardedToast />
             <Image source={require("../../images/logo.png")} resizeMode="contain" style={styles.logo} />
 
-            <CustomButton name={"google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
-            <CustomButton name={"apple1"} text={Translations[language].signInApple} color="black" onPress={showToastMessage} disabled={false} />
-            <CustomButton name={"mail"} text={Translations[language].signInMail} color="black" onPress={goToMailPage} />
+            <CustomButton name={"logo-google"} text={Translations[language].signInGoogle} color="white" onPress={signInWithGoogle} />
+            <CustomButton name={"logo-apple"} text={Translations[language].signInApple} color="white" onPress={showToastMessage} disabled={false} />
+            <CustomButton name={"mail"} text={Translations[language].signInMail} color="white" onPress={goToMailPage} />
 
             <TouchableOpacity onPress={goToRegisterPage} style={styles.underText} >
                 <Text> {Translations[language].noAccount} </Text>
                 <Text style={{ color: "black", fontWeight: "bold" }} > {Translations[language].register} </Text>
             </TouchableOpacity>
 
-            <Text style={{ marginBottom: 10, fontSize: 12 }} >{Translations[language].or}</Text>
+            <Text style={styles.or} >{Translations[language].or}</Text>
 
             <TouchableOpacity onPress={sneakEnter} style={styles.box}>
-                <Icon name={"mask"} size={18} color={"black"} style={styles.icon} />
+                <Icon name={"mask"} size={18} color={"white"} style={styles.icon} />
                 <View style={styles.seperator} />
                 <View style={{ flex: 1, justifyContent: "center" }} >
                     <Text style={styles.text} >{Translations[language].sneak}    </Text>

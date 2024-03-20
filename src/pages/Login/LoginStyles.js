@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../colors/colors";
 
 export default StyleSheet.create({
     container: {
@@ -34,14 +35,15 @@ export default StyleSheet.create({
     languageText: {
         paddingBottom: 6,
         fontSize: 12,
+        color: "black"
     },
     box: {
         borderWidth: 1,
-        borderRadius: 16,
+        borderRadius: 12,
         flexDirection: "row",
         margin: 10,
-        width: Dimensions.get("window").width / 2,
-        backgroundColor: "#f5fcff"
+        width: Dimensions.get("window").width / 1.5,
+        backgroundColor: colors.primary,
     },
     icon: {
         padding: 10,
@@ -53,8 +55,8 @@ export default StyleSheet.create({
         alignContent: "center",
         alignItems: "center",
         fontWeight: "500",
-        fontSize: 10,
-        color: "black"
+        fontSize: 12,
+        color: "white"
     },
     text2: {
         alignSelf: "center",
@@ -63,10 +65,15 @@ export default StyleSheet.create({
         alignItems: "center",
         fontWeight: "500",
         fontSize: 8,
-        color: "black"
+        color: "white"
     },
     seperator: {
-        height: 40 ,
-        borderWidth: 0.5,
+        borderWidth: 0.6,
+        borderColor: "white",
+    },
+    or: {
+        marginBottom: 10,
+        fontSize: 14,
+        color: "black",
     }
 })

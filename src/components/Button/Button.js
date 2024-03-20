@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import styles from "./ButtonStyles";
 
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/Ionicons";
 
 function Button({ name, text, color, onPress, disabled }) {
     return (

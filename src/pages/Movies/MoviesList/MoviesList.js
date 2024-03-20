@@ -1,12 +1,11 @@
 import React, { useState, useEffect, forwardRef } from "react";
 import { useStats } from "../../../Context/StatContext";
 import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
-import styles from "./MovieListStyles";
+import styles from "./MoviesListStyles";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
 import Input from "../../../components/Input/Input";
 
-import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
@@ -301,14 +300,13 @@ function MoviesList({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                <View style={styles.filterContainer} >
                     <View style={styles.search} >
-                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
+                        <Icon name="search" size={16} color={"black"} style={styles.icon} />
+                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
                     </View>
                 </View>
-                <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedMovies
@@ -331,14 +329,11 @@ function MoviesList({ navigation, route }) {
                     </View>
                 </ScrollView>
 
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    label={Translations[language].addMovie}
-                    color="white"
-                    onPress={handleFabPress}
-                />
-
+                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
+                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
+                    <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
+                </TouchableOpacity>
+              
             </KeyboardAvoidingView>
 
             <Modal
