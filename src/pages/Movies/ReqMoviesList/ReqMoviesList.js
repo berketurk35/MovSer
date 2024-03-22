@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, Image } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
 import ReqMoviesCard from "../../../components/Card/ReqMoviesCard/ReqMoviesCard";
 import CustomMovieModal from "../../../components/Modal/CustomMovieModal/CustomMovieModal";
+import SearchFilter1 from "../../../components/SearchFilter/SearchFilter1/SearchFilter1";
+import Fab from "../../../components/Fab/Fab";
 
-import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -192,7 +193,7 @@ function ReqMoviesList({ navigation }) {
     };
 
     const handleMovieSelect = async (movie) => {
-        
+
         setSelectedMovie(movie);
         setSearchText(movie.title);
         getMovieDetails(movie.id);
@@ -239,22 +240,6 @@ function ReqMoviesList({ navigation }) {
             });
     };
 
-    const renderMovieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.title} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
-                </View>
-
-            </View>
-        </TouchableOpacity>
-    );
-
     const instaDate = () => {
         const date = new Date();
         const dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
@@ -297,13 +282,11 @@ function ReqMoviesList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={styles.filterContainer} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
-                    </View>
-                </View>
+                <SearchFilter1
+                    placeholder={Translations[language].filterMovie}
+                    value={searchMovie}
+                    onChangeText={setSearchMovie}
+                />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedMovies
@@ -329,10 +312,10 @@ function ReqMoviesList({ navigation }) {
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
-                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
-                    <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
-                </TouchableOpacity>
+                <Fab
+                    onPress={handleFabPress}
+                    text={Translations[language].addMovie}
+                />
 
             </KeyboardAvoidingView>
 

@@ -6,35 +6,9 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: "#e5e5e5",
     },
-    filterContainer: {
-        flexDirection: "row",
-        backgroundColor: colors.primary,
-    },
     content: {
         flex: 1,
         position: "relative",
-    },
-    fab: {
-        flexDirection: "row",
-        padding: 10,
-        position: "absolute",
-        margin: 12,
-        right: 0,
-        bottom: 0,
-        backgroundColor: colors.primary,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: "black",
-        opacity: 0.9,
-    },
-    fabColor: {
-        color: "white",
-        fontWeight: "bold",
-        margin: 4,
-        textAlign: "center",
-    },
-    fabIcon: {
-        margin: 2,
     },
     modalBackground: {
         flex: 1,
@@ -44,22 +18,11 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         margin: 20,
-
     },
     modalContent: {
         backgroundColor: "white",
         padding: 16,
         borderRadius: 16,
-    },
-    search: {
-        flex: 1,
-        flexDirection: "row",
-        backgroundColor: "white",
-        marginLeft: 30,
-        marginVertical: 10,
-        height: 40,
-        borderRadius: 12,
-        borderWidth: 1,
     },
     removeBox: {
         flexDirection: "row",
@@ -106,11 +69,6 @@ export default StyleSheet.create({
         height: 1,
         backgroundColor: "black",
         marginTop: 10,
-    },
-    seperator: {
-        height: 1,
-        backgroundColor: "black",
-        marginVertical: 6,
     },
     imageBack: {
         paddingTop: 10,

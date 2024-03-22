@@ -11,11 +11,10 @@ import styles from "./MySeriesListStyles";
 import ListCard from "../../../components/Card/ListCard/ListCard";
 import RemoveCard from "../../../components/Card/RemoveCard/RemoveCard";
 
-import { FAB } from "react-native-paper";
-import Icon from "react-native-vector-icons/Ionicons";
-import Translations from "../../../languages/Translation";
+import SearchFilter2 from "../../../components/SearchFilter/SearchFilter2/SearchFilter2";
+import Fab from "../../../components/Fab/Fab";
 
-import Swiper from "react-native-swiper";
+import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -262,17 +261,13 @@ function MySerieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={styles.filterContainer} >
-                            <View style={styles.search} >
-                                <Icon name="search" size={16} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
-                                    onChangeText={setSearchSerie} />
-                            </View>
-                            <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
-                                <Icon name="remove-circle" size={16} color={"red"} />
-                                <Text style={styles.removeText}>{Translations[language].remove}</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <SearchFilter2
+                            placeholder={Translations[language].filterCard}
+                            value={searchSerie}
+                            onChangeText={setSearchSerie}
+                            onPress={handleRemovePress}
+                            text={Translations[language].remove}
+                        />
                         {isVisible &&
                             <Text style={styles.info}>{Translations[language].info1} </Text>
                         }
@@ -293,10 +288,8 @@ function MySerieList({ navigation }) {
                                 )}
                             />
                         </View>
-                        <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
-                            <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
-                            <Text style={styles.fabColor} >{Translations[language].addCard}</Text>
-                        </TouchableOpacity>
+
+                        <Fab onPress={handleFabPress} text={Translations[language].addCard} />
 
                     </KeyboardAvoidingView>
                     <Modal

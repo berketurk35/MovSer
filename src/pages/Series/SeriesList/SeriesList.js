@@ -4,9 +4,10 @@ import { useStats } from "../../../Context/StatContext";
 import styles from "./SeriesListStyles";
 
 import SeriesCard from "../../../components/Card/SeriesCard/SeriesCard";
-
 import CustomSerieModal from "../../../components/Modal/CustomSerieModal/CustomSerieModal";
-import Icon from "react-native-vector-icons/Ionicons";
+import SearchFilter1 from "../../../components/SearchFilter/SearchFilter1/SearchFilter1";
+import Fab from "../../../components/Fab/Fab";
+
 import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -58,7 +59,7 @@ function SeriesList({ navigation, route }) {
     useEffect(() => {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
-            
+
             const isAlreadyAdded = savedSeries.some(serie => serie.serieId === serie.serieId);
             if (!isAlreadyAdded) {
                 const updatedSeries = [Serie, ...savedSeries];
@@ -267,32 +268,14 @@ function SeriesList({ navigation, route }) {
             });
     };
 
-    const renderSerieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleSerieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.name} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
-                </View>
-
-            </View>
-        </TouchableOpacity>
-    );
-
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={styles.filterContainer} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={16} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
-                            onChangeText={setSearchSerie} />
-                    </View>
-                </View>
+                <SearchFilter1
+                    placeholder={Translations[language].filterSerie}
+                    value={searchSerie}
+                    onChangeText={setSearchSerie}
+                />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedSeries
@@ -317,10 +300,7 @@ function SeriesList({ navigation, route }) {
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
-                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
-                    <Text style={styles.fabColor} >{Translations[language].addSerie}</Text>
-                </TouchableOpacity>
+                <Fab onPress={handleFabPress} text={Translations[language].addSerie} />
 
             </KeyboardAvoidingView>
 

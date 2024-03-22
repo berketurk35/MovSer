@@ -9,7 +9,8 @@ import styles from "./MyFriendsListStyles";
 import FriendListCard from "../../../components/Card/FriendListCard/FriendListCard";
 import RemoveCard from "../../../components/Card/RemoveCard/RemoveCard";
 
-import Icon from "react-native-vector-icons/Ionicons";
+import SearchFilter2 from "../../../components/SearchFilter/SearchFilter2/SearchFilter2";
+
 import Translations from "../../../languages/Translation";
 
 import { createClient } from "@supabase/supabase-js";
@@ -123,17 +124,13 @@ function MyFriendsList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={styles.filterContainer} >
-                            <View style={styles.search} >
-                                <Icon name="search" size={16} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchMovie}
-                                    onChangeText={setSearchMovie} />
-                            </View>
-                            <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
-                                <Icon name="remove-circle" size={16} color={"red"} />
-                                <Text style={styles.removeText}>{Translations[language].remove}</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <SearchFilter2
+                            placeholder={Translations[language].filterCard}
+                            value={searchMovie}
+                            onChangeText={setSearchMovie}
+                            onPress={handleRemovePress}
+                            text={Translations[language].remove}
+                        />
                         <View style={{ flex: 1 }}>
                             <FlatList
                                 data={savedMovieList.filter(

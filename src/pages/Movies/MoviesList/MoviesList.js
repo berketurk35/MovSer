@@ -1,12 +1,13 @@
-import React, { useState, useEffect, forwardRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, SafeAreaView, Alert, ScrollView, KeyboardAvoidingView } from "react-native";
 import styles from "./MoviesListStyles";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
 import CustomMovieModal from "../../../components/Modal/CustomMovieModal/CustomMovieModal";
+import SearchFilter1 from "../../../components/SearchFilter/SearchFilter1/SearchFilter1";
+import Fab from "../../../components/Fab/Fab";
 
-import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -78,7 +79,6 @@ function MoviesList({ navigation, route }) {
         }
     }, [route.params]);
 
-
     const fetchSavedMovies = async () => {
         try {
             const movies = await AsyncStorage.getItem(savedMoviesAsync);
@@ -87,15 +87,6 @@ function MoviesList({ navigation, route }) {
             }
         } catch (error) {
             console.log('Hata: ', error);
-        }
-    };
-
-    const clearData = async () => {
-        try {
-            await AsyncStorage.clear();
-            console.log('Veriler başarıyla sıfırlandı.');
-        } catch (error) {
-            console.log('Veriler sıfırlanırken bir hata oluştu:', error);
         }
     };
 
@@ -281,32 +272,14 @@ function MoviesList({ navigation, route }) {
             });
     };
 
-    const renderMovieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleMovieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.title} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-
-
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={styles.filterContainer} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={16} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
-                    </View>
-                </View>
+                <SearchFilter1
+                    placeholder={Translations[language].filterMovie}
+                    value={searchMovie}
+                    onChangeText={setSearchMovie}
+                />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedMovies
@@ -329,10 +302,7 @@ function MoviesList({ navigation, route }) {
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
-                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
-                    <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
-                </TouchableOpacity>
+                <Fab onPress={handleFabPress} text={Translations[language].addMovie} />
 
             </KeyboardAvoidingView>
 
