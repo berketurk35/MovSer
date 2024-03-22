@@ -319,7 +319,7 @@ function SeriesList({ navigation, route }) {
 
                 <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
                     <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
-                    <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
+                    <Text style={styles.fabColor} >{Translations[language].addSerie}</Text>
                 </TouchableOpacity>
 
             </KeyboardAvoidingView>

@@ -4,9 +4,8 @@ import { useStats } from "../../../Context/StatContext";
 import styles from "./ActiveSeriesListStyles";
 
 import SeriesCard from "../../../components/Card/SeriesCard/SeriesCard";
-import Input from "../../../components/Input/Input";
 
-import { FAB } from "react-native-paper";
+import CustomSerieModal from "../../../components/Modal/CustomSerieModal/CustomSerieModal";
 import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
@@ -269,22 +268,6 @@ function ActiveSeriesList({ navigation, route }) {
             });
     };
 
-    const renderSerieItem = ({ item }) => (
-        <TouchableOpacity onPress={() => handleSerieSelect(item)}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                    source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
-                />
-                <View>
-                    <Text>{item.name} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
-                </View>
-
-            </View>
-        </TouchableOpacity>
-    );
-
     const onPressAdd = (serie) => {
         Alert.alert(
             Translations[language].serieMoveTitle,
@@ -320,14 +303,13 @@ function ActiveSeriesList({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                <View style={styles.filterContainer} >
                     <View style={styles.search} >
-                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
+                        <Icon name="search" size={16} color={"black"} style={styles.icon} />
+                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
                             onChangeText={setSearchSerie} />
                     </View>
                 </View>
-                <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedActiveSeries
@@ -354,84 +336,35 @@ function ActiveSeriesList({ navigation, route }) {
                             ))}
                     </View>
                 </ScrollView>
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    label={Translations[language].addSerie}
-                    color="white"
-                    onPress={handleFabPress}
-                />
+
+                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
+                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
+                    <Text style={styles.fabColor} >{Translations[language].addSerie}</Text>
+                </TouchableOpacity>
 
             </KeyboardAvoidingView>
 
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity
-                    style={styles.modalBackground}
-                    activeOpacity={1}
-                    onPress={closeModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.modalContent}
-                            onPress={() => { }}
-                        >
-                            <View>
-                                <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                    <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder={Translations[language].searchSerie}
-                                        onFocus={handleSearchBarPress}
-                                        style={styles.searchText}
-                                    />
-                                </View>
+            <CustomSerieModal
+                modalVisible={modalVisible}
+                closeModal={closeModal}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                searchResults={searchResults}
+                setSelectedSerie={setSelectedSerie}
+                selectedSerie={selectedSerie}
+                handleTextChange={handleTextChange}
+                handleSearchBarPress={handleSearchBarPress}
+                handleSerieSelect={handleSerieSelect}
+                saveSerie={saveSerie}
+                Translations={Translations}
+                language={language}
+                formatDate={formatDate}
+                categoryText={categoryText}
+                seasons={seasons}
+                episodes={episodes}
+                IMAGE_BASE_URL={IMAGE_BASE_URL}
+            />
 
-                                {selectedSerie ? (
-                                    <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={Translations[language].selectedSerie} text={selectedSerie.name} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={Translations[language].releaseDate} text={formatDate(selectedSerie.first_air_date)} />
-                                            </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={Translations[language].score} text={selectedSerie.vote_average.toFixed(1)} />
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={Translations[language].numberSeasons} text={seasons} />
-                                            </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={Translations[language].numberEpisodes} text={episodes} />
-                                            </View>
-                                        </View>
-                                        <Input label={Translations[language].categories} text={categoryText} />
-
-                                        <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                            <Text style={styles.buttonText} >{Translations[language].saveSerie}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderSerieItem}
-                                    />
-                                )}
-
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
         </SafeAreaView>
     )
 };
