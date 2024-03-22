@@ -1,23 +1,40 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#e5e5e5",
     },
+    filterContainer: {
+        flexDirection: "row",
+        backgroundColor: colors.primary,
+    },
     content: {
         flex: 1,
         position: "relative",
     },
     fab: {
+        flexDirection: "row",
+        padding: 10,
         position: "absolute",
         margin: 12,
         right: 0,
         bottom: 0,
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
+        borderRadius: 12,
         borderWidth: 2,
         borderColor: "black",
-        opacity: 0.8
+        opacity: 0.9,
+    },
+    fabColor: {
+        color: "white",
+        fontWeight: "bold",
+        margin: 4,
+        textAlign: "center",
+    },
+    fabIcon: {
+        margin: 2,
     },
     modalBackground: {
         flex: 1,
@@ -37,15 +54,12 @@ export default StyleSheet.create({
     search: {
         flex: 1,
         flexDirection: "row",
-        backgroundColor: "white", //#FF95AB
+        backgroundColor: "white",
         marginLeft: 30,
         marginVertical: 10,
-        height: 38,
-        borderRadius: 16,
-        borderWidth: 0.6,
-        elevation: 44,
-        shadowColor: "black",
-        opacity: 1,
+        height: 40,
+        borderRadius: 12,
+        borderWidth: 1,
     },
     removeBox: {
         flexDirection: "row",

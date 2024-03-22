@@ -262,10 +262,10 @@ function MySerieList({ navigation }) {
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >
-                        <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                        <View style={styles.filterContainer} >
                             <View style={styles.search} >
-                                <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
+                                <Icon name="search" size={16} color={"black"} style={styles.icon} />
+                                <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterCard} placeholderTextColor={"black"} value={searchSerie}
                                     onChangeText={setSearchSerie} />
                             </View>
                             <TouchableOpacity onPress={handleRemovePress} style={styles.removeBox}>
@@ -293,13 +293,10 @@ function MySerieList({ navigation }) {
                                 )}
                             />
                         </View>
-                        <FAB
-                            style={styles.fab}
-                            icon="plus"
-                            label={Translations[language].addCard}
-                            color="white"
-                            onPress={handleFabPress}
-                        />
+                        <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
+                            <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
+                            <Text style={styles.fabColor} >{Translations[language].addCard}</Text>
+                        </TouchableOpacity>
 
                     </KeyboardAvoidingView>
                     <Modal
@@ -509,152 +506,26 @@ function MySerieList({ navigation }) {
                                         {swiperVisible && (
                                             <View style={styles.body}>
                                                 <Text style={styles.preview} >{Translations[language].preview}</Text>
-                                                <Swiper
-                                                    showsButtons={true}
-                                                    dotColor="white"
-                                                    showsPagination={true}
-
-                                                >
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={getPlatformImage(selectedPlatform)}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/netflix.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/prime.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/disney.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/blutv.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/mubi.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/exxen.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/apptv.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/hbmax.png")}
-                                                        />
-                                                    </View>
-                                                </Swiper>
+                                                <View style={styles.slide}>
+                                                    <Image
+                                                        style={styles.image}
+                                                        resizeMode="contain"
+                                                        source={getPlatformImage(selectedPlatform)}
+                                                    />
+                                                </View>
                                             </View>
                                         )}
 
                                         {swiperVisible2 && (
                                             <View style={styles.body}>
                                                 <Text style={styles.preview} >{Translations[language].preview}</Text>
-                                                <Swiper
-                                                    showsButtons={true}
-                                                    dotColor="white"
-                                                    showsPagination={true}
-
-                                                >
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={getCategoryImage(selectedPlatform)}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/1.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/2.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/3.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/6.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/9.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/10.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/11.png")}
-                                                        />
-                                                    </View>
-                                                    <View style={styles.slide}>
-                                                        <Image
-                                                            style={styles.image}
-                                                            resizeMode="contain"
-                                                            source={require("../../../images/12.png")}
-                                                        />
-                                                    </View>
-                                                </Swiper>
+                                                <View style={styles.slide}>
+                                                    <Image
+                                                        style={styles.image}
+                                                        resizeMode="contain"
+                                                        source={getCategoryImage(selectedPlatform)}
+                                                    />
+                                                </View>
                                             </View>
                                         )}
                                         {err.length > 0 &&
