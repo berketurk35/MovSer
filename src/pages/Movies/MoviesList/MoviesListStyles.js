@@ -8,7 +8,7 @@ export default StyleSheet.create({
     },
     filterContainer: {
         flexDirection: "row",
-        backgroundColor: "#457b9d",
+        backgroundColor: colors.primary,
     },
     search: {
         flex: 1,
@@ -43,7 +43,7 @@ export default StyleSheet.create({
         margin: 12,
         right: 0,
         bottom: 0,
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.primary,
         borderRadius: 12,
         borderWidth: 2,
         borderColor: "black",

@@ -11,7 +11,6 @@ import ReqMoviesList from '../pages/Movies/ReqMoviesList/ReqMoviesList';
 function TopNavigator() {
 
   const Tab = createMaterialTopTabNavigator();
-
   const { language, setLanguage } = useStats();
 
   return (
@@ -26,7 +25,7 @@ function TopNavigator() {
         fontSize: 13,
         fontWeight: "bold",
       },
-      tabBarIndicatorStyle : {
+      tabBarIndicatorStyle: {
         backgroundColor: "black",
         height: 3,
       }

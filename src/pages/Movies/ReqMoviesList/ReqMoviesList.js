@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, Image } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
 import ReqMoviesCard from "../../../components/Card/ReqMoviesCard/ReqMoviesCard";
-import Input from "../../../components/Input/Input";
+import CustomMovieModal from "../../../components/Modal/CustomMovieModal/CustomMovieModal";
 
-import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
 
@@ -298,14 +297,13 @@ function ReqMoviesList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
+                <View style={styles.filterContainer} >
                     <View style={styles.search} >
                         <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
+                        <TextInput style={{ fontSize: 13, flex: 1 }} fontSize={12} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
                             onChangeText={setSearchMovie} />
                     </View>
                 </View>
-                <View style={styles.seperator} />
                 <ScrollView>
                     <View style={styles.content}>
                         {savedMovies
@@ -330,74 +328,33 @@ function ReqMoviesList({ navigation }) {
                             ))}
                     </View>
                 </ScrollView>
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    label={Translations[language].addMovie}
-                    color="white"
-                    onPress={handleFabPress}
-                />
+
+                <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
+                    <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
+                    <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
+                </TouchableOpacity>
+
             </KeyboardAvoidingView>
 
-            <Modal
+            <CustomMovieModal
                 visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity
-                    style={styles.modalBackground}
-                    activeOpacity={1}
-                    onPress={closeModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.modalContent}
-                            onPress={() => { }}
-                        >
-                            <View>
-                                <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                    <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder={Translations[language].searchMovie}
-                                        onFocus={handleSearchBarPress}
-                                        style={styles.searchText}
-                                    />
-                                </View>
+                closeModal={closeModal}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                searchResults={searchResults}
+                setSelectedMovie={setSelectedMovie}
+                selectedMovie={selectedMovie}
+                handleTextChange={handleTextChange}
+                handleSearchBarPress={handleSearchBarPress}
+                handleMovieSelect={handleMovieSelect}
+                saveMovie={saveMovie}
+                Translations={Translations}
+                language={language}
+                formatDate={formatDate}
+                categoryText={categoryText}
+                IMAGE_BASE_URL={IMAGE_BASE_URL}
+            />
 
-                                {selectedMovie ? (
-                                    <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={Translations[language].selectedMovie} text={selectedMovie.title} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={Translations[language].releaseDate} text={formatDate(selectedMovie.release_date)} />
-                                            </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={Translations[language].score} text={selectedMovie.vote_average.toFixed(1)} />
-                                            </View>
-                                        </View>
-                                        <Input label={Translations[language].categories} text={categoryText} />
-
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >{Translations[language].saveMovie}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
-                                    />
-                                )}
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
         </SafeAreaView>
     )
 };

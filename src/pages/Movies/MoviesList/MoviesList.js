@@ -4,7 +4,7 @@ import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, T
 import styles from "./MoviesListStyles";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
-import Input from "../../../components/Input/Input";
+import CustomMovieModal from "../../../components/Modal/CustomMovieModal/CustomMovieModal";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import Translations from "../../../languages/Translation";
@@ -40,7 +40,7 @@ function MoviesList({ navigation, route }) {
                 console.log("userID: ", userID);
                 const asyncKey = (userID + "savedMovies");
                 setSavedMoviesAsync(asyncKey);
-    
+
                 const movies = await AsyncStorage.getItem(savedMoviesAsync);
                 if (movies) {
                     setSavedMovies(JSON.parse(movies));
@@ -57,7 +57,7 @@ function MoviesList({ navigation, route }) {
     useEffect(() => {
         if (route.params && route.params.Movie) {
             const { Movie } = route.params;
-    
+
             // Eğer bir film aktarıldıysa ve daha önce kaydedilmemişse, savedMovies dizisine ekleyin
             const isAlreadyAdded = savedMovies.some(movie => movie.movieId === Movie.movieId);
             if (!isAlreadyAdded) {
@@ -72,12 +72,12 @@ function MoviesList({ navigation, route }) {
                         console.log("Film eklenirken bir hata oluştu:", error);
                     });
             }
-    
+
             // route.params'ı temizleyin, böylece tekrar açıldığında Movie verisi yok olur
             navigation.setParams({ Movie: null });
         }
     }, [route.params]);
-    
+
 
     const fetchSavedMovies = async () => {
         try {
@@ -137,7 +137,7 @@ function MoviesList({ navigation, route }) {
 
                 if (isAlreadyAdded) {
                     console.log("Bu film zaten eklenmiş.");
-                    closeModal(); 
+                    closeModal();
                     return;
                 }
             }
@@ -333,68 +333,28 @@ function MoviesList({ navigation, route }) {
                     <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
                     <Text style={styles.fabColor} >{Translations[language].addMovie}</Text>
                 </TouchableOpacity>
-              
+
             </KeyboardAvoidingView>
 
-            <Modal
+            <CustomMovieModal
                 visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
-                <TouchableOpacity
-                    style={styles.modalBackground}
-                    activeOpacity={1}
-                    onPress={closeModal}
-                >
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.modalContent}
-                            onPress={() => { }}
-                        >
-                            <View>
-                                <View style={styles.searchMovie} >
-                                    <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                    <TextInput
-                                        value={searchText}
-                                        onChangeText={handleTextChange}
-                                        placeholder={Translations[language].searchMovie}
-                                        onFocus={handleSearchBarPress}
-                                        style={styles.searchText}
-                                    />
-                                </View>
+                closeModal={closeModal}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                searchResults={searchResults}
+                setSelectedMovie={setSelectedMovie}
+                selectedMovie={selectedMovie}
+                handleTextChange={handleTextChange}
+                handleSearchBarPress={handleSearchBarPress}
+                handleMovieSelect={handleMovieSelect}
+                saveMovie={saveMovie}
+                Translations={Translations}
+                language={language}
+                formatDate={formatDate}
+                categoryText={categoryText}
+                IMAGE_BASE_URL={IMAGE_BASE_URL}
+            />
 
-                                {selectedMovie ? (
-                                    <View>
-                                        <View style={styles.seperator2} />
-                                        <Input label={Translations[language].selectedMovie} text={selectedMovie.title} />
-                                        <View style={{ flexDirection: "row" }} >
-                                            <View style={{ flex: 1, marginRight: 10, }} >
-                                                <Input label={Translations[language].releaseDate} text={formatDate(selectedMovie.release_date)} />
-                                            </View>
-                                            <View style={{ flex: 1 }}>
-                                                <Input label={Translations[language].score} text={selectedMovie.vote_average.toFixed(1)} />
-                                            </View>
-                                        </View>
-                                        <Input label={Translations[language].categories} text={categoryText} />
-
-                                        <TouchableOpacity style={styles.button} onPress={saveMovie} >
-                                            <Text style={styles.buttonText} >{Translations[language].saveMovie}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                ) : (
-                                    <FlatList
-                                        data={searchResults}
-                                        keyExtractor={(item) => item.id.toString()}
-                                        renderItem={renderMovieItem}
-                                    />
-                                )}
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
-            </Modal>
         </SafeAreaView>
     )
 };
