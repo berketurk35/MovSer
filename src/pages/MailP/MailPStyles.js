@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../colors/colors";
 
 export default StyleSheet.create({
     container: {
@@ -27,11 +28,12 @@ export default StyleSheet.create({
     },
     icon2: {
         paddingRight: 5,
+        paddingTop: 1,
     },
     button: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         width: Dimensions.get("window").width / 1.6,
-        borderRadius: 14,
+        borderRadius: 12,
         marginTop: 10,
     },
     buttonText: {
@@ -65,5 +67,5 @@ export default StyleSheet.create({
     },
     forget: {
         paddingTop: 10,
-    }
+    },
 })

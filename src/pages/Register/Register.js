@@ -196,7 +196,7 @@ function Register({ navigation }) {
 
     return (
         <View style={styles.container} >
-            <CustomButton name={"google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
+            <CustomButton name={"logo-google"} text={Translations[language].signInGoogle} color="black" onPress={signInWithGoogle} />
 
             <Text style={styles.or} >{Translations[language].or}</Text>
 

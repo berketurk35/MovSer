@@ -21,14 +21,14 @@ export default StyleSheet.create({
         borderRadius: 16,
     },
     button: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         borderRadius: 14,
         marginTop: 20,
         marginHorizontal: Dimensions.get("screen").width / 5,
     },
     buttonText: {
         textAlign: "center",
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "bold",
         color: "white",
         padding: 10,
@@ -41,10 +41,25 @@ export default StyleSheet.create({
     searchMovie: {
         flexDirection: "row",
         borderWidth: 0.5,
-        borderRadius: 22,
+        borderRadius: 12,
     },
     searchText: {
         flex: 1,
         fontSize: 14,
     },
+    movieItemImage: {
+        width: 50,
+        height: 75,
+        margin: 10
+    },
+    movieItemDate: {
+        fontSize: 10, 
+        paddingTop: 6
+    },
+    image: {
+        alignSelf: 'center',
+        width: 100,
+        height: 150,
+        marginTop: 15,
+    }
 });

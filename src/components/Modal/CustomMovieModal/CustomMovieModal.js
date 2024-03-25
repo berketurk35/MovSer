@@ -28,11 +28,11 @@ const CustomMovieModal = ({
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                     source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
+                    style={styles.movieItemImage}
                 />
                 <View>
                     <Text>{item.title} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.release_date)} </Text>
+                    <Text style={styles.movieItemDate} >{formatDate(item.release_date)} </Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -71,6 +71,10 @@ const CustomMovieModal = ({
                             {selectedMovie ? (
                                 <View>
                                     <View style={styles.seperator2} />
+                                    <Image
+                                        source={{ uri: `${IMAGE_BASE_URL}${selectedMovie.poster_path}` }}
+                                        style={styles.image}
+                                    />
                                     <Input label={Translations[language].selectedMovie} text={selectedMovie.title} />
                                     <View style={{ flexDirection: "row" }} >
                                         <View style={{ flex: 1, marginRight: 10, }} >

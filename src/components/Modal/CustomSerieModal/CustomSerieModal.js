@@ -30,11 +30,11 @@ const CustomSerieModal = ({
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                     source={{ uri: `${IMAGE_BASE_URL}${item.poster_path}` }}
-                    style={{ width: 50, height: 75, margin: 10 }}
+                    style={styles.movieItemImage}
                 />
                 <View>
                     <Text>{item.name} </Text>
-                    <Text style={{ fontSize: 10, paddingTop: 6 }} >{formatDate(item.first_air_date)} </Text>
+                    <Text style={styles.movieItemDate} >{formatDate(item.first_air_date)} </Text>
                 </View>
 
             </View>
@@ -74,6 +74,10 @@ const CustomSerieModal = ({
                             {selectedSerie ? (
                                 <View>
                                     <View style={styles.seperator2} />
+                                    <Image
+                                        source={{ uri: `${IMAGE_BASE_URL}${selectedSerie.poster_path}` }}
+                                        style={styles.image}
+                                    />
                                     <Input label={Translations[language].selectedSerie} text={selectedSerie.name} />
                                     <View style={{ flexDirection: "row" }} >
                                         <View style={{ flex: 1, marginRight: 10, }} >

@@ -4,7 +4,7 @@ import { colors } from "../../../colors/colors";
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#e5e5e5",
+        backgroundColor: colors.background,
     },
     content: {
         flex: 1,
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     modalContent: {
         backgroundColor: "white",
         padding: 16,
-        borderRadius: 16,
+        borderRadius: 12,
     },
     removeBox: {
         flexDirection: "row",
@@ -62,7 +62,7 @@ export default StyleSheet.create({
         fontSize: 14,
         color: "black",
         padding: 10,
-        backgroundColor: "#F0E1CD",
+        backgroundColor: colors.secondary,
         marginVertical: 6,
     },
     seperator2: {
@@ -73,7 +73,7 @@ export default StyleSheet.create({
     imageBack: {
         paddingTop: 10,
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 14,
         paddingBottom: 4,
         fontWeight: 'bold',
     },
@@ -89,25 +89,25 @@ export default StyleSheet.create({
     },
     cardName: {
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 15,
         paddingBottom: 8,
         fontWeight: 'bold',
     },
     preview: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 14,
         paddingBottom: 10,
     },
     button: {
-        backgroundColor: "#1565C0",
-        borderRadius: 14,
+        backgroundColor: colors.primary,
+        borderRadius: 12,
         marginTop: 20,
         marginHorizontal: Dimensions.get("screen").width / 5,
     },
     buttonText: {
         textAlign: "center",
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "bold",
         color: "white",
         padding: 10,

@@ -358,7 +358,6 @@ function MySerieList({ navigation }) {
                                                     style={styles.searchText}
                                                 />
                                             </View>
-                                            <View style={styles.seperator2} />
                                             <Text style={styles.imageBack} > {Translations[language].cardBackground} </Text>
                                             <TouchableOpacity onPress={openPlatform}>
                                                 <Text style={styles.text}> -&gt; {Translations[language].videoStream}</Text>

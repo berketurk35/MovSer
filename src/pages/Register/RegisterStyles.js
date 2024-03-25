@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../colors/colors";
 
 export default StyleSheet.create({
     container: {
@@ -29,9 +30,9 @@ export default StyleSheet.create({
         paddingRight: 5,
     },
     button: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         width: Dimensions.get("window").width / 1.6,
-        borderRadius: 14,
+        borderRadius: 12,
         marginTop: 5,
     },
     buttonText: {
@@ -52,6 +53,7 @@ export default StyleSheet.create({
     },
     or: {
         margin: 5,
+        color: "black",
     },
     errorMessage: {
         color: "red",

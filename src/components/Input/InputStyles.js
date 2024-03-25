@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../colors/colors";
 
 export default StyleSheet.create({
     body: {
@@ -11,10 +12,11 @@ export default StyleSheet.create({
     },
     text: {
         textAlign: "center",
-        color: "black"
+        color: "black",
+        fontSize: 13
     },
     label: {
-        fontSize: 14,
+        fontSize: 12,
         color: "gray",
         fontWeight: "bold",
         marginBottom: 6,
@@ -22,10 +24,11 @@ export default StyleSheet.create({
     box: {
         flexDirection: "row",
         backgroundColor: "white",
-        borderWidth: 0.1,
+        borderWidth: 0.6,
+        borderColor: colors.primary,
         paddingHorizontal: 15,
         height: 50,
         elevation: 24,
-        shadowColor: "blue",
+        shadowColor: colors.primary,
     },
 });

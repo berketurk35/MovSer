@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     tabBar: {
         height: 80,
         backgroundColor: colors.primary,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
+        //borderTopLeftRadius: 25,
+        //borderTopRightRadius: 25,
         overflow: 'hidden',
     },
 })
