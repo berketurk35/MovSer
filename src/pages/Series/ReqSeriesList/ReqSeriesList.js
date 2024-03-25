@@ -216,7 +216,7 @@ function ReqSeriesList({ navigation, route }) {
     const handleSerieDelete = (serie) => {
         Alert.alert(
             Translations[language].serieMoveTitle,
-            `"${serie.serieName}", ${Translations[language].serieMoveText1}`,
+            `"${serie.serieName}", ${Translations[language].serieDeleteText}`,
             [
                 {
                     text: Translations[language].giveUp,

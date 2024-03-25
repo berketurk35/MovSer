@@ -1,10 +1,11 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     card: {
-        backgroundColor: "#212121",
+        backgroundColor: colors.cardBody,
         alignSelf: "center",
-        borderWidth: 1,
+        borderBottomWidth: 2,
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderColor: "gray",
@@ -17,25 +18,25 @@ export default StyleSheet.create({
     textMovie: {
         fontSize: 14,
         fontWeight: "bold",
-        color: "#ececec",
+        color: "white",
         padding: 6,
     },
     textDate: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "yellow",
+        color: colors.secondary,
         padding: 6,
     },
     textCategory: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "cyan",
+        color: colors.textCategory,
         padding: 6,
     },
     textVote: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "green",
+        color: colors.textVote,
         padding: 6,
     },
     poster: {
@@ -69,12 +70,9 @@ export default StyleSheet.create({
         marginTop: 10,
         marginRight: 14,
     },
-    movieNameCard: {
-        elevation: 50,
-        marginRight: 6,
-    },
     instaDate: {
         textAlign: "center",
-        color: "gray"
+        color: "gray",
+        fontSize: 12,
     }
 });

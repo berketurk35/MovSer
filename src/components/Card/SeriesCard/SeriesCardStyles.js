@@ -1,10 +1,11 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     card: {
-        backgroundColor: "#212121",
+        backgroundColor: colors.cardBody,
         alignSelf: "center",
-        borderWidth: 1,
+        borderBottomWidth: 2,
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderColor: "gray",
@@ -15,39 +16,38 @@ export default StyleSheet.create({
         flexDirection: "row",
     },
     textMovie: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "bold",
-        color: "#ececec",
+        color: "white",
         padding: 4,
     },
     textDate: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "yellow",
+        color: colors.secondary,
         padding: 4,
     },
     textSeasons: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "pink",
+        color: colors.seasons,
         padding: 4,
     },
     textCategory: {
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: "bold",
-        color: "cyan",
+        color: colors.textCategory,
         padding: 4,
     },
     textVote: {
         fontSize: 12,
         fontWeight: "bold",
-        color: "green",
+        color: colors.textVote,
         padding: 4,
     },
     poster: {
         flex: 0.8,
     },
-    
     image: {
         height: Dimensions.get("window").height / 5.5,
         margin: 6,

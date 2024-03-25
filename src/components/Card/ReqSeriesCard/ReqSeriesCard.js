@@ -3,8 +3,10 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./ReqSeriesCardStyles";
 import Translations from "../../../languages/Translation";
 import { useStats } from "../../../Context/StatContext";
+import { colors } from "../../../colors/colors";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Iconx from "react-native-vector-icons/MaterialCommunityIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
@@ -23,7 +25,7 @@ function ReqSeriesCard({ serieName, releaseDate, savedDate, vote, category, post
 
     const formattedSerieName = formatSerieName(sName, maxLengthToShow);
 
-    const { language, setLanguage} = useStats();
+    const { language, setLanguage } = useStats();
 
     return (
         <View style={styles.card} >
@@ -46,7 +48,7 @@ function ReqSeriesCard({ serieName, releaseDate, savedDate, vote, category, post
                         {category}
                     </Text>
                     <View style={styles.topCard}>
-                        <Icon name={"date-range"} color={"yellow"} size={16} style={styles.icon} />
+                        <Icon name={"date-range"} color={colors.secondary} size={16} style={styles.icon} />
                         <Text style={styles.textDate}>
                             {releaseDate}
                         </Text>
@@ -55,7 +57,7 @@ function ReqSeriesCard({ serieName, releaseDate, savedDate, vote, category, post
                         </Text>
                     </View>
                     <View style={styles.topCard}>
-                        <Icon name={"analytics"} color={"pink"} size={16} style={styles.icon} />
+                        <Icon name={"analytics"} color={colors.seasons} size={16} style={styles.icon} />
                         <Text style={styles.textSeasons}>
                             {seasons} {Translations[language].season}
                         </Text>
@@ -65,17 +67,17 @@ function ReqSeriesCard({ serieName, releaseDate, savedDate, vote, category, post
                     </View>
                     <View style={styles.topCard} >
                         <View style={{ flexDirection: "row", flex: 1 }} >
-                            <Icon name={"star"} color={"green"} size={16} style={styles.icon} />
+                            <Icon name={"star"} color={colors.textVote} size={16} style={styles.icon} />
                             <Text style={styles.textVote}>
                                 {vote}
                             </Text>
                         </View>
                     </View>
                     <TouchableOpacity onPress={onPressList} style={styles.icon2}>
-                        <Icon name={iconName} color={"green"} size={16} />
+                        <Iconx name={"file-export-outline"} color={"green"} size={16} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
-                        <Icon name={"cancel"} color={"#ff675c"} size={16} />
+                        <Iconx name={"delete-sweep-outline"} color={colors.delete} size={16} />
                     </TouchableOpacity>
                 </View>
 

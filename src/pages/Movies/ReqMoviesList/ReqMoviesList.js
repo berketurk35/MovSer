@@ -306,7 +306,6 @@ function ReqMoviesList({ navigation }) {
                                     time={movie.movieTime}
                                     onPressAdd={() => onPressAdd(movie)}
                                     onPressDelete={() => handleMovieDelete(movie)}
-                                    iconName={"add-circle"}
                                 />
                             ))}
                     </View>

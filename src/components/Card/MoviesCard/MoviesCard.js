@@ -1,12 +1,14 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./MoviesCardStyles";
+import { colors } from "../../../colors/colors";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Iconx from "react-native-vector-icons/MaterialCommunityIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function MoviesCard({ movieName, date, vote, category, poster, time, onPressDelete, iconName }) {
+function MoviesCard({ movieName, date, vote, category, poster, time, onPressDelete }) {
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -39,7 +41,7 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressDele
                         {category}
                     </Text>
                     <View style={styles.topCard}>
-                        <Icon name={"date-range"} color={"yellow"} size={16} style={styles.icon} />
+                        <Icon name={"date-range"} color={colors.secondary} size={16} style={styles.icon} />
                         <Text style={styles.textDate}>
                             {date}
                         </Text>
@@ -49,7 +51,7 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressDele
                     </View>
                     <View style={styles.topCard} >
                         <View style={{ flexDirection: "row", flex: 1 }} >
-                            <Icon name={"star"} color={"green"} size={16} style={styles.icon} />
+                            <Icon name={"star"} color={colors.textVote} size={16} style={styles.icon} />
                             <Text style={styles.textVote}>
                                 {vote}
                             </Text>
@@ -57,7 +59,7 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressDele
                     </View>
                 </View>
                 <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                    <Icon name={"cancel"} color={"#ff675c"} size={16} />
+                    <Iconx name={"delete-sweep-outline"} color={colors.delete} size={16} /> 
                 </TouchableOpacity>
             </View>
         </View>

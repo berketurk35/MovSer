@@ -1,12 +1,14 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import styles from "./ReqMoviesCardStyles";
+import { colors } from "../../../colors/colors";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Iconx from "react-native-vector-icons/MaterialCommunityIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, time, onPressAdd, onPressDelete, iconName }) {
+function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, time, onPressAdd, onPressDelete }) {
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -33,16 +35,14 @@ function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, tim
                 </View>
                 <View style={styles.rightCard}>
                     <Text style={styles.instaDate} >{savedDate}</Text>
-                    <View style={styles.movieNameCard} >
                         <Text style={styles.textMovie} >
                             {formattedMovieName}
                         </Text>
-                    </View>
                     <Text style={styles.textCategory}>
                         {category}
                     </Text>
                     <View style={styles.topCard}>
-                        <Icon name={"date-range"} color={"yellow"} size={16} style={styles.icon} />
+                        <Icon name={"date-range"} color={colors.secondary} size={16} style={styles.icon} />
                         <Text style={styles.textDate}>
                             {date}
                         </Text>
@@ -52,7 +52,7 @@ function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, tim
                     </View>
                     <View style={styles.topCard} >
                         <View style={{ flexDirection: "row", flex: 1 }} >
-                            <Icon name={"star"} color={"green"} size={16} style={styles.icon} />
+                            <Icon name={"star"} color={colors.textVote} size={16} style={styles.icon} />
                             <Text style={styles.textVote}>
                                 {vote}
                             </Text>
@@ -60,10 +60,10 @@ function ReqMoviesCard({ savedDate, movieName, date, vote, category, poster, tim
                     </View>
                 </View>
                 <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
-                    <Icon name={iconName} color={"green"} size={16} />
+                    <Iconx name={"file-export-outline"} color={"green"} size={16} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
-                    <Icon name={"cancel"} color={"#ff675c"} size={16} />
+                    <Iconx name={"delete-sweep-outline"} color={colors.delete} size={16} /> 
                 </TouchableOpacity>
             </View>
         </View>
