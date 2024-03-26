@@ -24,11 +24,11 @@ export default StyleSheet.create({
     box: {
         flexDirection: "row",
         backgroundColor: "white",
-        borderWidth: 0.6,
+        borderWidth: 0.5,
         borderColor: colors.primary,
         paddingHorizontal: 15,
         height: 50,
-        elevation: 24,
+        elevation: 20,
         shadowColor: colors.primary,
     },
 });

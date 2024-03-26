@@ -3,12 +3,12 @@ import { StyleSheet, Dimensions } from "react-native";
 export default StyleSheet.create({
     container: {
         flexDirection: "row",
-        marginTop: 20,
-        marginLeft: 30,
+        marginTop: 10,
+        marginHorizontal: 10,
     },
     image: {
-        height: 50,
-        width: 50,
+        height: 60,
+        width: 60,
         borderWidth: 1,
         borderRadius: 100,
     },
@@ -17,14 +17,15 @@ export default StyleSheet.create({
         justifyContent: "center",
     },
     userName: {
-        fontSize: 16,
+        fontSize: 15,
         paddingLeft: 20,
         color: "black",
         fontWeight: "500",
     },
     fullName: {
         fontSize: 12,
-        paddingLeft: 20
+        paddingLeft: 20,
+        paddingTop: 2,
     },
     seperator: {
         borderWidth: 0.2,
@@ -34,7 +35,7 @@ export default StyleSheet.create({
         marginTop: 20,
     },
     icon: {
-        paddingRight: 20
+        paddingHorizontal: 10
     },
     iconBox: {
         alignSelf: "center",
