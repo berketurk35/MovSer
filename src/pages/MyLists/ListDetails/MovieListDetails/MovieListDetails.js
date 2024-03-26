@@ -532,6 +532,7 @@ function MovieListDetails({ navigation, route }) {
                     Translations={Translations}
                     language={language}
                     friends={friends}
+                    handlePressMessageBox={handlePressMessageBox}
                 />
 
                 <Modal

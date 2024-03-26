@@ -12,6 +12,7 @@ const ShareFriendListModal = ({
     Translations,
     language,
     friends,
+    handlePressMessageBox,
 }) => {
     useEffect(() => {
         // Her searchFriend state'i güncellendiğinde bu etki çalışır
