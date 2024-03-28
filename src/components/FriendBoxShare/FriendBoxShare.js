@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import styles from "./FriendBoxShareStyles";
 
 import Icon from "react-native-vector-icons/FontAwesome";
+import { colors } from "../../colors/colors";
 
 function FriendBoxShare({ profilePhoto, userName, fullName, pressShare, iconShare }) {
 
@@ -17,7 +18,7 @@ function FriendBoxShare({ profilePhoto, userName, fullName, pressShare, iconShar
                 </View>
                 <View style={styles.iconBox}>
                     <TouchableOpacity onPress={pressShare} >
-                        <Icon name={iconShare} size={22} color={"black"} style={styles.icon} />
+                        <Icon name={iconShare} size={22} color={colors.primary} style={styles.icon} />
                     </TouchableOpacity>
                 </View>
             </View>
