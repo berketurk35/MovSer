@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, SafeAreaView, Alert, ScrollView, KeyboardAvoidingView } from "react-native";
+import { View, SafeAreaView, Alert, ScrollView, KeyboardAvoidingView, StatusBar } from "react-native";
 import styles from "./MoviesListStyles";
+import { colors } from "../../../colors/colors";
 
 import MovSerCard from "../../../components/Card/MoviesCard/MoviesCard";
 import CustomMovieModal from "../../../components/Modal/CustomMovieModal/CustomMovieModal";
@@ -274,6 +275,7 @@ function MoviesList({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar backgroundColor={colors.primary} />
             <KeyboardAvoidingView style={styles.container} behavior="height" >
                 <SearchFilter1
                     placeholder={Translations[language].filterMovie}

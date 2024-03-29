@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, Modal, TouchableOpacity, StatusBar, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useStats } from "../../../Context/StatContext";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from "../../../colors/colors";
 
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -258,6 +259,7 @@ function MyMovieList({ navigation }) {
 
     return (
         <GestureHandlerRootView style={styles.container}>
+            <StatusBar backgroundColor={colors.primary} />
             <SafeAreaProvider >
                 <SafeAreaView style={styles.container}>
                     <KeyboardAvoidingView style={styles.container} behavior="height" >

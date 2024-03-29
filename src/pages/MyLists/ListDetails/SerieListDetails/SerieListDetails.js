@@ -10,12 +10,16 @@ import { Dimensions } from "react-native";
 import Input from "../../../../components/Input/Input";
 import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
 import Toast from 'react-native-toast-message';
-
-import { FAB } from "react-native-paper";
+import SeriesCard from "../../../../components/Card/SeriesCard/SeriesCard";
+import CustomHeader from "../../../../components/Header/CustomHeader";
+import SearchFilter3 from "../../../../components/SearchFilter/SearchFilter3/SearchFilter3";
+import Fab from "../../../../components/Fab/Fab";
+import GuestInfoModal from "../../../../components/Modal/GuestInfoModal/GuestInfoModal";
+import ShareFriendListModal from "../../../../components/Modal/ShareFriendListModal/ShareFriendListModal";
+import MessageModal from "../../../../components/Modal/MessageModal/MessageModal";
+import CustomSerieModal from "../../../../components/Modal/CustomSerieModal/CustomSerieModal";
 
 import Icon from "react-native-vector-icons/Ionicons";
-import IconFont from "react-native-vector-icons/FontAwesome5";
-import IconMaterial from "react-native-vector-icons/MaterialIcons";
 
 import Translations from "../../../../languages/Translation";
 import { useStats } from "../../../../Context/StatContext";
@@ -186,12 +190,12 @@ function SerieListDetails({ navigation, route }) {
                 showErrorMessage();
                 return;
             }
-            
+
             const { data: userDetailsData, error: userDetailsError } = await supabase
                 .from("users")
                 .select("*")
                 .eq("userID", currentUserId);
-    
+
             const { data, error } = await supabase
                 .from("shared_lists")
                 .insert([
@@ -262,7 +266,7 @@ function SerieListDetails({ navigation, route }) {
 
                 if (isAlreadyAdded) {
                     console.log("Bu film zaten eklenmiş.");
-                    closeModal(); 
+                    closeModal();
                     return;
                 }
             }
@@ -459,20 +463,7 @@ function SerieListDetails({ navigation, route }) {
         }
     }
 
-    function formatSerieName(name, maxLength) {
-        if (name.length <= maxLength) {
-            return name;
-        } else {
-            return name.substring(0, maxLength - 3) + '...';
-        }
-    }
-
     const renderItem = ({ item, drag }) => {
-
-        const sName = item.serieName;
-        const maxLengthToShow = 34;
-
-        const formattedSerieName = formatSerieName(sName, maxLengthToShow);
 
         const { isActive } = useOnCellActiveAnimation();
 
@@ -482,56 +473,18 @@ function SerieListDetails({ navigation, route }) {
                     <ShadowDecorator>
                         <TouchableOpacity onLongPress={drag} activeOpacity={1} style={{ height: Dimensions.get("window").height / 5, elevation: isActive ? 60 : 0, shadowColor: "white", }} >
                             <Animated.View>
-                                <View style={styles.card} >
-                                    <View style={styles.topCard} >
-                                        <View style={styles.poster} >
-                                            <Image
-                                                source={{ uri: `${IMAGE_BASE_URL}${item.seriePoster}` }}
-                                                resizeMode="contain"
-                                                style={styles.image}
-                                            />
-                                        </View>
-                                        <View style={styles.rightCard}>
-                                            <View style={styles.movieNameCard} >
-                                                <Text style={styles.textMovie} >
-                                                    {formattedSerieName}
-                                                </Text>
-                                            </View>
-                                            <Text style={styles.textCategory}>
-                                                {item.serieCategory}
-                                            </Text>
-                                            <View style={styles.topCard}>
-                                                <IconMaterial name={"date-range"} color={"yellow"} size={16} style={styles.iconx} />
-                                                <Text style={styles.textDate}>
-                                                    {item.serieReleaseDate}
-                                                </Text>
-                                                <Text style={styles.textDate}>
-                                                    |    {item.serieFinaldate}
-                                                </Text>
-                                            </View>
-                                            <View style={styles.topCard}>
-                                                <IconMaterial name={"analytics"} color={"pink"} size={16} style={styles.iconx} />
-                                                <Text style={styles.textSeasons}>
-                                                    {item.serieSeasons} {Translations[language].season}
-                                                </Text>
-                                                <Text style={styles.textSeasons}>
-                                                    |    {item.serieEpisodes} {Translations[language].episode}
-                                                </Text>
-                                            </View>
-                                            <View style={styles.topCard} >
-                                                <View style={{ flexDirection: "row", flex: 1 }} >
-                                                    <Icon name={"star"} color={"green"} size={16} style={styles.iconx} />
-                                                    <Text style={styles.textVote}>
-                                                        {item.serieVote}
-                                                    </Text>
-                                                </View>
-                                            </View>
-                                            <TouchableOpacity onPress={() => handleSerieDelete(item)} style={styles.icon2}>
-                                                <IconMaterial name={"cancel"} color={"#ff675c"} size={16} />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
+                                <SeriesCard
+                                    key={item.serieId}
+                                    serieName={item.serieName}
+                                    releaseDate={item.serieReleaseDate}
+                                    finalDate={item.serieFinaldate}
+                                    vote={item.serieVote}
+                                    category={item.serieCategory}
+                                    poster={item.seriePoster}
+                                    seasons={item.serieSeasons}
+                                    episodes={item.serieEpisodes}
+                                    onPressDelete={() => handleSerieDelete(item)}
+                                />
                             </Animated.View>
                         </TouchableOpacity>
                     </ShadowDecorator>
@@ -547,30 +500,18 @@ function SerieListDetails({ navigation, route }) {
     return (
         <GestureHandlerRootView style={styles.container} >
             <SafeAreaView style={styles.container}>
-                <View style={styles.customHeader}>
-                    <Icon name="arrow-back" size={22} color={"black"} style={styles.backIcon} onPress={back} />
-                    <View style={styles.headerTextContainer}>
-                        <Text style={styles.headerText}>{listName}</Text>
-                    </View>
-                    <View style={{ flex: 0.5 }} />
-                </View>
-                <KeyboardAvoidingView style={styles.container} >
-                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                        <View style={styles.search} >
-                            <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13 }} placeholder={Translations[language].filterSerie} placeholderTextColor={"black"} value={searchSerie}
-                                onChangeText={setSearchSerie} />
-                        </View>
-                        <TouchableOpacity onPress={handlePressShare} style={styles.shareBox}>
-                            <IconFont name="share-square" size={20} color={"green"} />
-                            <View>
-                                <Text style={styles.shareText}>{Translations[language].share}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                <CustomHeader onPress={back} listName={listName} />
+                <KeyboardAvoidingView style={styles.container} behavior="height" >
+                    <SearchFilter3
+                        placeholder={Translations[language].filterSerie}
+                        value={searchSerie}
+                        onChangeText={setSearchSerie}
+                        onPress={handlePressShare}
+                        text={Translations[language].share}
+                    />
                     {isVisible &&
-                            <Text style={styles.info}>{Translations[language].info3} </Text>
-                        }
+                        <Text style={styles.info}>{Translations[language].info3} </Text>
+                    }
                     <View style={{ flex: 1 }} >
                         <DraggableFlatList
                             ref={ref}
@@ -581,202 +522,61 @@ function SerieListDetails({ navigation, route }) {
                         />
                     </View>
                     <ForwardedToast />
-                    <FAB
-                        style={styles.fab}
-                        icon="plus"
-                        label={Translations[language].addSerie}
-                        color="white"
-                        onPress={handleFabPress}
-                    />
+
+                    <Fab onPress={handleFabPress} text={Translations[language].addSerie} />
 
                 </KeyboardAvoidingView>
 
-                <Modal
+                <GuestInfoModal
                     visible={guestVisible}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={closeModal}
-                >
-                    <TouchableOpacity
-                        style={styles.modalBackground}
-                        activeOpacity={1}
-                        onPress={closeModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.modalContent}
-                                onPress={() => { }}
-                            >
-                                <View style={styles.guestInfoBox} >
-                                    <Text style={styles.guestInfoTitle} >{Translations[language].hiUser}</Text>
-                                    <Text>{Translations[language].guestInfo1}</Text>
-                                    <TouchableOpacity onPress={goToRegisterPage} style={styles.guestInfoButton}>
-                                        <Text style={styles.guestInfoButtonText}>{Translations[language].registerNow}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
+                    closeModal={closeModal}
+                    onPress={goToRegisterPage}
+                    Translations={Translations}
+                    language={language}
+                />
 
-                <Modal
+                <ShareFriendListModal
                     visible={shareModal}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={closeShareModal}
-                >
-                    <TouchableOpacity
-                        style={styles.modalBackground}
-                        activeOpacity={1}
-                        onPress={closeShareModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.modalContent}
-                                onPress={() => { }}
-                            >
-                                <Text style={styles.friendList} > {Translations[language].friendList} </Text>
-                                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                                    <View style={styles.search} >
-                                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
-                                            onChangeText={setSearchFriend} />
-                                    </View>
-                                </View>
-                                <View style={styles.seperator2} />
-                                <FlatList
-                                    data={friends.filter(
-                                        (friend) =>
-                                            friend.userName
-                                                .toLowerCase()
-                                                .includes(searchFriend.toLowerCase())
-                                    )}
-                                    keyExtractor={(friend) => friend.userID}
-                                    renderItem={({ item: friend }) => (
-                                        <FriendBoxShare
-                                            profilePhoto={friend.profile_photo_url}
-                                            userName={friend.userName}
-                                            fullName={friend.fullName}
-                                            iconShare={"share-square-o"}
-                                            pressShare={() => handlePressMessageBox(friend.userID)}
-                                        />
-                                    )}
-                                    style={{ height: "70%" }}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
+                    closeShareModal={closeShareModal}
+                    searchFriend={searchFriend}
+                    setSearchFriend={setSearchFriend}
+                    Translations={Translations}
+                    language={language}
+                    friends={friends}
+                    handlePressMessageBox={handlePressMessageBox}
+                />
 
-                <Modal
+                <MessageModal
                     visible={messageModal}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={closeMessageModal}
-                >
-                    <TouchableOpacity
-                        style={styles.modalBackground}
-                        activeOpacity={1}
-                        onPress={closeMessageModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.modalContent}
-                                onPress={() => { }}
-                            >
-                                <View>
-                                    <View>
-                                        <Text style={styles.friendList} > {Translations[language].writeMessage}</Text>
-                                        <View style={styles.seperator2} />
-                                        <TextInput
-                                            style={styles.input}
-                                            multiline
-                                            numberOfLines={4}
-                                            maxLength={160}
-                                            value={message}
-                                            onChangeText={setMessage}
-                                            placeholder={Translations[language].writeYourMessage}
-                                        />
-                                        <TouchableOpacity onPress={shareMovieList} style={styles.button}>
-                                            <Text style={styles.buttonText2} >{Translations[language].shareList}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
+                    closeModal={closeMessageModal}
+                    value={message}
+                    onChangeText={setMessage}
+                    onPress={shareMovieList}
+                    Translations={Translations}
+                    language={language}
+                />
 
-                <Modal
-                    visible={modalVisible}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={closeModal}
-                >
-                    <TouchableOpacity
-                        style={styles.modalBackground}
-                        activeOpacity={1}
-                        onPress={closeModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.modalContent}
-                                onPress={() => { }}
-                            >
-                                <View>
-                                    <View style={styles.searchMovie} >
-                                        <Icon name={"search"} size={16} color="black" style={styles.icon} />
-                                        <TextInput
-                                            value={searchText}
-                                            onChangeText={handleTextChange}
-                                            placeholder={Translations[language].searchSerie}
-                                            onFocus={handleSearchBarPress}
-                                            style={styles.searchText}
-                                        />
-                                    </View>
+                <CustomSerieModal
+                    modalVisible={modalVisible}
+                    closeModal={closeModal}
+                    searchText={searchText}
+                    setSearchText={setSearchText}
+                    searchResults={searchResults}
+                    setSelectedSerie={setSelectedSerie}
+                    selectedSerie={selectedSerie}
+                    handleTextChange={handleTextChange}
+                    handleSearchBarPress={handleSearchBarPress}
+                    handleSerieSelect={handleSerieSelect}
+                    saveSerie={saveSerie}
+                    Translations={Translations}
+                    language={language}
+                    formatDate={formatDate}
+                    categoryText={categoryText}
+                    seasons={seasons}
+                    episodes={episodes}
+                    IMAGE_BASE_URL={IMAGE_BASE_URL}
+                />
 
-                                    {selectedSerie ? (
-                                        <View>
-                                            <View style={styles.seperator2} />
-                                            <Input label={Translations[language].selectedSerie} text={selectedSerie.name} />
-                                            <View style={{ flexDirection: "row" }} >
-                                                <View style={{ flex: 1, marginRight: 10, }} >
-                                                    <Input label={Translations[language].releaseDate} text={formatDate(selectedSerie.first_air_date)} />
-                                                </View>
-                                                <View style={{ flex: 1 }}>
-                                                    <Input label={Translations[language].score} text={selectedSerie.vote_average.toFixed(1)} />
-                                                </View>
-                                            </View>
-                                            <View style={{ flexDirection: "row" }} >
-                                                <View style={{ flex: 1, marginRight: 10, }} >
-                                                    <Input label={Translations[language].numberSeasons} text={seasons} />
-                                                </View>
-                                                <View style={{ flex: 1 }}>
-                                                    <Input label={Translations[language].numberEpisodes} text={episodes} />
-                                                </View>
-                                            </View>
-                                            <Input label={Translations[language].categories} text={categoryText} />
-
-                                            <TouchableOpacity style={styles.button} onPress={saveSerie} >
-                                                <Text style={styles.buttonText} >{Translations[language].saveSerie}</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    ) : (
-                                        <FlatList
-                                            data={searchResults}
-                                            keyExtractor={(item) => item.id.toString()}
-                                            renderItem={renderSerieItem}
-                                        />
-                                    )}
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
             </SafeAreaView>
         </GestureHandlerRootView>
     )

@@ -34,7 +34,7 @@ export default StyleSheet.create({
         borderColor: "gray",
         width: Dimensions.get("window").width /1.1,
         marginHorizontal: 10,
-        marginTop: 20,
+        marginTop: 10,
     },
     icon: {
         paddingHorizontal: 10

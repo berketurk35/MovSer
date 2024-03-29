@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { View, StatusBar } from "react-native";
 import FastImage from 'react-native-fast-image';
 import styles from "./IntroStyles";
+import { colors } from "../../colors/colors";
 
 import { createClient } from "@supabase/supabase-js";
 import 'react-native-url-polyfill/auto';
@@ -46,6 +47,7 @@ function Intro({ navigation }) {
 
   return (
     <View style={styles.container} >
+      <StatusBar backgroundColor={colors.primary} />
       <FastImage source={require("../../images/logoo.gif")} resizeMode={FastImage.resizeMode.contain} style={styles.logo} />
     </View>
   )

@@ -329,8 +329,7 @@ function ActiveSeriesList({ navigation, route }) {
                                     episodes={serie.serieEpisodes}
                                     onPressAdd={() => onPressAdd(serie)}
                                     onPressDelete={() => handleSerieDelete(serie)}
-                                    iconName={"add-circle"}
-                                    iconName2={"library-add"}
+                                    iconName={"file-export-outline"}
                                 />
                             ))}
                     </View>

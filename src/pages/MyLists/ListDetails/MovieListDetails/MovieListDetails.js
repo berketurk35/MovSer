@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, KeyboardAvoidingView } from "react-native";
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -7,7 +7,6 @@ import Animated from 'react-native-reanimated';
 import styles from "./MovieListDetailsStyles";
 import { Dimensions } from "react-native";
 
-import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
 import Toast from 'react-native-toast-message';
 import SearchFilter3 from "../../../../components/SearchFilter/SearchFilter3/SearchFilter3";
 import Fab from "../../../../components/Fab/Fab";
@@ -16,8 +15,7 @@ import CustomMovieModal from "../../../../components/Modal/CustomMovieModal/Cust
 import CustomHeader from "../../../../components/Header/CustomHeader";
 import MovSerCard from "../../../../components/Card/MoviesCard/MoviesCard";
 import ShareFriendListModal from "../../../../components/Modal/ShareFriendListModal/ShareFriendListModal";
-
-import Icon from "react-native-vector-icons/Ionicons";
+import MessageModal from "../../../../components/Modal/MessageModal/MessageModal";
 
 import Translations from "../../../../languages/Translation";
 import { useStats } from "../../../../Context/StatContext";
@@ -535,46 +533,16 @@ function MovieListDetails({ navigation, route }) {
                     handlePressMessageBox={handlePressMessageBox}
                 />
 
-                <Modal
+                <MessageModal
                     visible={messageModal}
-                    transparent={true}
-                    animationType="fade"
-                    onRequestClose={closeMessageModal}
-                >
-                    <TouchableOpacity
-                        style={styles.modalBackground}
-                        activeOpacity={1}
-                        onPress={closeMessageModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                style={styles.modalContent}
-                                onPress={() => { }}
-                            >
-                                <View>
-                                    <View>
-                                        <Text style={styles.friendList} > {Translations[language].writeMessage}</Text>
-                                        <View style={styles.seperator2} />
-                                        <TextInput
-                                            style={styles.input}
-                                            multiline
-                                            numberOfLines={4}
-                                            maxLength={160}
-                                            value={message}
-                                            onChangeText={setMessage}
-                                            placeholder={Translations[language].writeYourMessage}
-                                        />
-                                        <TouchableOpacity onPress={shareMovieList} style={styles.button}>
-                                            <Text style={styles.buttonText2} >{Translations[language].shareList}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
-
+                    closeModal={closeMessageModal}
+                    value={message}
+                    onChangeText={setMessage}
+                    onPress={shareMovieList}
+                    Translations={Translations}
+                    language={language}
+                />
+                
                 <CustomMovieModal
                     visible={modalVisible}
                     closeModal={closeModal}

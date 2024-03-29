@@ -4,7 +4,7 @@ import { colors } from "../../colors/colors";
 export default StyleSheet.create({
     customHeader: {
         backgroundColor: colors.primary,
-        height: Dimensions.get("window").height / 14,
+        height: Dimensions.get("window").height / 16,
         flexDirection: "row",
         alignItems: "center",
     },

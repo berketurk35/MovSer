@@ -10,7 +10,7 @@ import Iconx from "react-native-vector-icons/MaterialCommunityIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate, onPressList, onPressAdd, onPressDelete, iconName, seasons, episodes }) {
+function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate, onPressAdd, onPressDelete, iconName, seasons, episodes }) {
 
     function formatSerieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -71,7 +71,7 @@ function SeriesCard({ serieName, releaseDate, vote, category, poster, finalDate,
                         </View>
                     </View>
                     <TouchableOpacity onPress={onPressAdd} style={styles.icon2}>
-                        <Iconx name={"file-export-outline"} color={"green"} size={16} />
+                        <Iconx name={iconName} color={"green"} size={16} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={onPressDelete} style={styles.icon3}>
                         <Iconx name={"delete-sweep-outline"} color={colors.delete} size={16} />
