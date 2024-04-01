@@ -330,6 +330,7 @@ function ActiveSeriesList({ navigation, route }) {
                                     onPressAdd={() => onPressAdd(serie)}
                                     onPressDelete={() => handleSerieDelete(serie)}
                                     iconName={"file-export-outline"}
+                                    iconDelete={"delete-sweep-outline"}
                                 />
                             ))}
                     </View>

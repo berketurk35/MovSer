@@ -1,65 +1,79 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        height: 160,
-        width: 200,
-        padding: 10,
-        margin: 10,
-        borderWidth: 0.5,
-        borderColor: "white",
-        backgroundColor: "black",
+        flex: 1,
+    },
+    containerBox: {
+        padding: 3,
+        marginHorizontal: 40,
+        marginTop: 10,
+        marginBottom: 10,
+        backgroundColor: colors.primary,
         borderRadius: 12,
         elevation: 10,
         shadowColor: "black",
     },
+    card: {
+        height: Dimensions.get("screen").height / 5.6,
+        borderRadius: 12,
+        overflow: "hidden",
+    },
     cardName: {
         color: "black",
         fontWeight: "bold",
-        fontSize: 12,
-        textAlign: "center"
-    },
-    cardMessage: {
-        paddingLeft: 6,
-        paddingTop: 2,
-        fontSize: 12,
-        color: "black",
-        fontWeight: "bold",
-        backgroundColor: "#e2e5dc",
+        fontSize: 14,
         textAlign: "center",
-        flex: 1,
+        backgroundColor: colors.background,
         opacity: 0.8,
+        paddingRight: 60,
+        paddingBottom: 3
     },
     cardMessageTitle: {
         paddingLeft: 6,
         paddingTop: 6,
         color: "black",
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: "bold",
-        backgroundColor: "#e2e5dc",
-        textAlign: "center",
+        backgroundColor: colors.background,
         opacity: 0.8,
     },
-    card: {
-        width: Dimensions.get("screen").width / 2,
-        //height: 149,
-        height: Dimensions.get("screen").height / 5.8,
-        borderRadius: 12,
-        overflow: "hidden",
-    },
-    cardInfo: {
-        textAlign: "center",
-        fontSize: 18,
+    cardMessage: {
+        flex: 1,
+        paddingHorizontal: 6,
+        paddingTop: 2,
+        fontSize: 11,
+        color: "black",
         fontWeight: "bold",
+        backgroundColor: colors.background,
+        opacity: 0.8,
     },
-    infoBox: {
-        width: Dimensions.get("screen").width / 2.4,
+    fullName: {
+        textAlign: "right",
+        paddingRight: 12,
+        paddingBottom: 4,
+        color: "black",
+        fontSize: 13,
+        fontWeight: "bold",
+        backgroundColor: colors.background,
+        opacity: 0.8,
+    },
+    typeBox: {
+        backgroundColor: colors.primary,
+        alignItems: "center",
+        position: "absolute",
+        right: 0,
+        borderBottomLeftRadius: 12,
+    },
+    typeText: {
+        paddingHorizontal: 10,
+        paddingBottom: 4,
+        color: "white"
     },
     separator: {
         height: 1,
-        backgroundColor: 'gray',
-        marginLeft: 4,
-        marginTop: 6,
+        backgroundColor: colors.primary,
+        opacity: 0.8,
     },
 });

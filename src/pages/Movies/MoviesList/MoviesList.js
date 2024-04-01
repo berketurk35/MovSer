@@ -298,6 +298,7 @@ function MoviesList({ navigation, route }) {
                                     category={movie.movieCategory}
                                     poster={movie.moviePoster}
                                     time={movie.movieTime}
+                                    iconDelete={"delete-sweep-outline"}
                                     onPressDelete={() => handleMovieDelete(movie)}
                                 />
                             ))}

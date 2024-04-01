@@ -483,6 +483,7 @@ function SerieListDetails({ navigation, route }) {
                                     poster={item.seriePoster}
                                     seasons={item.serieSeasons}
                                     episodes={item.serieEpisodes}
+                                    iconDelete={"delete-sweep-outline"}
                                     onPressDelete={() => handleSerieDelete(item)}
                                 />
                             </Animated.View>

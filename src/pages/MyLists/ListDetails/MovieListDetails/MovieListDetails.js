@@ -470,6 +470,7 @@ function MovieListDetails({ navigation, route }) {
                                     category={item.movieCategory}
                                     poster={item.moviePoster}
                                     time={item.movieTime}
+                                    iconDelete={"delete-sweep-outline"}
                                     onPressDelete={() => handleMovieDelete(item)}
                                 />
                             </Animated.View>

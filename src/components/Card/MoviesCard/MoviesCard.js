@@ -8,7 +8,7 @@ import Iconx from "react-native-vector-icons/MaterialCommunityIcons";
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w400';
 
-function MoviesCard({ movieName, date, vote, category, poster, time, onPressDelete }) {
+function MoviesCard({ movieName, date, vote, category, poster, time, onPressDelete, iconDelete }) {
 
     function formatMovieName(name, maxLength) {
         if (name.length <= maxLength) {
@@ -59,7 +59,7 @@ function MoviesCard({ movieName, date, vote, category, poster, time, onPressDele
                     </View>
                 </View>
                 <TouchableOpacity onPress={onPressDelete} style={styles.icon2}>
-                    <Iconx name={"delete-sweep-outline"} color={colors.delete} size={16} /> 
+                    <Iconx name={iconDelete} color={colors.delete} size={16} /> 
                 </TouchableOpacity>
             </View>
         </View>

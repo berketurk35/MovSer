@@ -294,6 +294,7 @@ function SeriesList({ navigation, route }) {
                                     poster={serie.seriePoster}
                                     seasons={serie.serieSeasons}
                                     episodes={serie.serieEpisodes}
+                                    iconDelete={"delete-sweep-outline"}
                                     onPressDelete={() => handleSerieDelete(serie)}
                                 />
                             ))}

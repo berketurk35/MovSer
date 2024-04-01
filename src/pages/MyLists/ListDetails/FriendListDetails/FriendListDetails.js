@@ -3,12 +3,13 @@ import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, TextInput, Keyb
 
 import styles from "./FriendListDetailsStyles";
 
-import FriendMoviesCard from "../../../../components/Card/FriendMoviesCard/FriendMoviesCard";
-
-import Icon from "react-native-vector-icons/Ionicons";
+import MoviesCard from "../../../../components/Card/MoviesCard/MoviesCard";
 
 import Translations from "../../../../languages/Translation";
 import { useStats } from "../../../../Context/StatContext";
+
+import CustomHeader from "../../../../components/Header/CustomHeader";
+import SearchFilter1 from "../../../../components/SearchFilter/SearchFilter1/SearchFilter1";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -87,29 +88,20 @@ function FriendListDetails({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.customHeader}>
-                <Icon name="arrow-back" size={22} color={"black"} style={styles.backIcon} onPress={back} />
-                <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerText}>{listName}</Text>
-                </View>
-                <View style={{ flex: 0.5 }} />
-            </View>
+            <CustomHeader onPress={back} listName={listName} />
             <KeyboardAvoidingView style={styles.container} behavior="height" >
-                <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                    <View style={styles.search} >
-                        <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                        <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterMovie} placeholderTextColor={"black"} value={searchMovie}
-                            onChangeText={setSearchMovie} />
-                    </View>
-                </View>
-                <View style={styles.seperator} />
+                <SearchFilter1
+                    placeholder={Translations[language].filterMovie}
+                    value={searchMovie}
+                    onChangeText={setSearchMovie}
+                />
                 <ScrollView>
                     <View style={styles.content}>
                         {moviesDetails.filter(
                             (movie) =>
                                 movie.title.toLowerCase().includes(searchMovie.toLowerCase())
                         ).map((movie, index) => (
-                            <FriendMoviesCard
+                            <MoviesCard
                                 key={movie.id}
                                 movieName={movie.title}
                                 date={formatDate(movie.release_date)}
