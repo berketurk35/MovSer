@@ -1,23 +1,36 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#e5e5e5",
+        backgroundColor: colors.background,
     },
     content: {
         flex: 1,
         position: "relative",
     },
     fab: {
+        flexDirection: "row",
+        padding: 10,
         position: "absolute",
         margin: 12,
         right: 0,
         bottom: 0,
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
+        borderRadius: 12,
         borderWidth: 2,
         borderColor: "black",
-        opacity: 0.8
+        opacity: 0.9,
+    },
+    fabColor: {
+        color: "white",
+        fontWeight: "bold",
+        margin: 4,
+        textAlign: "center",
+    },
+    fabIcon: {
+        margin: 2,
     },
     modalBackground: {
         flex: 1,
@@ -27,33 +40,15 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         margin: 20,
-
     },
     modalContent: {
         backgroundColor: "white",
         padding: 16,
-        borderRadius: 16,
-    },
-    search: {
-        flex: 1,
-        flexDirection: "row",
-        backgroundColor: "white", //#FF95AB
-        marginHorizontal: 30,
-        marginVertical: 10,
-        height: 38,
-        borderRadius: 16,
-        borderWidth: 0.6,
-        elevation: 44,
-        shadowColor: "black",
-        opacity: 1,
+        borderRadius: 8,
     },
     icon: {
         alignSelf: "center",
         paddingHorizontal: 10,
-    },
-    seperator: {
-        height: 1,
-        backgroundColor: "black",
     },
     seperator2: {
         height: 1,
@@ -63,17 +58,17 @@ export default StyleSheet.create({
     searchUser: {
         flexDirection: "row",
         borderWidth: 0.5,
-        borderRadius: 22,
+        borderRadius: 12,
     },
     searchText: {
         flex: 1,
+        fontSize: 14,
     },
     itemName: {
         flex: 1,
         padding: 0,
         marginTop: 15,
         alignSelf: "center",
-        
     },
     add: {
         padding: 10,
@@ -97,8 +92,8 @@ export default StyleSheet.create({
     },
     status: {
         marginLeft: 30,
-        marginTop: 20,
-        fontSize: 16,
+        marginTop: 16,
+        fontSize: 14,
         color: "black"
     },
     guestInfoBox: {

@@ -60,13 +60,14 @@ function SeriesList({ navigation, route }) {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
 
-            const isAlreadyAdded = savedSeries.some(serie => serie.serieId === serie.serieId);
+            const isAlreadyAdded = savedSeries.some(serie => serie.serieId === Serie.serieId);
             if (!isAlreadyAdded) {
                 const updatedSeries = [Serie, ...savedSeries];
                 setSavedSeries(updatedSeries);
                 AsyncStorage.setItem(savedSeriesAsync, JSON.stringify(updatedSeries))
                     .then(() => {
                         console.log("Dizi başarıyla eklendi.");
+                        console.log("Emin miyiz");
                         fetchSavedSeries();
                     })
                     .catch((error) => {
@@ -128,7 +129,7 @@ function SeriesList({ navigation, route }) {
                 );
 
                 if (isAlreadyAdded) {
-                    console.log("Bu film zaten eklenmiş.");
+                    console.log("Bu dizi zaten eklenmiş.");
                     closeModal();
                     return;
                 }

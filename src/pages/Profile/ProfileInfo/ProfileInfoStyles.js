@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../../colors/colors";
 
 export default StyleSheet.create({
     container: {
@@ -9,19 +10,19 @@ export default StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#d8d8d8"
+        backgroundColor: colors.profileBackground,
     },
     image: {
         flex: 1,
-        height: Dimensions.get("window").height / 6,
-        borderRadius: 100,
+        height: Dimensions.get("window").height / 6.2,
+        borderRadius: 180,
         borderWidth: 1,
         borderColor: "black",
         margin: 20,
     },
     seperator: {
-        height: 2,
-        backgroundColor: "black",
+        borderBottomWidth: 2,
+        borderColor: colors.primary,
         width: Dimensions.get("window").width / 2.,
     },
     userName: {
@@ -36,13 +37,14 @@ export default StyleSheet.create({
         color: "black",
     },
     body: {
-        margin: 20,
+        flex: 1,
+        padding: 20,
     },
     text: {
-        fontSize: 15,
+        fontSize: 14,
         padding: 4,
-        //color: "black",
         fontWeight: "bold",
+        color: "black",
     },
     title: {
         fontSize: 18,
@@ -61,6 +63,7 @@ export default StyleSheet.create({
     box: {
         padding: 10,
         borderBottomWidth: 1,
+        borderColor: colors.primary
     },
     box2: {
         padding: 10,

@@ -7,4 +7,5 @@ export const colors = {
     seasons: "#ffafcc",
     delete: "#d90429",
     background: "#e5e5e5",
+    profileBackground: "#d8d8d8",
 };

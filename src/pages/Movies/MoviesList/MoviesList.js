@@ -68,6 +68,7 @@ function MoviesList({ navigation, route }) {
                 AsyncStorage.setItem(savedMoviesAsync, JSON.stringify(updatedMovies))
                     .then(() => {
                         console.log("Film başarıyla eklendi.");
+                        console.log("Burada mıyım");
                         fetchSavedMovies();
                     })
                     .catch((error) => {

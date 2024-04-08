@@ -60,7 +60,7 @@ function ActiveSeriesList({ navigation, route }) {
         if (route.params && route.params.Serie) {
             const { Serie } = route.params;
 
-            const isAlreadyAdded = savedActiveSeries.some(serie => serie.serieId === serie.serieId);
+            const isAlreadyAdded = savedActiveSeries.some(serie => serie.serieId === Serie.serieId);
             if (!isAlreadyAdded) {
                 const updatedSeries = [Serie, ...savedActiveSeries];
                 setSavedActiveSeries(updatedSeries);

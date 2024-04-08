@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import React from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import styles from "./FriendBoxStyles";
 

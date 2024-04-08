@@ -7,6 +7,7 @@ import FriendBox from "../../../components/FriendBox/FriendBox";
 import styles from "./FriendsStyles";
 import Translations from "../../../languages/Translation";
 import { useStats } from "../../../Context/StatContext";
+import SearchFilter1 from "../../../components/SearchFilter/SearchFilter1/SearchFilter1";
 
 import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -166,7 +167,6 @@ function Friends({ navigation }) {
             console.error("Arkadaşları alınırken hata:", error);
         }
     };
-
 
     const handleFabPress = async () => {
         const userId = await AsyncStorage.getItem("userId");
@@ -442,13 +442,11 @@ function Friends({ navigation }) {
         <SafeAreaProvider >
             <SafeAreaView style={styles.container}>
                 <KeyboardAvoidingView style={styles.container} behavior="height" >
-                    <View style={{ flexDirection: "row", backgroundColor: "white", opacity: 0.7 }} >
-                        <View style={styles.search} >
-                            <Icon name="search" size={18} color={"black"} style={styles.icon} />
-                            <TextInput style={{ fontSize: 13, flex: 1 }} placeholder={Translations[language].filterFriend} placeholderTextColor={"black"} value={searchFriend}
-                                onChangeText={setSearchFriend} />
-                        </View>
-                    </View>
+                    <SearchFilter1
+                        placeholder={Translations[language].filterFriend}
+                        value={searchFriend}
+                        onChangeText={setSearchFriend}
+                    />
                     <ScrollView>
                         <TouchableOpacity onPress={handleIncomingRequistPress}>
                             <Text style={styles.status}>- {Translations[language].incomingRequest} ({receivedRequests.length})</Text>
@@ -464,14 +462,10 @@ function Friends({ navigation }) {
                         {friendsList && renderFriends()}
                     </ScrollView>
 
-
-                    <FAB
-                        style={styles.fab}
-                        icon="plus"
-                        label={Translations[language].addFriend}
-                        color="white"
-                        onPress={handleFabPress}
-                    />
+                    <TouchableOpacity onPress={handleFabPress} style={styles.fab}>
+                        <Icon style={styles.fabIcon} name="add" size={24} color={"white"} />
+                        <Text style={styles.fabColor} >{Translations[language].addFriend}</Text>
+                    </TouchableOpacity>
 
                 </KeyboardAvoidingView>
 

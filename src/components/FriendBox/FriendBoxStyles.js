@@ -1,9 +1,10 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { colors } from "../../colors/colors";
 
 export default StyleSheet.create({
     container: {
         flexDirection: "row",
-        marginTop: 20,
+        marginTop: 10,
         marginLeft: 30,
     },
     image: {
@@ -17,7 +18,7 @@ export default StyleSheet.create({
         justifyContent: "center",
     },
     userName: {
-        fontSize: 16,
+        fontSize: 15,
         paddingLeft: 20,
         color: "black",
         fontWeight: "500",
@@ -28,15 +29,16 @@ export default StyleSheet.create({
     },
     seperator: {
         borderWidth: 0.2,
-        borderColor: "gray",
-        width: Dimensions.get("window").width /1.1,
-        marginHorizontal: 10,
-        marginTop: 20,
+        borderColor: colors.primary,
+        marginHorizontal: 30,
+        marginTop: 10,
     },
     icon: {
+        paddingTop: 10,
         paddingRight: 20
     },
     icon2: {
+        paddingTop: 10,
         paddingRight: 35
     },
     iconBox: {
