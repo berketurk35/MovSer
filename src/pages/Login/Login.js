@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from "react";
-import { View, Button, Text, TouchableOpacity, TextInput, Image, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, Image, StatusBar } from "react-native";
 import styles from "./LoginStyles";
 import Translations from "../../languages/Translation";
 import Toast from 'react-native-toast-message';

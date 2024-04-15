@@ -110,7 +110,7 @@ export default StyleSheet.create({
     removeDataBox: {
         borderWidth: 1,
         borderRadius: 16,
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         alignSelf: "center",
         width: Dimensions.get("window").width / 3,
         marginTop: 20,
@@ -149,15 +149,17 @@ export default StyleSheet.create({
     editBodyTitle: {
         flex: 1,
         alignSelf: "center",
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: "bold",
         color: "black",
     },
     editBodyInput: {
         flex: 2,
         borderWidth: 0.5,
-        borderRadius: 16,
-        paddingHorizontal: 15,
+        borderRadius: 12,
+        paddingHorizontal: 12,
+        marginRight: 10,
+        height: 40
     },
     editIcon: {
         position: "absolute",
@@ -165,13 +167,13 @@ export default StyleSheet.create({
         right: Dimensions.get("window").width / 4,
     },
     editButton: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         borderWidth: 1,
-        borderRadius: 18,
+        borderRadius: 14,
         borderColor: "white",
         marginTop: 20,
         alignSelf: "center",
-        paddingHorizontal: 20
+        paddingHorizontal: 14
     },
     editButtonText: {
         color: "white",

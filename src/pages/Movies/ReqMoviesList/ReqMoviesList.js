@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useStats } from "../../../Context/StatContext";
-import { View, Text, SafeAreaView, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView } from "react-native";
+import { View, SafeAreaView, Alert, ScrollView, KeyboardAvoidingView } from "react-native";
 import styles from "./ReqMoviesListStyles";
 
 import ReqMoviesCard from "../../../components/Card/ReqMoviesCard/ReqMoviesCard";

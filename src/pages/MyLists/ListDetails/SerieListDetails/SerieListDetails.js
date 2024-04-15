@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, forwardRef } from "react";
-import { View, Text, SafeAreaView, Modal, TouchableOpacity, Alert, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image } from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, KeyboardAvoidingView, Image } from "react-native";
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -7,8 +7,6 @@ import Animated from 'react-native-reanimated';
 import styles from "./SerieListDetailsStyles";
 import { Dimensions } from "react-native";
 
-import Input from "../../../../components/Input/Input";
-import FriendBoxShare from "../../../../components/FriendBoxShare/FriendBoxShare";
 import Toast from 'react-native-toast-message';
 import SeriesCard from "../../../../components/Card/SeriesCard/SeriesCard";
 import CustomHeader from "../../../../components/Header/CustomHeader";
@@ -19,7 +17,6 @@ import ShareFriendListModal from "../../../../components/Modal/ShareFriendListMo
 import MessageModal from "../../../../components/Modal/MessageModal/MessageModal";
 import CustomSerieModal from "../../../../components/Modal/CustomSerieModal/CustomSerieModal";
 
-import Icon from "react-native-vector-icons/Ionicons";
 
 import Translations from "../../../../languages/Translation";
 import { useStats } from "../../../../Context/StatContext";

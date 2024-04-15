@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Modal, TouchableOpacity, StatusBar, ScrollView, TextInput, KeyboardAvoidingView, FlatList, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, Modal, TouchableOpacity, StatusBar, ScrollView, TextInput, KeyboardAvoidingView, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useStats } from "../../../Context/StatContext";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from "../../../colors/colors";

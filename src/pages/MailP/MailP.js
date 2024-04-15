@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import styles from "./MailPStyles";
 import Translations from "../../languages/Translation";

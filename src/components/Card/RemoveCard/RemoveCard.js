@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import styles from "./RemoveCardStyles";
 
-import Translations from "../../../languages/Translation";
 import { useStats } from "../../../Context/StatContext";
 
 import Icon from "react-native-vector-icons/MaterialIcons";

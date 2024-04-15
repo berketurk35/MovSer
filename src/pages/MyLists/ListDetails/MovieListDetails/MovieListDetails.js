@@ -409,15 +409,15 @@ function MovieListDetails({ navigation, route }) {
 
     const handleMovieDelete = (item) => {
         Alert.alert(
-            'Film Silme',
-            `"${item.movieName}" Filmini silmek istediğinize emin misiniz?`,
+            Translations[language].movieDeleteTitle,
+            `"${item.movieName}" ${Translations[language].movieDeleteText}`,
             [
                 {
-                    text: 'Vazgeç',
+                    text: Translations[language].giveUp,
                     style: 'cancel',
                 },
                 {
-                    text: 'Sil',
+                    text: Translations[language].delete,
                     style: 'destructive',
                     onPress: () => deleteMovie(item),
                 },

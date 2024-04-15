@@ -76,7 +76,7 @@ export default StyleSheet.create({
         fontSize: 10,
     },
     addBox: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         borderRadius: 14,
         marginTop: 15,
         marginHorizontal: 15,
@@ -105,7 +105,7 @@ export default StyleSheet.create({
         color: "black"
     },
     guestInfoButton: {
-        backgroundColor: "#1565C0",
+        backgroundColor: colors.primary,
         borderWidth: 1,
         borderRadius: 18,
         borderColor: "white",

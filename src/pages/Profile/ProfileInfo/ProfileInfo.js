@@ -276,11 +276,11 @@ function ProfileInfo({ navigation }) {
                                 </TouchableOpacity>
                                 <View style={styles.editBody} >
                                     <Text style={styles.editBodyTitle}>{Translations[language].username}: </Text>
-                                    <TextInput style={styles.editBodyInput} placeholder={userName} value={userNameEdit} onChangeText={setUserNameEdit} autoCapitalize="none" />
+                                    <TextInput style={styles.editBodyInput} placeholder={userName} fontSize={13} value={userNameEdit} onChangeText={setUserNameEdit} autoCapitalize="none" />
                                 </View>
                                 <View style={styles.editBody} >
                                     <Text style={styles.editBodyTitle}>{Translations[language].fullname}: </Text>
-                                    <TextInput style={styles.editBodyInput} placeholder={userFullName} value={userFullNameEdit} onChangeText={setUserFullNameEdit} />
+                                    <TextInput style={styles.editBodyInput} placeholder={userFullName} fontSize={13} value={userFullNameEdit} onChangeText={setUserFullNameEdit} />
                                 </View>
                                 {err.length > 0 &&
                                     <Text style={styles.errorMessage} > {err} </Text>

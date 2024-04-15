@@ -3,7 +3,6 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { ScaleDecorator, ShadowDecorator, OpacityDecorator, useOnCellActiveAnimation } from 'react-native-draggable-flatlist';
 
 import Animated from 'react-native-reanimated';
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 import styles from "./ListCardStyles";
 

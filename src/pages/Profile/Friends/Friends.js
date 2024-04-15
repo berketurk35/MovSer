@@ -9,7 +9,6 @@ import Translations from "../../../languages/Translation";
 import { useStats } from "../../../Context/StatContext";
 import SearchFilter1 from "../../../components/SearchFilter/SearchFilter1/SearchFilter1";
 
-import { FAB } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 
 import { createClient } from "@supabase/supabase-js";

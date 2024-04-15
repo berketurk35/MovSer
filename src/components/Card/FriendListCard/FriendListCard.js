@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
 import Translations from '../../../languages/Translation';
 import { useStats } from '../../../Context/StatContext';

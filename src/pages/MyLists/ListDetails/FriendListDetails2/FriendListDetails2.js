@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, FlatList } from "react-native";
+import { View, SafeAreaView, ScrollView, KeyboardAvoidingView } from "react-native";
 
 import styles from "./FriendListDetails2Styles";
 
